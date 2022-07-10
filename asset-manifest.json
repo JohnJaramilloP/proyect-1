@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/proyect-1/static/css/main.25a23b2f.css",
-    "main.js": "/proyect-1/static/js/main.079ee8c2.js",
+    "main.js": "/proyect-1/static/js/main.4080896f.js",
     "static/media/logo-tec-2.png": "/proyect-1/static/media/logo-tec-2.281efd6da091aadb8c07.png",
     "static/media/asesor.png": "/proyect-1/static/media/asesor.c0d5985311e8d4d0cb8e.png",
     "static/media/logo-tec.jpg": "/proyect-1/static/media/logo-tec.d714a1db1b411b35f481.jpg",
     "static/media/super-admin.jpeg": "/proyect-1/static/media/super-admin.d83ba9b092d083838dd6.jpeg",
     "index.html": "/proyect-1/index.html",
     "main.25a23b2f.css.map": "/proyect-1/static/css/main.25a23b2f.css.map",
-    "main.079ee8c2.js.map": "/proyect-1/static/js/main.079ee8c2.js.map"
+    "main.4080896f.js.map": "/proyect-1/static/js/main.4080896f.js.map"
   },
   "entrypoints": [
     "static/css/main.25a23b2f.css",
-    "static/js/main.079ee8c2.js"
+    "static/js/main.4080896f.js"
   ]
 }
