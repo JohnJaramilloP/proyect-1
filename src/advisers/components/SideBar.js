@@ -14,7 +14,8 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import superAdmin from "../../assets/images/super-admin.jpeg";
+import { useNavigate } from "react-router-dom";
+import Asesor from "../../assets/images/asesor.png";
 
 export const SideBar = ({
   setValueSideBar,
@@ -25,6 +26,12 @@ export const SideBar = ({
 }) => {
   const onClickSideBar = (text) => {
     setValueSideBar(text);
+  };
+
+  const navigate = useNavigate();
+
+  const handleBacklogin = () => {
+    navigate("/auth/login");
   };
 
   return (
@@ -68,9 +75,6 @@ export const SideBar = ({
             {[
               "Casos",
               "Estudiantes",
-              "Asesores",
-              "Personas",
-              "Casos Antiguos",
             ].map((text) => (
               <ListItem 
                 key={text} disablePadding
@@ -88,9 +92,6 @@ export const SideBar = ({
                   <ListItemIcon>
                     {text === "Casos" && <FindInPage />}
                     {text === "Estudiantes" && <Group />}
-                    {text === "Asesores" && <PersonPinCircle />}
-                    {text === "Personas" && <GroupAdd />}
-                    {text === "Casos Antiguos" && <HourglassEmpty />}
                   </ListItemIcon>
                   <Grid container>
                     <ListItemText primary={text} />
@@ -117,9 +118,12 @@ export const SideBar = ({
                 mb: 2,
               }}
             >
-              <img src={superAdmin} alt="super-admin" />
+              <img src={Asesor} alt="super-admin" />
             </ImageListItem>
-            <IconButton color="error">
+            <IconButton
+             color="error"
+             onClick={handleBacklogin}
+             >
               <LogoutOutlined />
             </IconButton>
           </Grid>
