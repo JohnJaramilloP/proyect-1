@@ -1,4 +1,3 @@
-import * as React from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -9,6 +8,8 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { Button, Grid, IconButton } from "@mui/material";
 import { DeleteForeverSharp, EditSharp } from "@mui/icons-material";
+import ModalCreate from "../components/ModalCreate";
+import { useState } from "react";
 
 const columns = [
   { id: "nombre", label: "Nombre", minWidth: 120 },
@@ -46,13 +47,7 @@ function createData(
 }
 
 const rows = [
-  createData(
-    "01",
-    "cod-123",
-    1324171354,
-    3287263,
-    "aa",
-  ),
+  createData("01", "cod-123", 1324171354, 3287263, "aa"),
   createData("China", "CN", "css", 9596961),
   createData("Italy", "IT", 60483973, 301340),
   createData("United States", "US", 327167434, 9833520),
@@ -70,8 +65,9 @@ const rows = [
 ];
 
 export const Persons = () => {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [openModal, setOpenModal] = useState(false);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -89,7 +85,22 @@ export const Persons = () => {
       justifyContent="center"
       alignItems="center"
     >
-      <Paper sx={{ sm: {maxWidth: "60vw"}, overflow: "hidden" }}>
+      <Button 
+      onClick={setOpenModal}
+      sx={{ 
+        padding: 1, 
+        margin: 2, 
+        background: "#0275d8",
+        "&:hover": {
+          background: "#369ffa"
+        }
+        }}>
+        Agregar persona
+      </Button>
+
+      <ModalCreate add={openModal} setAdd={setOpenModal} />
+
+      <Paper sx={{ sm: { maxWidth: "60vw" }, overflow: "hidden" }}>
         <TableContainer sx={{ width: "80vw", maxHeight: 590 }}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
@@ -131,8 +142,8 @@ export const Persons = () => {
                             )}
                             {column.id === "eliminar" && (
                               <IconButton color="error">
-                              <DeleteForeverSharp />
-                            </IconButton>
+                                <DeleteForeverSharp />
+                              </IconButton>
                             )}
                           </TableCell>
                         );

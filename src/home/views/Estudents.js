@@ -1,4 +1,3 @@
-import * as React from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -9,6 +8,7 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { Button, Grid, IconButton } from "@mui/material";
 import { DeleteForeverSharp, EditSharp } from "@mui/icons-material";
+import { useState } from "react";
 
 const columns = [
   { id: "nombre", label: "Nombre", minWidth: 120 },
@@ -70,8 +70,8 @@ const rows = [
 ];
 
 export const Estudents = () => {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
