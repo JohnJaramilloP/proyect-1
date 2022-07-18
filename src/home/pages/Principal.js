@@ -1,6 +1,5 @@
 import { Typography } from "@mui/material";
 import React, { useState } from "react";
-import { SearchCreate } from "../components/SearchCreate";
 import { JournalLayout } from "../layout/JournalLayout";
 import { OldCases } from "../views";
 import { Advisers } from "../views/Advisers";

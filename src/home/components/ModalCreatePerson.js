@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
 import Swal from "sweetalert2";
 
-const ModalCreate = ({ add, setAdd, addDepartment }) => {
+const ModalCreatePerson = ({ add, setAdd, addDepartment }) => {
   const [valueInput, setValueInput] = useState({
     nombre:"",
     cedula:"",
@@ -112,4 +112,4 @@ const ModalCreate = ({ add, setAdd, addDepartment }) => {
   );
 };
 
-export default ModalCreate;
+export default ModalCreatePerson;

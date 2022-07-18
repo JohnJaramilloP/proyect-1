@@ -8,7 +8,7 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { Button, Grid, IconButton } from "@mui/material";
 import { DeleteForeverSharp, EditSharp } from "@mui/icons-material";
-import ModalCreate from "../components/ModalCreate";
+import ModalCreatePerson from "../components/ModalCreatePerson";
 import { useState } from "react";
 
 const columns = [
@@ -98,7 +98,7 @@ export const Persons = () => {
         Agregar persona
       </Button>
 
-      <ModalCreate add={openModal} setAdd={setOpenModal} />
+      <ModalCreatePerson add={openModal} setAdd={setOpenModal} />
 
       <Paper sx={{ sm: { maxWidth: "60vw" }, overflow: "hidden" }}>
         <TableContainer sx={{ width: "80vw", maxHeight: 590 }}>
