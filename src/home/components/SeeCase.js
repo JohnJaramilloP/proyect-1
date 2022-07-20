@@ -46,6 +46,95 @@ const nombres = [
   "Pedro Cruz",
 ];
 
+const area = [
+  "Civil y comercial",
+  "Familia",
+  "Penal",
+  "Laboral",
+  "Administrativo",
+  "Psicosocial",
+  "Otros",
+];
+
+const materia = [
+  "Alimentos: Revisión",
+  "Alimentos: Exoneración",
+  "Alimentos: Fijación",
+  "Alimentos y visitas",
+  "Custodia y alimentos",
+  "Alimentos",
+  "Unión marital del hecho",
+  "Restitución de inmueble edn arrendamiento",
+  "Responsabilidad civil extracontractual",
+  "Responsabilidad civil contractual",
+  "Contratos",
+  "Divorcio con menores",
+  "Divorcio sin menores",
+  "Disolución y liquidación sociedad patrimonial",
+  "Disolución y liquidación sociedad conyugal",
+  "Pertenencia",
+  "Bienes",
+  "Copropiedad",
+  "Posesiones",
+  "Títulos valores",
+  "Custodia",
+  "Régimen de visitas",
+  "Lesiones personales",
+  "Sucesiones",
+  "Apropiación de bien ajeno",
+  "Daño en bien ajeno",
+  "Otros delitos querellables",
+  "Restitución de inmueble dado en comodato",
+  "Custodia y visitas",
+  "Delitos de cuantía inferior a 150 SMLMV",
+  "Derecho de petición",
+  "Acción de tutela",
+  "Otras acciones constitucionales",
+  "Memoriales",
+  "Hurto",
+  "Laboral",
+  "Psicosocial",
+  "Registro de marca",
+  "Divisorio",
+  "Consumidor",
+  "Otros",
+];
+
+const origen = [
+  "Usuario interno",
+  "Usuario externo",
+  "Derivado de entidades",
+  "Otro",
+];
+
+const recepcion = ["Si", "No"];
+
+const calidad = ["Abogado", "Estudiante", "No aplica"];
+
+const participacion = ["Si", "No", "No aplica"];
+
+const representacionTerceros = [
+  "Asesoría",
+  "Elaboración de demanda",
+  "Contestación de demanda",
+  "Acción constitucional",
+  "Representación a terceros",
+];
+
+const resultadoAudiencia = [
+  "Acta de acuerdo parcial",
+  "Acta de acuerdo total",
+  "Aplazada",
+  "Auto de pruebas",
+  "Constancia de no comparecencia - ambas partes",
+  "Constancia de no comparecencia - parte convocada",
+  "Constancia de no comparecencia - parte convocante",
+  "Constancia no acuerdo",
+  "Desistimiento",
+  "Recurso",
+  "Sentencia"
+];
+
 function getStyles(name, personName, theme) {
   return {
     fontWeight:
@@ -130,7 +219,7 @@ export const SeeCase = ({ setViews }) => {
         <Grid>
           <Typography variant="h4">Asignar estudiante</Typography>
 
-          <FormControl sx={{ m: 1, width: 300 }}>
+          <FormControl sx={{ m: 1, width: "100%" }}>
             <InputLabel id="demo-multiple-name-label">Nombre</InputLabel>
             <Select
               labelId="demo-multiple-name-label"
@@ -156,7 +245,7 @@ export const SeeCase = ({ setViews }) => {
 
         <Grid>
           <Typography variant="h4">Asignar asesor</Typography>
-          <FormControl sx={{ m: 1, width: 300 }}>
+          <FormControl sx={{ m: 1, width: "100%" }}>
             <InputLabel id="demo-multiple-name-label">Nombre</InputLabel>
             <Select
               labelId="demo-multiple-name-label"
@@ -354,20 +443,35 @@ export const SeeCase = ({ setViews }) => {
             flexDirection: "column",
           }}
         >
-          <Typography variant="h6" className="title">
-            Áre (CIVIL, FAMILIA, COMERCIAL, LABORAL, PENAL)
-          </Typography>
-          <Typography
-            variant="p"
-            className="text"
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            CIVIL Y COMERCIAL
-          </Typography>
+          <Grid>
+            <Typography variant="h6">
+              {" "}
+              Áre (CIVIL, FAMILIA, COMERCIAL, LABORAL, PENAL)
+            </Typography>
+
+            <FormControl sx={{ m: 1, width: "100%" }}>
+              <InputLabel id="demo-multiple-name-label">Area</InputLabel>
+              <Select
+                labelId="demo-multiple-name-label"
+                id="demo-multiple-name"
+                multiple
+                value={personName}
+                onChange={handleChange}
+                input={<OutlinedInput label="Name" />}
+                MenuProps={MenuProps}
+              >
+                {area.map((name) => (
+                  <MenuItem
+                    key={name}
+                    value={name}
+                    style={getStyles(name, personName, theme)}
+                  >
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
         </Grid>
       </Grid>
 
@@ -388,20 +492,32 @@ export const SeeCase = ({ setViews }) => {
             flexDirection: "column",
           }}
         >
-          <Typography variant="h6" className="title">
-            MATERIA
-          </Typography>
-          <Typography
-            variant="p"
-            className="text"
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            HURTO
-          </Typography>
+          <Grid>
+            <Typography variant="h6">Materia</Typography>
+
+            <FormControl sx={{ m: 1, width: "100%" }}>
+              <InputLabel id="demo-multiple-name-label">Materia</InputLabel>
+              <Select
+                labelId="demo-multiple-name-label"
+                id="demo-multiple-name"
+                multiple
+                value={personName}
+                onChange={handleChange}
+                input={<OutlinedInput label="Name" />}
+                MenuProps={MenuProps}
+              >
+                {materia.map((name) => (
+                  <MenuItem
+                    key={name}
+                    value={name}
+                    style={getStyles(name, personName, theme)}
+                  >
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
         </Grid>
 
         <Grid
@@ -413,20 +529,32 @@ export const SeeCase = ({ setViews }) => {
             flexDirection: "column",
           }}
         >
-          <Typography variant="h6" className="title">
-            ORIGEN (C.J. o EXT)
-          </Typography>
-          <Typography
-            variant="p"
-            className="text"
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            USUARIO INTERNO
-          </Typography>
+          <Grid>
+            <Typography variant="h6">ORIGEN (C.J. o EXT)</Typography>
+
+            <FormControl sx={{ m: 1, width: "100%" }}>
+              <InputLabel id="demo-multiple-name-label">Origen</InputLabel>
+              <Select
+                labelId="demo-multiple-name-label"
+                id="demo-multiple-name"
+                multiple
+                value={personName}
+                onChange={handleChange}
+                input={<OutlinedInput label="Name" />}
+                MenuProps={MenuProps}
+              >
+                {origen.map((name) => (
+                  <MenuItem
+                    key={name}
+                    value={name}
+                    style={getStyles(name, personName, theme)}
+                  >
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
         </Grid>
       </Grid>
 
@@ -447,20 +575,32 @@ export const SeeCase = ({ setViews }) => {
             flexDirection: "column",
           }}
         >
-          <Typography variant="h6" className="title">
-            SE RECEPCIONO EL CASO
-          </Typography>
-          <Typography
-            variant="p"
-            className="text"
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            SI
-          </Typography>
+          <Grid>
+            <Typography variant="h6">SE RECEPCIONó EL CASO</Typography>
+
+            <FormControl sx={{ m: 1, width: "100%" }}>
+              <InputLabel id="demo-multiple-name-label">Recepción</InputLabel>
+              <Select
+                labelId="demo-multiple-name-label"
+                id="demo-multiple-name"
+                multiple
+                value={personName}
+                onChange={handleChange}
+                input={<OutlinedInput label="Name" />}
+                MenuProps={MenuProps}
+              >
+                {recepcion.map((name) => (
+                  <MenuItem
+                    key={name}
+                    value={name}
+                    style={getStyles(name, personName, theme)}
+                  >
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
         </Grid>
 
         <Grid
@@ -529,20 +669,32 @@ export const SeeCase = ({ setViews }) => {
             flexDirection: "column",
           }}
         >
-          <Typography variant="h6" className="title">
-            CALIDAD(E/A)
-          </Typography>
-          <Typography
-            variant="p"
-            className="text"
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            ESTUDIANTE
-          </Typography>
+          <Grid>
+            <Typography variant="h6">CALIDAD(E/A)</Typography>
+
+            <FormControl sx={{ m: 1, width: "100%" }}>
+              <InputLabel id="demo-multiple-name-label">Calidad</InputLabel>
+              <Select
+                labelId="demo-multiple-name-label"
+                id="demo-multiple-name"
+                multiple
+                value={personName}
+                onChange={handleChange}
+                input={<OutlinedInput label="Name" />}
+                MenuProps={MenuProps}
+              >
+                {calidad.map((name) => (
+                  <MenuItem
+                    key={name}
+                    value={name}
+                    style={getStyles(name, personName, theme)}
+                  >
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
         </Grid>
       </Grid>
 
@@ -639,12 +791,34 @@ export const SeeCase = ({ setViews }) => {
             flexDirection: "column",
           }}
         >
-          <Typography variant="h6" className="title">
-            TUVO PARTICIPACIÓN INDIVIDUAL
-          </Typography>
-          <Typography variant="p" className="text">
-            NO
-          </Typography>
+          <Grid>
+            <Typography variant="h6">TUVO PARTICIPACIÓN INDIVIDUAL </Typography>
+
+            <FormControl sx={{ m: 1, width: "100%" }}>
+              <InputLabel id="demo-multiple-name-label">
+                Participación
+              </InputLabel>
+              <Select
+                labelId="demo-multiple-name-label"
+                id="demo-multiple-name"
+                multiple
+                value={personName}
+                onChange={handleChange}
+                input={<OutlinedInput label="Name" />}
+                MenuProps={MenuProps}
+              >
+                {participacion.map((name) => (
+                  <MenuItem
+                    key={name}
+                    value={name}
+                    style={getStyles(name, personName, theme)}
+                  >
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
         </Grid>
       </Grid>
 
@@ -690,12 +864,36 @@ export const SeeCase = ({ setViews }) => {
             flexDirection: "column",
           }}
         >
-          <Typography variant="h6" className="title">
-            REALIZÓ REPRESENTACION DE TERCEROS
-          </Typography>
-          <Typography variant="p" className="text">
-            ASESORIA
-          </Typography>
+          <Grid>
+            <Typography variant="h6">
+              REALIZÓ REPRESENTACION DE TERCEROS
+            </Typography>
+
+            <FormControl sx={{ m: 1, width: "100%" }}>
+              <InputLabel id="demo-multiple-name-label">
+                Representación
+              </InputLabel>
+              <Select
+                labelId="demo-multiple-name-label"
+                id="demo-multiple-name"
+                multiple
+                value={personName}
+                onChange={handleChange}
+                input={<OutlinedInput label="Name" />}
+                MenuProps={MenuProps}
+              >
+                {representacionTerceros.map((name) => (
+                  <MenuItem
+                    key={name}
+                    value={name}
+                    style={getStyles(name, personName, theme)}
+                  >
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
         </Grid>
       </Grid>
 
@@ -763,20 +961,32 @@ export const SeeCase = ({ setViews }) => {
             flexDirection: "column",
           }}
         >
-          <Typography variant="h6" className="title">
-            RESULTADO DE LA AUDIENCIA
-          </Typography>
-          <Typography
-            variant="p"
-            className="text"
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            RESULTADO DE LA AUDIENCIA
-          </Typography>
+          <Grid>
+            <Typography variant="h6">RESULTADO DE LA AUDIENCIA</Typography>
+
+            <FormControl sx={{ m: 1, width: "100%" }}>
+              <InputLabel id="demo-multiple-name-label">Resultado</InputLabel>
+              <Select
+                labelId="demo-multiple-name-label"
+                id="demo-multiple-name"
+                multiple
+                value={personName}
+                onChange={handleChange}
+                input={<OutlinedInput label="Name" />}
+                MenuProps={MenuProps}
+              >
+                {resultadoAudiencia.map((name) => (
+                  <MenuItem
+                    key={name}
+                    value={name}
+                    style={getStyles(name, personName, theme)}
+                  >
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
         </Grid>
 
         <Grid
@@ -923,7 +1133,9 @@ export const SeeCase = ({ setViews }) => {
               fontSize: 20,
             }}
           >
-            <a href="" download="filename">documento 1</a>
+            <a href="" download="filename">
+              documento 1
+            </a>
             <Button style={{ marginLeft: 10 }}>Editar documento 1</Button>
           </Grid>
           <Grid
@@ -932,7 +1144,9 @@ export const SeeCase = ({ setViews }) => {
               fontSize: 20,
             }}
           >
-            <a href="" download="filename">documento 2</a>
+            <a href="" download="filename">
+              documento 2
+            </a>
             <Button style={{ marginLeft: 10 }}>Editar documento 2</Button>
           </Grid>
           <Grid
@@ -941,7 +1155,9 @@ export const SeeCase = ({ setViews }) => {
               fontSize: 20,
             }}
           >
-            <a href="" download="filename">documento 3</a>
+            <a href="" download="filename">
+              documento 3
+            </a>
             <Button style={{ marginLeft: 10 }}>Editar documento 3</Button>
           </Grid>
           <Grid
@@ -950,7 +1166,9 @@ export const SeeCase = ({ setViews }) => {
               fontSize: 20,
             }}
           >
-            <a href="" download="filename">documento 4</a>
+            <a href="" download="filename">
+              documento 4
+            </a>
             <Button style={{ marginLeft: 10 }}>Editar documento 4</Button>
           </Grid>
         </Grid>
