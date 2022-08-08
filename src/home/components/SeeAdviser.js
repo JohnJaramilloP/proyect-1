@@ -16,7 +16,7 @@ export const SeeAdviser = ( {changeView} ) => {
       <CgClose
         onClick={() => changeView(1)}
         style={{
-          fontSize: 25,
+          fontSize: 35,
           position: "absolute",
           right: 15,
           top: 15,

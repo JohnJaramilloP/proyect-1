@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from 'react'
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -10,6 +10,7 @@ import TableRow from "@mui/material/TableRow";
 import { Button, Grid, IconButton } from "@mui/material";
 import { DeleteForeverSharp, EditSharp } from "@mui/icons-material";
 import { SearchCreate } from "../components";
+import ModalCreateCase from "../../home/components/ModalCreateCase";
 
 const columns = [
   { id: "numero", label: "Número", minWidth: 200 },
@@ -69,8 +70,9 @@ const rows = [
 ];
 
 export const AssignedCases = () => {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [openModal, setOpenModal] = useState(false);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -89,7 +91,21 @@ export const AssignedCases = () => {
       alignItems="center"
     >
       <Grid>
-      <SearchCreate />
+      <ModalCreateCase add={openModal} setAdd={setOpenModal} />
+      <Button
+            onClick={setOpenModal}
+            sx={{
+              padding: 1,
+              margin: 2,
+              background: "#0275d8",
+              "&:hover": {
+                background: "#369ffa",
+              },
+            }}
+          >
+            Agregar caso
+          </Button>
+
       </Grid>
       <Paper sx={{ sm: {maxWidth: "60vw"}, overflow: "hidden" }}>
       <TableContainer sx={{ width: "80vw", maxHeight: 590 }}>

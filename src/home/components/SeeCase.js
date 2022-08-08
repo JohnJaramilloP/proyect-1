@@ -177,7 +177,7 @@ export const SeeCase = ({ setViews }) => {
       <CgClose
         onClick={handleView}
         style={{
-          fontSize: 25,
+          fontSize: 35,
           position: "absolute",
           right: 15,
           top: 15,
