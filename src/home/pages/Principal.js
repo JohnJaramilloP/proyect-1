@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
 import React, { useState } from "react";
 import { JournalLayout } from "../layout/JournalLayout";
-import { OldCases } from "../views";
+import { Configuration, OldCases } from "../views";
 import { Advisers } from "../views/Advisers";
 import { Cases } from "../views/Cases";
 import { Estudents } from "../views/Estudents";
@@ -26,6 +26,7 @@ export const Principal = () => {
       {valueSideBar === "Asesores" && <Advisers /> }
       {valueSideBar === "Personas" && <Persons /> }
       {valueSideBar === "Casos Antiguos" && <OldCases /> }
+      {valueSideBar === "Configuración" && <Configuration /> }
     </JournalLayout>
   );
 };

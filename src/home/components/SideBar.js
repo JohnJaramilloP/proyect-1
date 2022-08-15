@@ -1,4 +1,4 @@
-import { FindInPage, Group, GroupAdd, HourglassEmpty, LogoutOutlined, PersonPinCircle } from "@mui/icons-material";
+import { PermDataSetting, FindInPage, Group, GroupAdd, HourglassEmpty, LogoutOutlined, PersonPinCircle } from "@mui/icons-material";
 import {
   Box,
   Divider,
@@ -78,6 +78,7 @@ export const SideBar = ({
               "Asesores",
               "Personas",
               "Casos Antiguos",
+              "Configuración"
             ].map((text) => (
               <ListItem 
                 key={text} disablePadding
@@ -98,6 +99,7 @@ export const SideBar = ({
                     {text === "Asesores" && <PersonPinCircle />}
                     {text === "Personas" && <GroupAdd />}
                     {text === "Casos Antiguos" && <HourglassEmpty />}
+                    {text === "Configuración" && <PermDataSetting />}
                   </ListItemIcon>
                   <Grid container>
                     <ListItemText primary={text} />
