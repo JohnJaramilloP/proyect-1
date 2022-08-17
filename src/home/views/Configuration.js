@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import { Box } from "@material-ui/core";
 import DataGrid, {
   Column,
@@ -24,6 +24,10 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import "devextreme/dist/css/dx.light.css";
 import { Card, Grid, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+
+const {
+  ListadoPaises
+} = require("../components/services.js");
 
 const texts = {
   exportAll: "Exportar todos los datos",
@@ -73,6 +77,7 @@ function getStyles(name, personName, theme) {
 export const Configuration = () => {
   const theme = useTheme();
   const [personName, setPersonName] = useState([]);
+  const [dataPaises, setDataPaises] = useState([])
   const [data, setData] = useState([
     {
       id: 1,
@@ -86,6 +91,13 @@ export const Configuration = () => {
     },
   ]);
 
+  useEffect(() => {
+    ListadoPaises().then(res => {
+      setDataPaises(res)
+    })
+  }, [])
+  
+
   const handleChange = (event) => {
     const {
       target: { value },
@@ -95,6 +107,8 @@ export const Configuration = () => {
       typeof value === "string" ? value.split(",") : value
     );
   };
+
+  console.log("paises", dataPaises)
 
   return (
     <div>
@@ -142,11 +156,12 @@ export const Configuration = () => {
       <Card
         style={{
           padding: 10,
+          width: "100%"
         }}
       >
         <DataGrid
-          dataSource={data}
-          keyExpr="id"
+          dataSource={dataPaises}
+          keyExpr="_id"
           showColumnLines={true}
           // onRowClick={e => console.log(e)}
           onExporting={(e) => {}}
@@ -185,8 +200,8 @@ export const Configuration = () => {
                   editorType="dxSelectBox"
                   editorOptions={positionEditorOptions}
                 /> */}
-                <Item dataField="articulo" caption="Elemento" />
-                <Item dataField="descripcion" caption="Descripción" />
+                <Item dataField="codigo" caption="Elemento" />
+                <Item dataField="departamento" caption="Descripción" />
               </Item>
             </Form>
           </Editing>
@@ -196,8 +211,8 @@ export const Configuration = () => {
             deferred={true}
             showCheckBoxesMode="always"
           />
-          <Column dataField="articulo" caption="Elemento" />
-          <Column dataField="descripcion" caption="Descripción" />
+          <Column dataField="codigo" caption="Elemento" />
+          <Column dataField="departamento" caption="Descripción" />
           <Paging defaultPageSize={10} />
           <Pager
             visible={true}
