@@ -23,9 +23,9 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import Swal from "sweetalert2";
 
 import "devextreme/dist/css/dx.light.css";
-import { Card, Grid, Typography } from "@mui/material";
+import { Box, Card, Grid, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { CommentBankSharp } from "@mui/icons-material";
+import { CommentBankSharp, Place } from "@mui/icons-material";
 
 const {
   attentionPlaces,
@@ -140,6 +140,8 @@ export const Configuration = () => {
   const [optionSelect, setOptionSelect] = useState([]);
   const [data, setData] = useState([]);
   const [viewGrid, setViewGrid] = useState(1);
+  const [idTypeSelectItems, setIdTypeSelectItems] = useState([]);
+  const [idType, setIdType] = useState([]);
 
   const handleChange = (event) => {
     const {
@@ -238,56 +240,37 @@ export const Configuration = () => {
     }
   };
 
-  const alertCreate = () => {
+  const alert = (icon, text) => {
     Swal.fire({
       position: "center",
-      icon: "success",
-      title: "Elemento creado",
+      icon: icon,
+      title: text,
       showConfirmButton: false,
       timer: 1500,
     });
   };
 
-  const alertWrong = () => {
-    Swal.fire({
-      position: "center",
-      icon: "error",
-      title: "El nombre es requerido",
-      showConfirmButton: false,
-      timer: 1500,
+  useEffect(() => {
+    idTypes().then((id) => {
+      let idType = id.map((e) => e.name);
+      setIdTypeSelectItems(idType);
+      setIdType(id);
     });
+  }, [data]);
+
+  const cellrender = (row) => {
+    let apellido1 = row.data.lastName1 === null ? "" : row.data.lastName1;
+    let apellido2 = row.data.lastName2 === null ? "" : row.data.lastName2;
+    return <p>{`${apellido1} ${apellido2}`}</p>
   };
 
-  const alerUpdate = () => {
-    Swal.fire({
-      position: "center",
-      icon: "success",
-      title: "Elemento editado",
-      showConfirmButton: false,
-      timer: 1500,
-    });
+  let positionEditorOptions = {
+    items: idTypeSelectItems,
+    searchEnabled: true,
+    value: "",
   };
 
-  const alerDelete = () => {
-    Swal.fire({
-      position: "center",
-      icon: "success",
-      title: "Elemento eliminado",
-      showConfirmButton: false,
-      timer: 1500,
-    });
-  };
-
-  const alerDeleteWrong = () => {
-    Swal.fire({
-      position: "center",
-      icon: "error",
-      title: "Error al eliminar elemento",
-      showConfirmButton: false,
-      timer: 1500,
-    });
-  };
-
+  console.log("data", data)
   return (
     <div>
       <Grid
@@ -343,317 +326,386 @@ export const Configuration = () => {
             width: "100%",
           }}
         >
-          <DataGrid
-            dataSource={data}
-            keyExpr="id"
-            showColumnLines={true}
-            // onRowClick={e => console.log(e)}
-            onExporting={(e) => {}}
-            showHeaderFilter={true}
-            showRowLines={true}
-            columnAutoWidth={true}
-            showBorders={true}
-            onRowRemoved={(row) => {
-              let id = row.data.id;
-              let name = row.data.name;
-              let description = row.data.description;
-              switch (optionSelect[0]) {
-                case "Lugares de atención":
-                  deletePlace(id).then((res) => {
-                    res.request.status === 204
-                      ? alerDelete()
-                      : alerDeleteWrong();
-                  });
-                  break;
-                case "Áreas":
-                  deleteArea(id).then((res) => {
-                    res.request.status === 204
-                      ? alerDelete()
-                      : alerDeleteWrong();
-                  });
-                  break;
-                case "Materia":
-                  deleteSubjectMatters(id).then((res) => {
-                    res.request.status === 204
-                      ? alerDelete()
-                      : alerDeleteWrong();
-                  });
-                  break;
-                case "Origen":
-                  deleteOrigins(id).then((res) => {
-                    res.request.status === 204
-                      ? alerDelete()
-                      : alerDeleteWrong();
-                  });
-                  break;
-                case "Calidad":
-                  deleteCapacities(id).then((res) => {
-                    res.request.status === 204
-                      ? alerDelete()
-                      : alerDeleteWrong();
-                  });
-                  break;
-                case "Funcionario Judicial":
-                  deleteLegalOfficerOptions(id).then((res) => {
-                    res.request.status === 204
-                      ? alerDelete()
-                      : alerDeleteWrong();
-                  });
-                  break;
-                case "Resultado de la atención":
-                  deleteAttentionResults(id).then((res) => {
-                    res.request.status === 204
-                      ? alerDelete()
-                      : alerDeleteWrong();
-                  });
-                  break;
-                case "Eficacia":
-                  deleteEfficacyOptions(id).then((res) => {
-                    res.request.status === 204
-                      ? alerDelete()
-                      : alerDeleteWrong();
-                  });
-                  break;
-                case "Estado de los casos":
-                  deleteCaseStatuses(id).then((res) => {
-                    res.request.status === 204
-                      ? alerDelete()
-                      : alerDeleteWrong();
-                  });
-                  break;
-                case "Resultado de la audiencia":
-                  deleteAudienceResults(id).then((res) => {
-                    res.request.status === 204
-                      ? alerDelete()
-                      : alerDeleteWrong();
-                  });
-                  break;
-                case "Opciones de soporte gráfico":
-                  deleteGraphicSupportOptions(id).then((res) => {
-                    res.request.status === 204
-                      ? alerDelete()
-                      : alerDeleteWrong();
-                  });
-                  break;
-                case "Tipos de identificación":
-                  deleteIdTypes(id).then((res) => {
-                    res.request.status === 204
-                      ? alerDelete()
-                      : alerDeleteWrong();
-                  });
-                  break;
-                case "Tipos de archivo":
-                  deleteFileTypes(id).then((res) => {
-                    res.request.status === 204
-                      ? alerDelete()
-                      : alerDeleteWrong();
-                  });
-                  break;
+          <Box width="100%">
+            <DataGrid
+              dataSource={data}
+              keyExpr="id"
+              showColumnLines={true}
+              // onRowClick={e => console.log(e)}
+              onExporting={(e) => {}}
+              showHeaderFilter={true}
+              showRowLines={true}
+              columnAutoWidth={true}
+              showBorders={true}
+              onRowRemoved={(row) => {
+                let id = row.data.id;
+                switch (optionSelect[0]) {
+                  case "Lugares de atención":
+                    deletePlace(id).then((res) => {
+                      res.request.status === 204
+                        ? alert("success", "Elemento eliminado")
+                        : alert("error", "Error al eliminar");
+                    });
+                    break;
+                  case "Áreas":
+                    deleteArea(id).then((res) => {
+                      res.request.status === 204
+                        ? alert("success", "Elemento eliminado")
+                        : alert("error", "Error al eliminar");
+                    });
+                    break;
+                  case "Materia":
+                    deleteSubjectMatters(id).then((res) => {
+                      res.request.status === 204
+                        ? alert("success", "Elemento eliminado")
+                        : alert("error", "Error al eliminar");
+                    });
+                    break;
+                  case "Origen":
+                    deleteOrigins(id).then((res) => {
+                      res.request.status === 204
+                        ? alert("success", "Elemento eliminado")
+                        : alert("error", "Error al eliminar");
+                    });
+                    break;
+                  case "Calidad":
+                    deleteCapacities(id).then((res) => {
+                      res.request.status === 204
+                        ? alert("success", "Elemento eliminado")
+                        : alert("error", "Error al eliminar");
+                    });
+                    break;
+                  case "Funcionario Judicial":
+                    deleteLegalOfficerOptions(id).then((res) => {
+                      res.request.status === 204
+                        ? alert("success", "Elemento eliminado")
+                        : alert("error", "Error al eliminar");
+                    });
+                    break;
+                  case "Resultado de la atención":
+                    deleteAttentionResults(id).then((res) => {
+                      res.request.status === 204
+                        ? alert("success", "Elemento eliminado")
+                        : alert("error", "Error al eliminar");
+                    });
+                    break;
+                  case "Eficacia":
+                    deleteEfficacyOptions(id).then((res) => {
+                      res.request.status === 204
+                        ? alert("success", "Elemento eliminado")
+                        : alert("error", "Error al eliminar");
+                    });
+                    break;
+                  case "Estado de los casos":
+                    deleteCaseStatuses(id).then((res) => {
+                      res.request.status === 204
+                        ? alert("success", "Elemento eliminado")
+                        : alert("error", "Error al eliminar");
+                    });
+                    break;
+                  case "Resultado de la audiencia":
+                    deleteAudienceResults(id).then((res) => {
+                      res.request.status === 204
+                        ? alert("success", "Elemento eliminado")
+                        : alert("error", "Error al eliminar");
+                    });
+                    break;
+                  case "Opciones de soporte gráfico":
+                    deleteGraphicSupportOptions(id).then((res) => {
+                      res.request.status === 204
+                        ? alert("success", "Elemento eliminado")
+                        : alert("error", "Error al eliminar");
+                    });
+                    break;
+                  case "Tipos de identificación":
+                    deleteIdTypes(id).then((res) => {
+                      res.request.status === 204
+                        ? alert("success", "Elemento eliminado")
+                        : alert("error", "Error al eliminar");
+                    });
+                    break;
+                  case "Tipos de archivo":
+                    deleteFileTypes(id).then((res) => {
+                      res.request.status === 204
+                        ? alert("success", "Elemento eliminado")
+                        : alert("error", "Error al eliminar");
+                    });
+                    break;
 
-                default:
-                  break;
-              }
-            }}
-            onRowInserted={(row) => {
-              let name = row.data.name;
-              let description = row.data.description;
-              switch (optionSelect[0]) {
-                case "Lugares de atención":
-                  createPlace(name, description).then((res) => {
-                    res.id ? alertCreate() : alertWrong();
-                  });
-                  break;
-                case "Áreas":
-                  createArea(name, description).then((res) => {
-                    res.id ? alertCreate() : alertWrong();
-                  });
-                  break;
-                case "Materia":
-                  createSubjectMatters(name, description).then((res) => {
-                    res.id ? alertCreate() : alertWrong();
-                  });
-                  break;
-                case "Origen":
-                  createOrigins(name, description).then((res) => {
-                    res.id ? alertCreate() : alertWrong();
-                  });
-                  break;
-                case "Calidad":
-                  createCapacities(name, description).then((res) => {
-                    res.id ? alertCreate() : alertWrong();
-                  });
-                  break;
-                case "Funcionario Judicial":
-                  createLegalOfficerOptions(name, description).then((res) => {
-                    res.id ? alertCreate() : alertWrong();
-                  });
-                  break;
-                case "Resultado de la atención":
-                  createAttentionResults(name, description).then((res) => {
-                    res.id ? alertCreate() : alertWrong();
-                  });
-                  break;
-                case "Eficacia":
-                  createEfficacyOptions(name, description).then((res) => {
-                    res.id ? alertCreate() : alertWrong();
-                  });
-                  break;
-                case "Estado de los casos":
-                  createCaseStatuses(name, description).then((res) => {
-                    res.id ? alertCreate() : alertWrong();
-                  });
-                  break;
-                case "Resultado de la audiencia":
-                  createAudienceResults(name, description).then((res) => {
-                    res.id ? alertCreate() : alertWrong();
-                  });
-                  break;
-                case "Opciones de soporte gráfico":
-                  createGraphicSupportOptions(name, description).then((res) => {
-                    res.id ? alertCreate() : alertWrong();
-                  });
-                  break;
-                case "Tipos de identificación":
-                  createIdTypes(name, description).then((res) => {
-                    res.id ? alertCreate() : alertWrong();
-                  });
-                  break;
-                case "Tipos de archivo":
-                  createFileTypes(name, description).then((res) => {
-                    res.id ? alertCreate() : alertWrong();
-                  });
-                  break;
+                  default:
+                    break;
+                }
+              }}
+              onRowInserted={(row) => {
+                let name = row.data.name;
+                let description = row.data.description;
+                switch (optionSelect[0]) {
+                  case "Lugares de atención":
+                    createPlace(name, description).then((res) => {
+                      res.id
+                        ? alert("success", "Elemento creado")
+                        : alert("error", "Error al eliminar");
+                        attentionPlaces().then(res => setData(res))
+                    });
+                    break;
+                  case "Áreas":
+                    createArea(name, description).then((res) => {
+                      res.id
+                        ? alert("success", "Elemento creado")
+                        : alert("error", "Error al eliminar");
+                        areas().then(res => setData(res))
+                    });
+                    break;
+                  case "Materia":
+                    createSubjectMatters(name, description).then((res) => {
+                      res.id
+                        ? alert("success", "Elemento creado")
+                        : alert("error", "Error al eliminar");
+                        subjectMatters().then(res => setData(res))
+                    });
+                    break;
+                  case "Origen":
+                    createOrigins(name, description).then((res) => {
+                      res.id
+                        ? alert("success", "Elemento creado")
+                        : alert("error", "Error al eliminar");
+                        origins().then(res => setData(res))
+                    });
+                    break;
+                  case "Calidad":
+                    createCapacities(name, description).then((res) => {
+                      res.id
+                        ? alert("success", "Elemento creado")
+                        : alert("error", "Error al eliminar");
+                        capacities().then(res => setData(res))
+                    });
+                    break;
+                  case "Funcionario Judicial":
+                    createLegalOfficerOptions(name, description).then((res) => {
+                      res.id
+                        ? alert("success", "Elemento creado")
+                        : alert("error", "Error al eliminar");
+                        legalOfficerOptions().then(res => setData(res))
+                    });
+                    break;
+                  case "Resultado de la atención":
+                    createAttentionResults(name, description).then((res) => {
+                      res.id
+                        ? alert("success", "Elemento creado")
+                        : alert("error", "Error al eliminar");
+                        attentionResults().then(res => setData(res))
+                    });
+                    break;
+                  case "Eficacia":
+                    createEfficacyOptions(name, description).then((res) => {
+                      res.id
+                        ? alert("success", "Elemento creado")
+                        : alert("error", "Error al eliminar");
+                        efficacyOptions().then(res => setData(res))
+                    });
+                    break;
+                  case "Estado de los casos":
+                    createCaseStatuses(name, description).then((res) => {
+                      res.id
+                        ? alert("success", "Elemento creado")
+                        : alert("error", "Error al eliminar");
+                        caseStatuses().then(res => setData(res))
+                    });
+                    break;
+                  case "Resultado de la audiencia":
+                    createAudienceResults(name, description).then((res) => {
+                      res.id
+                        ? alert("success", "Elemento creado")
+                        : alert("error", "Error al eliminar");
+                        audienceResults().then(res => setData(res))
+                    });
+                    break;
+                  case "Opciones de soporte gráfico":
+                    createGraphicSupportOptions(name, description).then(
+                      (res) => {
+                        res.id
+                          ? alert("success", "Elemento creado")
+                          : alert("error", "Error al eliminar");
+                          graphicSupportOptions().then(res => setData(res))
+                      }
+                    );
+                    break;
+                  case "Tipos de identificación":
+                    createIdTypes(name, description).then((res) => {
+                      res.id
+                        ? alert("success", "Elemento creado")
+                        : alert("error", "Error al eliminar");
+                        idTypes().then(res => setData(res))
+                    });
+                    break;
+                  case "Tipos de archivo":
+                    createFileTypes(name, description).then((res) => {
+                      res.id
+                        ? alert("success", "Elemento creado")
+                        : alert("error", "Error al eliminar");
+                        fileTypes().then(res => setData(res))
+                    });
+                    break;
 
-                default:
-                  break;
-              }
-            }}
-            onInitialized={() => {}}
-            onRowUpdated={(row) => {
-              let id = row.data.id;
-              let name = row.data.name;
-              let description = row.data.description;
-              switch (optionSelect[0]) {
-                case "Lugares de atención":
-                  updatePlace(id, name, description).then((res) => {
-                    res.length > 0 ? alerUpdate() : alertWrong();
-                  });
-                  break;
-                case "Áreas":
-                  updateArea(id, name, description).then((res) => {
-                    res.length > 0 ? alerUpdate() : alertWrong();
-                  });
-                  break;
-                case "Materia":
-                  updateSubjectMatters(id, name, description).then((res) => {
-                    res.length > 0 ? alerUpdate() : alertWrong();
-                  });
-                  break;
-                case "Origen":
-                  updateOrigins(id, name, description).then((res) => {
-                    res.length > 0 ? alerUpdate() : alertWrong();
-                  });
-                  break;
-                case "Calidad":
-                  updateCapacities(id, name, description).then((res) => {
-                    res.length > 0 ? alerUpdate() : alertWrong();
-                  });
-                  break;
-                case "Funcionario Judicial":
-                  updateLegalOfficerOptions(id, name, description).then(
-                    (res) => {
-                      res.length > 0 ? alerUpdate() : alertWrong();
-                    }
-                  );
-                  break;
-                case "Resultado de la atención":
-                  updateAttentionResults(id, name, description).then((res) => {
-                    res.length > 0 ? alerUpdate() : alertWrong();
-                  });
-                  break;
-                case "Eficacia":
-                  updateEfficacyOptions(id, name, description).then((res) => {
-                    res.length > 0 ? alerUpdate() : alertWrong();
-                  });
-                  break;
-                case "Estado de los casos":
-                  updateCaseStatuses(id, name, description).then((res) => {
-                    res.length > 0 ? alerUpdate() : alertWrong();
-                  });
-                  break;
-                case "Resultado de la audiencia":
-                  updateAudienceResults(id, name, description).then((res) => {
-                    res.length > 0 ? alerUpdate() : alertWrong();
-                  });
-                  break;
-                case "Opciones de soporte gráfico":
-                  updateGraphicSupportOptions(id, name, description).then(
-                    (res) => {
-                      res.length > 0 ? alerUpdate() : alertWrong();
-                    }
-                  );
-                  break;
-                case "Tipos de identificación":
-                  updateIdTypes(id, name, description).then((res) => {
-                    res.length > 0 ? alerUpdate() : alertWrong();
-                  });
-                  break;
-                case "Tipos de archivo":
-                  updateFileTypes(id, name, description).then((res) => {
-                    res.length > 0 ? alerUpdate() : alertWrong();
-                  });
-                  break;
+                  default:
+                    break;
+                }
+              }}
+              onInitialized={() => {}}
+              onRowUpdated={(row) => {
+                let id = row.data.id;
+                let name = row.data.name;
+                let description = row.data.description;
+                switch (optionSelect[0]) {
+                  case "Lugares de atención":
+                    updatePlace(id, name, description).then((res) => {
+                      res.length > 0
+                        ? alert("success", "Elemento editado")
+                        : alert("error", "Error al editar");
+                    });
+                    break;
+                  case "Áreas":
+                    updateArea(id, name, description).then((res) => {
+                      res.length > 0
+                        ? alert("success", "Elemento editado")
+                        : alert("error", "Error al editar");
+                    });
+                    break;
+                  case "Materia":
+                    updateSubjectMatters(id, name, description).then((res) => {
+                      res.length > 0
+                        ? alert("success", "Elemento editado")
+                        : alert("error", "Error al editar");
+                    });
+                    break;
+                  case "Origen":
+                    updateOrigins(id, name, description).then((res) => {
+                      res.length > 0
+                        ? alert("success", "Elemento editado")
+                        : alert("error", "Error al editar");
+                    });
+                    break;
+                  case "Calidad":
+                    updateCapacities(id, name, description).then((res) => {
+                      res.length > 0
+                        ? alert("success", "Elemento editado")
+                        : alert("error", "Error al editar");
+                    });
+                    break;
+                  case "Funcionario Judicial":
+                    updateLegalOfficerOptions(id, name, description).then(
+                      (res) => {
+                        res.length > 0
+                          ? alert("success", "Elemento editado")
+                          : alert("error", "Error al editar");
+                      }
+                    );
+                    break;
+                  case "Resultado de la atención":
+                    updateAttentionResults(id, name, description).then(
+                      (res) => {
+                        res.length > 0
+                          ? alert("success", "Elemento editado")
+                          : alert("error", "Error al editar");
+                      }
+                    );
+                    break;
+                  case "Eficacia":
+                    updateEfficacyOptions(id, name, description).then((res) => {
+                      res.length > 0
+                        ? alert("success", "Elemento editado")
+                        : alert("error", "Error al editar");
+                    });
+                    break;
+                  case "Estado de los casos":
+                    updateCaseStatuses(id, name, description).then((res) => {
+                      res.length > 0
+                        ? alert("success", "Elemento editado")
+                        : alert("error", "Error al editar");
+                    });
+                    break;
+                  case "Resultado de la audiencia":
+                    updateAudienceResults(id, name, description).then((res) => {
+                      res.length > 0
+                        ? alert("success", "Elemento editado")
+                        : alert("error", "Error al editar");
+                    });
+                    break;
+                  case "Opciones de soporte gráfico":
+                    updateGraphicSupportOptions(id, name, description).then(
+                      (res) => {
+                        res.length > 0
+                          ? alert("success", "Elemento editado")
+                          : alert("error", "Error al editar");
+                      }
+                    );
+                    break;
+                  case "Tipos de identificación":
+                    updateIdTypes(id, name, description).then((res) => {
+                      res.length > 0
+                        ? alert("success", "Elemento editado")
+                        : alert("error", "Error al editar");
+                    });
+                    break;
+                  case "Tipos de archivo":
+                    updateFileTypes(id, name, description).then((res) => {
+                      res.length > 0
+                        ? alert("success", "Elemento editado")
+                        : alert("error", "Error al editar");
+                    });
+                    break;
 
-                default:
-                  break;
-              }
-            }}
-            rowAlternationEnabled={true}
-          >
-            <Editing
-              mode="popup"
-              allowUpdating={true}
-              allowAdding={true}
-              allowDeleting={true}
-              useIcons={true}
-              texts={texts2}
+                  default:
+                    break;
+                }
+              }}
+              rowAlternationEnabled={true}
             >
-              <Popup
-                title="Consultorio Jurídico"
-                showTitle={true}
-                width={700}
-                height={620}
+              <Editing
+                mode="popup"
+                allowUpdating={true}
+                allowAdding={true}
+                allowDeleting={true}
+                useIcons={true}
+                texts={texts2}
+              >
+                <Popup
+                  title="Consultorio Jurídico"
+                  showTitle={true}
+                  width={700}
+                  height={620}
+                />
+                <Form>
+                  <Item itemType="group" colCount={2} colSpan={2}>
+                    <Item dataField="name" caption="Nombre" required />
+                    <Item dataField="description" caption="Descripción" />
+                  </Item>
+                </Form>
+              </Editing>
+              <HeaderFilter visible={true} />
+              <Selection
+                mode="multiple"
+                deferred={true}
+                showCheckBoxesMode="always"
               />
-              <Form>
-                <Item itemType="group" colCount={2} colSpan={2}>
-                  <Item dataField="name" caption="Nombre" required />
-                  <Item dataField="description" caption="Descripción" />
-                </Item>
-              </Form>
-            </Editing>
-            <HeaderFilter visible={true} />
-            <Selection
-              mode="multiple"
-              deferred={true}
-              showCheckBoxesMode="always"
-            />
-            <Column dataField="name" caption="Nombre" />
-            <Column dataField="description" caption="Descripción" />
-            <Paging defaultPageSize={10} />
-            <Pager
-              visible={true}
-              allowedPageSizes={allowedPageSizes}
-              displayMode="full"
-              showPageSizeSelector={true}
-              showInfo={true}
-              showNavigationButtons={true}
-            />
-            <Export
-              enabled={true}
-              allowExportSelectedData={true}
-              texts={texts}
-            />
-          </DataGrid>
+              <Column dataField="name" caption="Nombre" />
+              <Column dataField="description" caption="Descripción" />
+              <Paging defaultPageSize={10} />
+              <Pager
+                visible={true}
+                allowedPageSizes={allowedPageSizes}
+                displayMode="full"
+                showPageSizeSelector={true}
+                showInfo={true}
+                showNavigationButtons={true}
+              />
+              <Export
+                enabled={true}
+                allowExportSelectedData={true}
+                texts={texts}
+              />
+            </DataGrid>
+          </Box>
         </Card>
       )}
 
@@ -678,14 +730,24 @@ export const Configuration = () => {
               let id = row.data.id;
               deletePeople(id).then((res) => {
                 res.request.status === 204
-                  ? alerDelete()
-                  : alerDeleteWrong();
+                  ? alert("success", "Elemento eliminado")
+                  : alert("error", "Error al eliminar");
               });
             }}
             onRowInserted={(row) => {
+              console.log("event row", row)
+              let typeId = [];
+
+              idType.forEach(
+                (e) => e.name === row.data.idTypeId && typeId.push(e.id)
+              );
+
+              console.log("id a enviar", typeId[0]);
+
               let name = row.data.name;
               let lastName1 = row.data.lastName1;
-              let idTypeId = row.data.idTypeId;
+              let lastName2 = row.data.lastName2;
+              let idTypeId = typeId[0];
               let idNumber = row.data.idNumber;
               let email = row.data.email;
               let tel = row.data.tel;
@@ -694,13 +756,17 @@ export const Configuration = () => {
               createPeople(
                 name,
                 lastName1,
+                lastName2,
                 idTypeId,
                 idNumber,
                 email,
                 tel,
                 birthdate
               ).then((res) => {
-                res.id ? alertCreate() : alertWrong();
+                res.id
+                  ? alert("success", "Elemento creado")
+                  : alert("error", "Error al crear persona");
+                  people().then(res => setData(res))
               });
             }}
             onInitialized={() => {}}
@@ -708,6 +774,7 @@ export const Configuration = () => {
               let id = row.data.id;
               let name = row.data.name;
               let lastName1 = row.data.lastName1;
+              let lastName2 = row.data.lastName2;
               let idTypeId = row.data.idTypeId;
               let idNumber = row.data.idNumber;
               let email = row.data.email;
@@ -718,13 +785,16 @@ export const Configuration = () => {
                 id,
                 name,
                 lastName1,
+                lastName2,
                 idTypeId,
                 idNumber,
                 email,
                 tel,
                 birthdate
               ).then((res) => {
-                res.length > 0 ? alerUpdate() : alertWrong();
+                res.length > 0
+                  ? alert("success", "Elemento editado")
+                  : alert("error", "Error al editar");
               });
             }}
             rowAlternationEnabled={true}
@@ -745,9 +815,15 @@ export const Configuration = () => {
               />
               <Form>
                 <Item itemType="group" colCount={2} colSpan={2}>
-                  <Item dataField="name" caption="Nombre" r />
-                  <Item dataField="lastName1" caption="Apellido" />
-                  <Item dataField="idTypeId" caption="Tipo de documento" />
+                  <Item dataField="name" caption="Nombre"/>
+                  <Item dataField="lastName1" caption="Primer apellido" />
+                  <Item dataField="lastName2" caption="Segundo apellido" />
+                  <Item
+                    dataField="idTypeId"
+                    editorType="dxSelectBox"
+                    editorOptions={positionEditorOptions}
+                  />
+                  {/* <Item dataField="idTypeId" caption="Tipo de documento" /> */}
                   <Item dataField="idNumber" caption="Número de documento" />
                   <Item dataField="email" caption="Correo" />
                   <Item dataField="tel" caption="Teléfono" />
@@ -762,8 +838,15 @@ export const Configuration = () => {
               showCheckBoxesMode="always"
             />
             <Column dataField="name" caption="Nombre" />
-            <Column dataField="lastName1" caption="Apellido" />
-            <Column dataField="idTypeId" caption="Tipo de documento" />
+            <Column caption="Apellidos" cellRender={cellrender} width={200}/>
+            <Column dataField="lastName1" caption="Primer apellido" visible={false} />
+            <Column dataField="lastName2" caption="Segundo apellido" visible={false} />
+            <Column
+              dataField="idTypeId"
+              caption="Tipo de documento"
+              visible={false}
+            />
+            <Column dataField="idType.name" caption="Tipo de documento" />
             <Column dataField="idNumber" caption="Número de documento" />
             <Column dataField="email" caption="Correo" />
             <Column dataField="tel" caption="Teléfono" />

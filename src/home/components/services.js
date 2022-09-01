@@ -880,6 +880,7 @@ export async function people() {
 export async function createPeople(
   name,
   lastName1,
+  lastName2,
   idTypeId,
   idNumber,
   email,
@@ -891,6 +892,7 @@ export async function createPeople(
       .post(URL + "people", {
         name: name,
         lastName1: lastName1,
+        lastName2: lastName2,
         idTypeId: idTypeId,
         idNumber: idNumber,
         email: email,
@@ -911,6 +913,7 @@ export async function updatePeople(
   id,
   name,
   lastName1,
+  lastName2,
   idTypeId,
   idNumber,
   email,
@@ -922,6 +925,7 @@ export async function updatePeople(
       .put(URL + "people/" + id, {
         name: name,
         lastName1: lastName1,
+        lastName2: lastName2,
         idTypeId: idTypeId,
         idNumber: idNumber,
         email: email,

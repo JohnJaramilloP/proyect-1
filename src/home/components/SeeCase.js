@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { Grid, Typography } from "@mui/material";
+import { Grid, TextField, Typography } from "@mui/material";
 import { CgClose } from "react-icons/cg";
 import { Button } from "reactstrap";
 
@@ -19,6 +19,14 @@ const MenuProps = {
     },
   },
 };
+
+const {
+  areas,
+  subjectMatters,
+  origins,
+  capacities,
+  audienceResults,
+} = require("../components/services");
 
 const names = [
   "Oliver Hansen",
@@ -46,70 +54,7 @@ const nombres = [
   "Pedro Cruz",
 ];
 
-const area = [
-  "Civil y comercial",
-  "Familia",
-  "Penal",
-  "Laboral",
-  "Administrativo",
-  "Psicosocial",
-  "Otros",
-];
-
-const materia = [
-  "Alimentos: Revisión",
-  "Alimentos: Exoneración",
-  "Alimentos: Fijación",
-  "Alimentos y visitas",
-  "Custodia y alimentos",
-  "Alimentos",
-  "Unión marital del hecho",
-  "Restitución de inmueble edn arrendamiento",
-  "Responsabilidad civil extracontractual",
-  "Responsabilidad civil contractual",
-  "Contratos",
-  "Divorcio con menores",
-  "Divorcio sin menores",
-  "Disolución y liquidación sociedad patrimonial",
-  "Disolución y liquidación sociedad conyugal",
-  "Pertenencia",
-  "Bienes",
-  "Copropiedad",
-  "Posesiones",
-  "Títulos valores",
-  "Custodia",
-  "Régimen de visitas",
-  "Lesiones personales",
-  "Sucesiones",
-  "Apropiación de bien ajeno",
-  "Daño en bien ajeno",
-  "Otros delitos querellables",
-  "Restitución de inmueble dado en comodato",
-  "Custodia y visitas",
-  "Delitos de cuantía inferior a 150 SMLMV",
-  "Derecho de petición",
-  "Acción de tutela",
-  "Otras acciones constitucionales",
-  "Memoriales",
-  "Hurto",
-  "Laboral",
-  "Psicosocial",
-  "Registro de marca",
-  "Divisorio",
-  "Consumidor",
-  "Otros",
-];
-
-const origen = [
-  "Usuario interno",
-  "Usuario externo",
-  "Derivado de entidades",
-  "Otro",
-];
-
 const recepcion = ["Si", "No"];
-
-const calidad = ["Abogado", "Estudiante", "No aplica"];
 
 const participacion = ["Si", "No", "No aplica"];
 
@@ -121,46 +66,178 @@ const representacionTerceros = [
   "Representación a terceros",
 ];
 
-const resultadoAudiencia = [
-  "Acta de acuerdo parcial",
-  "Acta de acuerdo total",
-  "Aplazada",
-  "Auto de pruebas",
-  "Constancia de no comparecencia - ambas partes",
-  "Constancia de no comparecencia - parte convocada",
-  "Constancia de no comparecencia - parte convocante",
-  "Constancia no acuerdo",
-  "Desistimiento",
-  "Recurso",
-  "Sentencia"
-];
-
-function getStyles(name, personName, theme) {
-  return {
-    fontWeight:
-      personName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
-
 export const SeeCase = ({ setViews }) => {
   const handleView = () => {
     setViews(1);
   };
 
-  const theme = useTheme();
-  const [personName, setPersonName] = React.useState([]);
+  const [numeroCaso, setNumeroCaso] = useState("2233");
+  const [ano, setAno] = useState("2022");
+  const [radicadoInterno, setRadicadoInterno] = useState("Radicado");
+  const [fechaAtencion, setFechaAtencion] = useState("12 de Noviembre");
+  const [fechaRecepcion, setFechaRecepcion] = useState("20 de noviembre");
+  const [parteAccionante, setParteAccionante] = useState("Demandante");
+  const [parteAccionada, setParteAccionada] = useState("demandado");
+  const [estudianteAsignado, setEstudianteAsignado] = useState("Oliver Hansen");
+  const [asesorAsignado, setAsesorAsignado] = useState("Ricardo Vélez");
+  const [area, setArea] = useState([]);
+  const [areaSeleccionada, setAreaSeleccionada] = useState("CIVIL Y COMERCIAL");
+  const [origen, setOrigen] = useState([]);
+  const [origenSeleccionado, setOrigenSeleccionado] =
+    useState("USUARIO INTERNO");
+  const [materia, setMateria] = useState([]);
+  const [materiaSeleccionada, setMateriaSeleccionada] = useState("Contratos");
+  const [calidad, setCalidad] = useState([]);
+  const [calidadSeleccionada, setCalidadSeleccionada] = useState("Abogado");
+  const [calidad2, setCalidad2] = useState("estudiante");
+  const [fechaCitacion, setFechaCitacion] = useState("3 de julio");
+  const [recepcionCaso, setRecepcionCaso] = useState("Si");
+  const [estudianteRecepcion, setEstudianteRecepcion] = useState("Juan Pérez");
+  const [lugarAtencion, setLugarAtencion] = useState("Centro principal");
+  const [participacionOpcion, setParticipacionOpcion] = useState("Si");
+  const [representacionTercerosOpcion, setRepresentacionTercerosOpcion] =
+    useState("Asesoría");
+  const [fechaAudiencia, setfechaAudiencia] = useState("15 de agosto");
+  const [horaAudiencia, setHoraAudiencia] = useState("03:00");
+  const [resultadoAudiencia, setResultadoAudiencia] = useState([]);
+  const [resultadoAudienciaSeleccionado, setResultadoAudienciaSeleccionado] =
+    useState("ACTA DE ACUERDO PARCIAL");
+  const [estadoProceso, setEstadoProceso] = useState("Conciliacion");
+  const [estudianteRecibe, setEstudianteRecibe] = useState("Carlos Marín");
+const [pazSalvo, setPazSalvo] = useState("En espera");
 
   const handleChange = (event) => {
     const {
       target: { value },
     } = event;
-    setPersonName(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
+    switch (event.target.name) {
+      case "asignar_estudiante":
+        setEstudianteAsignado(
+          typeof value === "string" ? value.split(",") : value
+        );
+        break;
+      case "asignar_asesor":
+        setAsesorAsignado(typeof value === "string" ? value.split(",") : value);
+        break;
+      case "numeroCaso":
+        setNumeroCaso(typeof value === "string" ? value.split(",") : value);
+        break;
+      case "ano":
+        setAno(typeof value === "string" ? value.split(",") : value);
+        break;
+      case "radicadoInterno":
+        setRadicadoInterno(
+          typeof value === "string" ? value.split(",") : value
+        );
+        break;
+      case "fechaAtencion":
+        setFechaAtencion(typeof value === "string" ? value.split(",") : value);
+        break;
+      case "fechaRecepcion":
+        setFechaRecepcion(typeof value === "string" ? value.split(",") : value);
+        break;
+      case "parteAccionante":
+        setParteAccionante(
+          typeof value === "string" ? value.split(",") : value
+        );
+        break;
+      case "parteAccionada":
+        setParteAccionada(typeof value === "string" ? value.split(",") : value);
+        break;
+      case "select_area":
+        setAreaSeleccionada(
+          typeof value === "string" ? value.split(",") : value
+        );
+        break;
+      case "select_materia":
+        setMateriaSeleccionada(
+          typeof value === "string" ? value.split(",") : value
+        );
+        break;
+      case "select_origen":
+        setOrigenSeleccionado(
+          typeof value === "string" ? value.split(",") : value
+        );
+        break;
+      case "select_calidad":
+        setCalidadSeleccionada(
+          typeof value === "string" ? value.split(",") : value
+        );
+        break;
+      case "calidad2":
+        setCalidad2(typeof value === "string" ? value.split(",") : value);
+        break;
+      case "fechaCitacion":
+        setFechaCitacion(typeof value === "string" ? value.split(",") : value);
+        break;
+      case "select_recepcionCaso":
+        setRecepcionCaso(typeof value === "string" ? value.split(",") : value);
+        break;
+      case "estudianteRecepcion":
+        setEstudianteRecepcion(
+          typeof value === "string" ? value.split(",") : value
+        );
+        break;
+      case "lugarAtencion":
+        setLugarAtencion(typeof value === "string" ? value.split(",") : value);
+        break;
+      case "select_participacion":
+        setParticipacionOpcion(
+          typeof value === "string" ? value.split(",") : value
+        );
+        break;
+      case "select_representacionTerceros":
+        setRepresentacionTercerosOpcion(
+          typeof value === "string" ? value.split(",") : value
+        );
+        break;
+      case "fechaAudiencia":
+        setfechaAudiencia(typeof value === "string" ? value.split(",") : value);
+        break;
+      case "horaAudiencia":
+        setHoraAudiencia(typeof value === "string" ? value.split(",") : value);
+        break;
+      case "select_resultadoAudiencia":
+        setResultadoAudienciaSeleccionado(
+          typeof value === "string" ? value.split(",") : value
+        );
+        break;
+      case "estadoProceso":
+        setEstadoProceso(typeof value === "string" ? value.split(",") : value);
+        break;
+        case "estudianteRecibe":
+        setEstudianteRecibe(typeof value === "string" ? value.split(",") : value);
+        break;
+        case "pazSalvo":
+        setPazSalvo(typeof value === "string" ? value.split(",") : value);
+        break;
+      default:
+        break;
+    }
   };
+
+  useEffect(() => {
+    areas().then((res) => {
+      let areas = res.map((res) => res.name);
+      setArea(areas);
+    });
+    origins().then((res) => {
+      let origen = res.map((res) => res.name);
+      setOrigen(origen);
+    });
+    capacities().then((res) => {
+      let calidad = res.map((res) => res.name);
+      setCalidad(calidad);
+    });
+    subjectMatters().then((res) => {
+      let materia = res.map((res) => res.name);
+      setMateria(materia);
+    });
+    audienceResults().then((res) => {
+      let resultado = res.map((res) => res.name);
+      setResultadoAudiencia(resultado);
+    });
+  }, []);
 
   return (
     <Grid
@@ -169,9 +246,6 @@ export const SeeCase = ({ setViews }) => {
         width: "100%",
         padding: 10,
         position: "relative",
-        // display: "flex",
-        // flexDirection: "column",
-        // justifyContent: "space-around"
       }}
     >
       <CgClose
@@ -220,22 +294,18 @@ export const SeeCase = ({ setViews }) => {
           <Typography variant="h4">Asignar estudiante</Typography>
 
           <FormControl sx={{ m: 1, width: "100%" }}>
-            <InputLabel id="demo-multiple-name-label">Nombre</InputLabel>
+            <InputLabel id="demo-simple-select-label">Nombre</InputLabel>
             <Select
-              labelId="demo-multiple-name-label"
-              id="demo-multiple-name"
-              multiple
-              value={personName}
+              labelId="demo-simple-select-label"
+              id="demo-simple-select-label"
+              value={estudianteAsignado}
               onChange={handleChange}
               input={<OutlinedInput label="Name" />}
               MenuProps={MenuProps}
+              name="asignar_estudiante"
             >
               {names.map((name) => (
-                <MenuItem
-                  key={name}
-                  value={name}
-                  style={getStyles(name, personName, theme)}
-                >
+                <MenuItem key={name} value={name}>
                   {name}
                 </MenuItem>
               ))}
@@ -246,22 +316,18 @@ export const SeeCase = ({ setViews }) => {
         <Grid>
           <Typography variant="h4">Asignar asesor</Typography>
           <FormControl sx={{ m: 1, width: "100%" }}>
-            <InputLabel id="demo-multiple-name-label">Nombre</InputLabel>
+            <InputLabel id="demo-simple-select-label">Nombre</InputLabel>
             <Select
-              labelId="demo-multiple-name-label"
-              id="demo-multiple-name"
-              multiple
-              value={personName}
+              labelId="demo-simple-select-label"
+              id="demo-simple-select-label"
+              value={asesorAsignado}
               onChange={handleChange}
               input={<OutlinedInput label="Name" />}
               MenuProps={MenuProps}
+              name="asignar_asesor"
             >
               {nombres.map((name) => (
-                <MenuItem
-                  key={name}
-                  value={name}
-                  style={getStyles(name, personName, theme)}
-                >
+                <MenuItem key={name} value={name}>
                   {name}
                 </MenuItem>
               ))}
@@ -277,7 +343,6 @@ export const SeeCase = ({ setViews }) => {
         style={{
           display: "flex",
           padding: "15px 0",
-          border: "2px solid #000",
         }}
       >
         <Grid
@@ -289,149 +354,222 @@ export const SeeCase = ({ setViews }) => {
             flexDirection: "column",
           }}
         >
-          <Typography variant="h6" className="title">
-            NÚMERO:
-          </Typography>
-          <Typography variant="p" className="text">
-            1
-          </Typography>
-        </Grid>
-
-        <Grid
-          container
-          className="container"
-          style={{
-            width: "45%",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <Typography variant="h6" className="title">
-            AÑO:
-          </Typography>
-          <Typography variant="p" className="text">
-            2022
-          </Typography>
-        </Grid>
-      </Grid>
-
-      <Grid
-        container
-        style={{
-          display: "flex",
-          padding: "15px 0",
-          border: "2px solid #000",
-        }}
-      >
-        <Grid
-          container
-          className="container"
-          style={{
-            width: "45%",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <Typography variant="h6" className="title">
-            RADICADO INTERNO
-          </Typography>
-          <Typography variant="p" className="text">
-            N/A
-          </Typography>
-        </Grid>
-
-        <Grid
-          container
-          className="container"
-          style={{
-            width: "45%",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <Typography variant="h6" className="title">
-            FECHA DE ATENCIÓN Y ASESORIA
-          </Typography>
-          <Typography variant="p" className="text">
-            DD/MM/AAAA
-          </Typography>
-        </Grid>
-      </Grid>
-
-      <Grid
-        container
-        style={{
-          display: "flex",
-          padding: "15px 0",
-          border: "2px solid #000",
-        }}
-      >
-        <Grid
-          container
-          className="container"
-          style={{
-            width: "45%",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <Typography variant="h6" className="title">
-            FECHA DE RECEPCION DE CASO
-          </Typography>
-          <Typography variant="p" className="text">
-            DD/MM/AAAA
-          </Typography>
-        </Grid>
-
-        <Grid
-          container
-          className="container"
-          style={{
-            width: "45%",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <Typography variant="h6" className="title">
-            PARTE ACCIONANTE
-          </Typography>
-          <Typography variant="p" className="text">
-            MAURICIO DE JESUS VILLAREAL MAZO
-          </Typography>
-        </Grid>
-      </Grid>
-
-      <Grid
-        container
-        style={{
-          display: "flex",
-          padding: "15px 0",
-          border: "2px solid #000",
-        }}
-      >
-        <Grid
-          container
-          className="container"
-          style={{
-            width: "45%",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <Typography variant="h6" className="title">
-            PARTE ACCIONADA
-          </Typography>
           <Typography
             variant="p"
-            className="text"
+            className="title"
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              fontWeight: 600,
+              marginBottom: 5,
             }}
           >
-            DESCONOCIDA
+            NÚMERO:
           </Typography>
+          <TextField
+            id="outlined-basic"
+            label="Número"
+            variant="outlined"
+            defaultValue={numeroCaso}
+            name="numeroCaso"
+            onChange={handleChange}
+          />
+        </Grid>
+
+        <Grid
+          container
+          className="container"
+          style={{
+            width: "45%",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Typography
+            variant="p"
+            className="title"
+            style={{
+              fontWeight: 600,
+              marginBottom: 5,
+            }}
+          >
+            AÑO:
+          </Typography>
+          <TextField
+            id="outlined-basic"
+            label="Ano"
+            variant="outlined"
+            defaultValue={ano}
+            name="ano"
+            onChange={handleChange}
+          />
+        </Grid>
+      </Grid>
+
+      <Grid
+        container
+        style={{
+          display: "flex",
+          padding: "15px 0",
+        }}
+      >
+        <Grid
+          container
+          className="container"
+          style={{
+            width: "45%",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Typography
+            variant="p"
+            className="title"
+            style={{
+              fontWeight: 600,
+              marginBottom: 5,
+            }}
+          >
+            RADICADO INTERNO
+          </Typography>
+          <TextField
+            id="outlined-basic"
+            label="RADICADO INTERNO"
+            variant="outlined"
+            defaultValue={radicadoInterno}
+            name="radicadoInterno"
+            onChange={handleChange}
+          />
+        </Grid>
+
+        <Grid
+          container
+          className="container"
+          style={{
+            width: "45%",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Typography
+            variant="p"
+            className="title"
+            style={{
+              fontWeight: 600,
+              marginBottom: 5,
+            }}
+          >
+            FECHA DE ATENCIÓN Y ASESORIA
+          </Typography>
+          <TextField
+            id="outlined-basic"
+            label="FECHA DE ATENCIÓN Y ASESORIA"
+            variant="outlined"
+            defaultValue={fechaAtencion}
+            name="fechaAtencion"
+            onChange={handleChange}
+          />
+        </Grid>
+      </Grid>
+
+      <Grid
+        container
+        style={{
+          display: "flex",
+          padding: "15px 0",
+        }}
+      >
+        <Grid
+          container
+          className="container"
+          style={{
+            width: "45%",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Typography
+            variant="p"
+            className="title"
+            style={{
+              fontWeight: 600,
+              marginBottom: 5,
+            }}
+          >
+            FECHA DE RECEPCION DE CASO
+          </Typography>
+          <TextField
+            id="outlined-basic"
+            label="FECHA DE RECEPCION DE CASO"
+            variant="outlined"
+            defaultValue={fechaRecepcion}
+            name="fechaRecepcion"
+            onChange={handleChange}
+          />
+        </Grid>
+
+        <Grid
+          container
+          className="container"
+          style={{
+            width: "45%",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Typography
+            variant="p"
+            className="title"
+            style={{
+              fontWeight: 600,
+              marginBottom: 5,
+            }}
+          >
+            PARTE ACCIONANTE
+          </Typography>
+          <TextField
+            id="outlined-basic"
+            label="PARTE ACCIONANTE"
+            variant="outlined"
+            defaultValue={parteAccionante}
+            name="parteAccionante"
+            onChange={handleChange}
+          />
+        </Grid>
+      </Grid>
+
+      <Grid
+        container
+        style={{
+          display: "flex",
+          padding: "15px 0",
+        }}
+      >
+        <Grid
+          container
+          className="container"
+          style={{
+            width: "45%",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Typography
+            variant="p"
+            className="title"
+            style={{
+              fontWeight: 600,
+              marginBottom: 10,
+            }}
+          >
+            PARTE ACCIONADA
+          </Typography>
+          <TextField
+            id="outlined-basic"
+            label="PARTE ACCIONADA"
+            variant="outlined"
+            defaultValue={parteAccionada}
+            name="parteAccionada"
+            onChange={handleChange}
+          />
         </Grid>
 
         <Grid
@@ -444,28 +582,29 @@ export const SeeCase = ({ setViews }) => {
           }}
         >
           <Grid>
-            <Typography variant="h6">
+            <Typography
+              variant="p"
+              style={{
+                fontWeight: 500,
+              }}
+            >
               {" "}
-              Áre (CIVIL, FAMILIA, COMERCIAL, LABORAL, PENAL)
+              Área (CIVIL, FAMILIA, COMERCIAL, LABORAL, PENAL)
             </Typography>
 
             <FormControl sx={{ m: 1, width: "100%" }}>
-              <InputLabel id="demo-multiple-name-label">Area</InputLabel>
+              <InputLabel id="demo-simple-select-label">Area</InputLabel>
               <Select
-                labelId="demo-multiple-name-label"
-                id="demo-multiple-name"
-                multiple
-                value={personName}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select-label"
+                value={areaSeleccionada}
                 onChange={handleChange}
                 input={<OutlinedInput label="Name" />}
                 MenuProps={MenuProps}
+                name="select_area"
               >
                 {area.map((name) => (
-                  <MenuItem
-                    key={name}
-                    value={name}
-                    style={getStyles(name, personName, theme)}
-                  >
+                  <MenuItem key={name} value={name}>
                     {name}
                   </MenuItem>
                 ))}
@@ -480,7 +619,6 @@ export const SeeCase = ({ setViews }) => {
         style={{
           display: "flex",
           padding: "15px 0",
-          border: "2px solid #000",
         }}
       >
         <Grid
@@ -493,25 +631,28 @@ export const SeeCase = ({ setViews }) => {
           }}
         >
           <Grid>
-            <Typography variant="h6">Materia</Typography>
+            <Typography
+              variant="p"
+              style={{
+                fontWeight: 500,
+              }}
+            >
+              Materia
+            </Typography>
 
             <FormControl sx={{ m: 1, width: "100%" }}>
-              <InputLabel id="demo-multiple-name-label">Materia</InputLabel>
+              <InputLabel id="demo-simple-select-label">Materia</InputLabel>
               <Select
-                labelId="demo-multiple-name-label"
-                id="demo-multiple-name"
-                multiple
-                value={personName}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select-label"
+                value={materiaSeleccionada}
                 onChange={handleChange}
                 input={<OutlinedInput label="Name" />}
                 MenuProps={MenuProps}
+                name="select_materia"
               >
                 {materia.map((name) => (
-                  <MenuItem
-                    key={name}
-                    value={name}
-                    style={getStyles(name, personName, theme)}
-                  >
+                  <MenuItem key={name} value={name}>
                     {name}
                   </MenuItem>
                 ))}
@@ -530,25 +671,28 @@ export const SeeCase = ({ setViews }) => {
           }}
         >
           <Grid>
-            <Typography variant="h6">ORIGEN (C.J. o EXT)</Typography>
+            <Typography
+              variant="p"
+              style={{
+                fontWeight: 500,
+              }}
+            >
+              ORIGEN (C.J. o EXT)
+            </Typography>
 
             <FormControl sx={{ m: 1, width: "100%" }}>
-              <InputLabel id="demo-multiple-name-label">Origen</InputLabel>
+              <InputLabel id="demo-simple-select-label">Origen</InputLabel>
               <Select
-                labelId="demo-multiple-name-label"
-                id="demo-multiple-name"
-                multiple
-                value={personName}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select-label"
+                value={origenSeleccionado}
                 onChange={handleChange}
                 input={<OutlinedInput label="Name" />}
                 MenuProps={MenuProps}
+                name="select_origen"
               >
                 {origen.map((name) => (
-                  <MenuItem
-                    key={name}
-                    value={name}
-                    style={getStyles(name, personName, theme)}
-                  >
+                  <MenuItem key={name} value={name}>
                     {name}
                   </MenuItem>
                 ))}
@@ -563,7 +707,6 @@ export const SeeCase = ({ setViews }) => {
         style={{
           display: "flex",
           padding: "15px 0",
-          border: "2px solid #000",
         }}
       >
         <Grid
@@ -576,25 +719,28 @@ export const SeeCase = ({ setViews }) => {
           }}
         >
           <Grid>
-            <Typography variant="h6">SE RECEPCIONó EL CASO</Typography>
+            <Typography
+              variant="p"
+              style={{
+                fontWeight: 500,
+              }}
+            >
+              SE RECEPCIONó EL CASO
+            </Typography>
 
             <FormControl sx={{ m: 1, width: "100%" }}>
-              <InputLabel id="demo-multiple-name-label">Recepción</InputLabel>
+              <InputLabel id="demo-simple-select-label">Recepción</InputLabel>
               <Select
-                labelId="demo-multiple-name-label"
-                id="demo-multiple-name"
-                multiple
-                value={personName}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select-label"
+                value={recepcionCaso}
                 onChange={handleChange}
                 input={<OutlinedInput label="Name" />}
                 MenuProps={MenuProps}
+                name="select_recepcionCaso"
               >
                 {recepcion.map((name) => (
-                  <MenuItem
-                    key={name}
-                    value={name}
-                    style={getStyles(name, personName, theme)}
-                  >
+                  <MenuItem key={name} value={name}>
                     {name}
                   </MenuItem>
                 ))}
@@ -612,20 +758,24 @@ export const SeeCase = ({ setViews }) => {
             flexDirection: "column",
           }}
         >
-          <Typography variant="h6" className="title">
-            NOMBRE DEL ESTUDIANTE QUE RECEPCIONO EL CASO
-          </Typography>
           <Typography
             variant="p"
-            className="text"
+            className="title"
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              fontWeight: 600,
+              marginBottom: 10,
             }}
           >
-            SAMANTA MARIA ARANGO JARAMILLO
+            NOMBRE DEL ESTUDIANTE QUE RECEPCIONO EL CASO
           </Typography>
+          <TextField
+            id="outlined-basic"
+            label="NOMBRE DEL ESTUDIANTE QUE RECEPCIONO EL CASO"
+            variant="outlined"
+            defaultValue={estudianteRecepcion}
+            name="estudianteRecepcion"
+            onChange={handleChange}
+          />
         </Grid>
       </Grid>
 
@@ -634,7 +784,6 @@ export const SeeCase = ({ setViews }) => {
         style={{
           display: "flex",
           padding: "15px 0",
-          border: "2px solid #000",
         }}
       >
         <Grid
@@ -646,18 +795,24 @@ export const SeeCase = ({ setViews }) => {
             flexDirection: "column",
           }}
         >
-          <Typography variant="h6" className="title">
-            LUGAR DE ATENCIÓN
-          </Typography>
           <Typography
             variant="p"
-            className="text"
+            className="title"
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              fontWeight: 600,
+              marginBottom: 10,
             }}
-          ></Typography>
+          >
+            LUGAR DE ATENCIÓN
+          </Typography>
+          <TextField
+            id="outlined-basic"
+            label="LUGAR DE ATENCIÓN"
+            variant="outlined"
+            defaultValue={lugarAtencion}
+            name="lugarAtencion"
+            onChange={handleChange}
+          />
         </Grid>
 
         <Grid
@@ -670,25 +825,28 @@ export const SeeCase = ({ setViews }) => {
           }}
         >
           <Grid>
-            <Typography variant="h6">CALIDAD(E/A)</Typography>
+            <Typography
+              variant="p"
+              style={{
+                fontWeight: 500,
+              }}
+            >
+              CALIDAD(E/A)
+            </Typography>
 
             <FormControl sx={{ m: 1, width: "100%" }}>
-              <InputLabel id="demo-multiple-name-label">Calidad</InputLabel>
+              <InputLabel id="demo-simple-select-label">Calidad</InputLabel>
               <Select
-                labelId="demo-multiple-name-label"
-                id="demo-multiple-name"
-                multiple
-                value={personName}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select-label"
+                value={calidadSeleccionada}
                 onChange={handleChange}
                 input={<OutlinedInput label="Name" />}
                 MenuProps={MenuProps}
+                name="select_calidad"
               >
                 {calidad.map((name) => (
-                  <MenuItem
-                    key={name}
-                    value={name}
-                    style={getStyles(name, personName, theme)}
-                  >
+                  <MenuItem key={name} value={name}>
                     {name}
                   </MenuItem>
                 ))}
@@ -703,7 +861,6 @@ export const SeeCase = ({ setViews }) => {
         style={{
           display: "flex",
           padding: "15px 0",
-          border: "2px solid #000",
         }}
       >
         <Grid
@@ -715,20 +872,24 @@ export const SeeCase = ({ setViews }) => {
             flexDirection: "column",
           }}
         >
-          <Typography variant="h6" className="title">
-            ESTUDIANTE A QUIEN SE LE ASIGNO EL CASO
-          </Typography>
           <Typography
             variant="p"
-            className="text"
+            className="title"
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              fontWeight: 600,
+              marginBottom: 5,
             }}
           >
-            LAURA ALEJANDRA OLARTE VILLA
+            ESTUDIANTE A QUIEN SE LE ASIGNO EL CASO
           </Typography>
+          <TextField
+            id="outlined-basic"
+            label="ESTUDIANTE A QUIEN SE LE ASIGNO EL CASO"
+            variant="outlined"
+            defaultValue={estudianteAsignado}
+            name="lugarAtencion"
+            disabled
+          />
         </Grid>
 
         <Grid
@@ -740,12 +901,24 @@ export const SeeCase = ({ setViews }) => {
             flexDirection: "column",
           }}
         >
-          <Typography variant="h6" className="title">
+          <Typography
+            variant="p"
+            className="title"
+            style={{
+              fontWeight: 600,
+              marginBottom: 5,
+            }}
+          >
             CALIDAD (E/A)
           </Typography>
-          <Typography variant="p" className="text">
-            ESTUDIANTE
-          </Typography>
+          <TextField
+            id="outlined-basic"
+            label="CALIDAD (E/A)"
+            variant="outlined"
+            defaultValue={calidad2}
+            name="lugarAtencion"
+            onChange={handleChange}
+          />
         </Grid>
       </Grid>
 
@@ -754,7 +927,6 @@ export const SeeCase = ({ setViews }) => {
         style={{
           display: "flex",
           padding: "15px 0",
-          border: "2px solid #000",
         }}
       >
         <Grid
@@ -766,20 +938,24 @@ export const SeeCase = ({ setViews }) => {
             flexDirection: "column",
           }}
         >
-          <Typography variant="h6" className="title">
-            FECHA DE CITACION DE PARTE USUARIO (MARCAR SI O NO)
-          </Typography>
           <Typography
             variant="p"
-            className="text"
+            className="title"
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              fontWeight: 600,
+              marginBottom: 10,
             }}
           >
-            NO
+            FECHA DE CITACION DE PARTE USUARIO (MARCAR SI O NO)
           </Typography>
+          <TextField
+            id="outlined-basic"
+            label="FECHA DE CITACION DE PARTE USUARIO (MARCAR SI O NO)"
+            variant="outlined"
+            defaultValue={fechaCitacion}
+            name="fechaCitacion"
+            onChange={handleChange}
+          />
         </Grid>
 
         <Grid
@@ -792,27 +968,30 @@ export const SeeCase = ({ setViews }) => {
           }}
         >
           <Grid>
-            <Typography variant="h6">TUVO PARTICIPACIÓN INDIVIDUAL </Typography>
+            <Typography
+              variant="p"
+              style={{
+                fontWeight: 500,
+              }}
+            >
+              TUVO PARTICIPACIÓN INDIVIDUAL{" "}
+            </Typography>
 
             <FormControl sx={{ m: 1, width: "100%" }}>
-              <InputLabel id="demo-multiple-name-label">
+              <InputLabel id="demo-simple-select-label">
                 Participación
               </InputLabel>
               <Select
-                labelId="demo-multiple-name-label"
-                id="demo-multiple-name"
-                multiple
-                value={personName}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select-label"
+                value={participacionOpcion}
                 onChange={handleChange}
                 input={<OutlinedInput label="Name" />}
                 MenuProps={MenuProps}
+                name="select_participacion"
               >
                 {participacion.map((name) => (
-                  <MenuItem
-                    key={name}
-                    value={name}
-                    style={getStyles(name, personName, theme)}
-                  >
+                  <MenuItem key={name} value={name}>
                     {name}
                   </MenuItem>
                 ))}
@@ -827,7 +1006,6 @@ export const SeeCase = ({ setViews }) => {
         style={{
           display: "flex",
           padding: "15px 0",
-          border: "2px solid #000",
         }}
       >
         <Grid
@@ -839,20 +1017,24 @@ export const SeeCase = ({ setViews }) => {
             flexDirection: "column",
           }}
         >
-          <Typography variant="h6" className="title">
-            NOMBRE DEL ASESOR
-          </Typography>
           <Typography
             variant="p"
-            className="text"
+            className="title"
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              fontWeight: 600,
+              marginBottom: 10,
             }}
           >
-            MARIA ESTELA DIAZ SANIN
+            NOMBRE DEL ASESOR
           </Typography>
+          <TextField
+            id="outlined-basic"
+            label="NOMBRE DEL ASESOR"
+            variant="outlined"
+            defaultValue={asesorAsignado}
+            name="asesorAsignado"
+            disabled
+          />
         </Grid>
 
         <Grid
@@ -865,29 +1047,30 @@ export const SeeCase = ({ setViews }) => {
           }}
         >
           <Grid>
-            <Typography variant="h6">
+            <Typography
+              variant="p"
+              style={{
+                fontWeight: 500,
+              }}
+            >
               REALIZÓ REPRESENTACION DE TERCEROS
             </Typography>
 
             <FormControl sx={{ m: 1, width: "100%" }}>
-              <InputLabel id="demo-multiple-name-label">
+              <InputLabel id="demo-simple-select-label">
                 Representación
               </InputLabel>
               <Select
-                labelId="demo-multiple-name-label"
-                id="demo-multiple-name"
-                multiple
-                value={personName}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select-label"
+                value={representacionTercerosOpcion}
                 onChange={handleChange}
                 input={<OutlinedInput label="Name" />}
                 MenuProps={MenuProps}
+                name="representacionTerceros"
               >
                 {representacionTerceros.map((name) => (
-                  <MenuItem
-                    key={name}
-                    value={name}
-                    style={getStyles(name, personName, theme)}
-                  >
+                  <MenuItem key={name} value={name}>
                     {name}
                   </MenuItem>
                 ))}
@@ -902,7 +1085,6 @@ export const SeeCase = ({ setViews }) => {
         style={{
           display: "flex",
           padding: "15px 0",
-          border: "2px solid #000",
         }}
       >
         <Grid
@@ -914,18 +1096,24 @@ export const SeeCase = ({ setViews }) => {
             flexDirection: "column",
           }}
         >
-          <Typography variant="h6" className="title">
-            FECHA DE AUDIENCIA
-          </Typography>
           <Typography
             variant="p"
-            className="text"
+            className="title"
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              fontWeight: 600,
+              marginBottom: 5,
             }}
-          ></Typography>
+          >
+            FECHA DE AUDIENCIA
+          </Typography>
+          <TextField
+            id="outlined-basic"
+            label="FECHA DE AUDIENCIA"
+            variant="outlined"
+            defaultValue={fechaAudiencia}
+            name="fechaAudiencia"
+            onChange={handleChange}
+          />
         </Grid>
 
         <Grid
@@ -937,10 +1125,24 @@ export const SeeCase = ({ setViews }) => {
             flexDirection: "column",
           }}
         >
-          <Typography variant="h6" className="title">
+          <Typography
+            variant="p"
+            className="title"
+            style={{
+              fontWeight: 600,
+              marginBottom: 5,
+            }}
+          >
             HORA DE AUDIENCIA
           </Typography>
-          <Typography variant="p" className="text"></Typography>
+          <TextField
+            id="outlined-basic"
+            label="HORA DE AUDIENCIA"
+            variant="outlined"
+            defaultValue={horaAudiencia}
+            name="horaAudiencia"
+            onChange={handleChange}
+          />
         </Grid>
       </Grid>
 
@@ -949,7 +1151,6 @@ export const SeeCase = ({ setViews }) => {
         style={{
           display: "flex",
           padding: "15px 0",
-          border: "2px solid #000",
         }}
       >
         <Grid
@@ -962,25 +1163,28 @@ export const SeeCase = ({ setViews }) => {
           }}
         >
           <Grid>
-            <Typography variant="h6">RESULTADO DE LA AUDIENCIA</Typography>
+            <Typography
+              variant="p"
+              style={{
+                fontWeight: 500,
+              }}
+            >
+              RESULTADO DE LA AUDIENCIA
+            </Typography>
 
             <FormControl sx={{ m: 1, width: "100%" }}>
-              <InputLabel id="demo-multiple-name-label">Resultado</InputLabel>
+              <InputLabel id="demo-simple-select-label">Resultado</InputLabel>
               <Select
-                labelId="demo-multiple-name-label"
-                id="demo-multiple-name"
-                multiple
-                value={personName}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select-label"
+                value={resultadoAudienciaSeleccionado}
                 onChange={handleChange}
                 input={<OutlinedInput label="Name" />}
                 MenuProps={MenuProps}
+                name="select_resultadoAudiencia"
               >
                 {resultadoAudiencia.map((name) => (
-                  <MenuItem
-                    key={name}
-                    value={name}
-                    style={getStyles(name, personName, theme)}
-                  >
+                  <MenuItem key={name} value={name}>
                     {name}
                   </MenuItem>
                 ))}
@@ -998,12 +1202,24 @@ export const SeeCase = ({ setViews }) => {
             flexDirection: "column",
           }}
         >
-          <Typography variant="h6" className="title">
+          <Typography
+            variant="p"
+            className="title"
+            style={{
+              fontWeight: 600,
+              marginBottom: 10,
+            }}
+          >
             ESTADO DEL PROCESO O RESULTADO DEL PROCESO
           </Typography>
-          <Typography variant="p" className="text">
-            SE RECIBE ACTA 3506 DE LA RESPECTIVA DEMANDA
-          </Typography>
+          <TextField
+            id="outlined-basic"
+            label="ESTADO DEL PROCESO O RESULTADO DEL PROCESO"
+            variant="outlined"
+            defaultValue={estadoProceso}
+            name="estadoProceso"
+            onChange={handleChange}
+          />
         </Grid>
       </Grid>
 
@@ -1012,7 +1228,6 @@ export const SeeCase = ({ setViews }) => {
         style={{
           display: "flex",
           padding: "15px 0",
-          border: "2px solid #000",
         }}
       >
         <Grid
@@ -1024,20 +1239,24 @@ export const SeeCase = ({ setViews }) => {
             flexDirection: "column",
           }}
         >
-          <Typography variant="h6" className="title">
+          <Typography
+            variant="p"
+            className="title"
+            style={{
+              fontWeight: 600,
+              marginBottom: 5,
+            }}
+          >
             ESTUDIANTE QUE RECIBE EL CASO
           </Typography>
-          <Typography
-            variant="p"
-            className="text"
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            SEBASTIAN TABARES VALENCIA
-          </Typography>
+          <TextField
+            id="outlined-basic"
+            label="ESTUDIANTE QUE RECIBE EL CASO"
+            variant="outlined"
+            defaultValue={estudianteRecibe}
+            name="estudianteRecibe"
+            onChange={handleChange}
+          />
         </Grid>
 
         <Grid
@@ -1049,12 +1268,24 @@ export const SeeCase = ({ setViews }) => {
             flexDirection: "column",
           }}
         >
-          <Typography variant="h6" className="title">
+          <Typography
+            variant="p"
+            className="title"
+            style={{
+              fontWeight: 600,
+              marginBottom: 5,
+            }}
+          >
             PAZ Y SALVO DE ESTUDIANTE EN CONSULTORIO
           </Typography>
-          <Typography variant="p" className="text">
-            SI
-          </Typography>
+          <TextField
+            id="outlined-basic"
+            label="PAZ Y SALVO DE ESTUDIANTE EN CONSULTORIO"
+            variant="outlined"
+            defaultValue={pazSalvo}
+            name="pazSalvo"
+            onChange={handleChange}
+          />
         </Grid>
       </Grid>
 
@@ -1063,7 +1294,6 @@ export const SeeCase = ({ setViews }) => {
         style={{
           display: "flex",
           padding: "15px 0",
-          border: "2px solid #000",
         }}
       >
         <Grid
@@ -1075,20 +1305,21 @@ export const SeeCase = ({ setViews }) => {
             flexDirection: "column",
           }}
         >
-          <Typography variant="h6" className="title">
-            APOYO GRAFICAR
-          </Typography>
           <Typography
             variant="p"
-            className="text"
+            className="title"
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              fontWeight: 600,
+              marginBottom: 5,
             }}
           >
-            CIVIL Y COMERCIALACTA DE ACUERDO PARCIAL
+            APOYO GRAFICAR
           </Typography>
+          <TextField
+            id="outlined-basic"
+            label="APOYO GRAFICAR"
+            variant="outlined"
+          />
         </Grid>
 
         <Grid
@@ -1100,12 +1331,19 @@ export const SeeCase = ({ setViews }) => {
             flexDirection: "column",
           }}
         >
-          <Typography variant="h6" className="title"></Typography>
+          <Typography
+            variant="p"
+            className="title"
+            style={{
+              fontWeight: 600,
+              marginBottom: 5,
+            }}
+          ></Typography>
           <Typography variant="p" className="text"></Typography>
         </Grid>
       </Grid>
 
-      {/* docimentacion del caso */}
+      {/* documentacion del caso */}
 
       <Grid
         container
@@ -1113,10 +1351,18 @@ export const SeeCase = ({ setViews }) => {
           margin: "20px 0",
           padding: "20px",
           width: "100%",
-          border: "2px solid #000",
+          border: "1px solid #00000060",
+          borderRadius: 1,
         }}
       >
-        <Typography variant="h6">Documentacion del caso:</Typography>
+        <Typography
+          variant="p"
+          style={{
+            fontWeight: 500,
+          }}
+        >
+          Documentación del caso:
+        </Typography>
 
         <Grid
           container

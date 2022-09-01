@@ -1,6 +1,7 @@
-import { PermDataSetting, FindInPage, Group, GroupAdd, HourglassEmpty, LogoutOutlined, PersonPinCircle } from "@mui/icons-material";
+import { PermDataSetting, FindInPage, Group, GroupAdd, LogoutOutlined, PersonPinCircle } from "@mui/icons-material";
 import {
   Box,
+  Button,
   Divider,
   Drawer,
   Grid,
@@ -14,19 +15,15 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import superAdmin from "../../assets/images/super-admin.jpeg";
 
 export const SideBar = ({
-  setValueSideBar,
   valueSideBarHidden,
   handleDrawerOpen,
   drawerWidth,
   handleClose
 }) => {
-  const onClickSideBar = (text) => {
-    setValueSideBar(text);
-  };
 
   const navigate = useNavigate();
 
@@ -77,8 +74,7 @@ export const SideBar = ({
               "Estudiantes",
               "Asesores",
               "Personas",
-              "Casos Antiguos",
-              "Configuración"
+              "Configuracion"
             ].map((text) => (
               <ListItem 
                 key={text} disablePadding
@@ -86,11 +82,20 @@ export const SideBar = ({
                     height: "10vh",
                 }}
                 >
+                <NavLink
+                className="nav-item"
+                to={text}
+                style={{
+                  textDecoration: "none",
+                  color: "#000000",
+                }}
+                >
                 <ListItemButton
                   name={text}
-                  onClick={() => (onClickSideBar(text), handleDrawerOpen(), handleClose())}
+                  onClick={() => (handleDrawerOpen(), handleClose())}
                   sx={{
                     display: { xs: "flex" },
+                    fontSize: "bold"
                   }}
                 >
                   <ListItemIcon>
@@ -98,13 +103,13 @@ export const SideBar = ({
                     {text === "Estudiantes" && <Group />}
                     {text === "Asesores" && <PersonPinCircle />}
                     {text === "Personas" && <GroupAdd />}
-                    {text === "Casos Antiguos" && <HourglassEmpty />}
-                    {text === "Configuración" && <PermDataSetting />}
+                    {text === "Configuracion" && <PermDataSetting />}
                   </ListItemIcon>
                   <Grid container>
                     <ListItemText primary={text} />
                   </Grid>
                 </ListItemButton>
+                </NavLink>
               </ListItem>
             ))}
           </List>
@@ -128,12 +133,15 @@ export const SideBar = ({
             >
               <img src={superAdmin} alt="super-admin" />
             </ImageListItem>
+            <Button
+            onClick={handleBacklogin}
+            >
             <IconButton
              color="error"
-             onClick={handleBacklogin}
              >
               <LogoutOutlined />
             </IconButton>
+            </Button>
           </Grid>
         </Grid>
       </Drawer>

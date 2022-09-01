@@ -23,8 +23,6 @@ export const NavBar = ({
   valueSideBarHidden
 }) => {
 
-console.log(valueSideBarHidden)
-
   return (
     <AppBar
       position="fixed"
