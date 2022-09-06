@@ -16,13 +16,8 @@ const personas = [
   { cedula: "34576857", nombre: "Daniela Uribe", estrato: 2 },
 ];
 
-const ModalCreateCase = ({ add, setAdd, addDepartment }) => {
-  const [valueInput, setValueInput] = useState({
-    nombre: "",
-    cedula: "",
-    estrato: "",
-    documentacion: "",
-  });
+const ModalEditCase = ({ add, setAdd, addDepartment }) => {
+ 
   const [valueCase, setValueCase] = useState({ nombre: "Nombre" });
 
   const defaultOptions = {
@@ -30,10 +25,10 @@ const ModalCreateCase = ({ add, setAdd, addDepartment }) => {
     getOptionLabel: (options) => options.nombre,
   };
 
-  const handleChange = (e) => {
+  const handleChangeEdit = (e) => {
     const { name, value } = e.target;
     console.log(name, value);
-    setValueInput((prevState) => ({
+    setValueCase((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -42,7 +37,7 @@ const ModalCreateCase = ({ add, setAdd, addDepartment }) => {
   const showAlert = () => {
     Swal.fire({
       icon: "success",
-      title: "Caso Agregado",
+      title: "Caso Editado",
       showConfirmButton: false,
       timer: 1500,
     });
@@ -60,7 +55,7 @@ const ModalCreateCase = ({ add, setAdd, addDepartment }) => {
     <Modal isOpen={add} centered>
       <ModalHeader>
         <div>
-          <h3>Crear nuevo caso</h3>
+          <h3>Editar caso</h3>
         </div>
       </ModalHeader>
       <ModalBody>
@@ -71,6 +66,7 @@ const ModalCreateCase = ({ add, setAdd, addDepartment }) => {
           id="controlled-demo"
           value={typeof valueCase !== "object" ? { nombre: "" } : valueCase}
           onChange={(event, newValue) => {
+            console.log("new value", newValue)
             let value =
               newValue !== null || undefined ? newValue : { nombre: "" };
             setValueCase(value);
@@ -83,67 +79,7 @@ const ModalCreateCase = ({ add, setAdd, addDepartment }) => {
         {valueCase.nombre === "Nombre" ? (
           ""
         ) : valueCase.nombre === "" ? (
-          <Grid
-            container
-            sx={{
-              marginTop: 2,
-            }}
-          >
-            <label>nombres y apellidos</label>
-            <input
-              className="form-control"
-              type="text"
-              name="nombre"
-              value={valueInput.nombre}
-              onChange={handleChange}
-              title="Este campo es requerido"
-              required
-            />
-
-            <label>Cédula</label>
-            <input
-              className="form-control"
-              type="text"
-              name="cedula"
-              value={valueInput.cedula}
-              onChange={handleChange}
-              title="Este campo es requerido"
-              required
-            />
-
-            <label>Estrato</label>
-            <input
-              className="form-control"
-              type="text"
-              name="estrato"
-              value={valueInput.estrato}
-              onChange={handleChange}
-              title="Este campo es requerido"
-              required
-            />
-
-            <label>Trae documentación</label>
-            <input
-              className="form-control"
-              type="text"
-              name="documentacion"
-              value={valueInput.documentacion}
-              onChange={handleChange}
-              title="Este campo es requerido"
-              required
-            />
-            <form
-              action="../../form-result.php"
-              method="post"
-              enctype="multipart/form-data"
-              target="_blank"
-            >
-              <p>Sube la documentación: </p>
-              <input type="file" name="archivosubido" />
-              <br />
-              {/* <input type="submit" value="Enviar datos" /> */}
-            </form>
-          </Grid>
+          ""
         ) : (
           <Grid 
           container
@@ -155,29 +91,38 @@ const ModalCreateCase = ({ add, setAdd, addDepartment }) => {
           }}
           >
             <Typography variant="h6">Nombre y apellidos:</Typography>
-            <Typography>{valueCase.nombre}</Typography>
+            <TextField
+            id="outlined-basic"
+            label="Nombre"
+            variant="outlined"
+            value={valueCase.nombre}
+            name="nombre"
+            onChange={handleChangeEdit}
+          />
             <Typography variant="h6">Cédula:</Typography>
-            <Typography>{valueCase.cedula}</Typography>
+            <TextField
+            id="outlined-basic"
+            label="Cédula"
+            variant="outlined"
+            value={valueCase.cedula}
+            name="cedula"
+            onChange={handleChangeEdit}
+          />
             <Typography variant="h6">Estrato:</Typography>
-            <Typography>{valueCase.estrato}</Typography>
-
-            <form
-              action="../../form-result.php"
-              method="post"
-              enctype="multipart/form-data"
-              target="_blank"
-            >
-              <p>Sube la documentación: </p>
-              <input type="file" name="archivosubido" />
-              <br />
-              {/* <input type="submit" value="Enviar datos" /> */}
-            </form>
+            <TextField
+            id="outlined-basic"
+            label="Estrato"
+            variant="outlined"
+            value={valueCase.estrato}
+            name="estrato"
+            onChange={handleChangeEdit}
+          />
           </Grid>
         )}
       </ModalBody>
       <ModalFooter>
         <Button color="primary" onClick={() => (showAlert(), setAdd())}>
-          Agregar
+          Editar
         </Button>
         <Button color="danger" onClick={() => setAdd()}>
           Cancelar
@@ -187,4 +132,4 @@ const ModalCreateCase = ({ add, setAdd, addDepartment }) => {
   );
 };
 
-export default ModalCreateCase;
+export default ModalEditCase;

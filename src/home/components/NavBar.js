@@ -28,9 +28,10 @@ export const NavBar = ({
       position="fixed"
       sx={{
         width: { sm: `calc(100% - ${drawerWidth}px)` },
-        height: 80,
+        height: 70,
         display: "flex",
         justifyContent: "center",
+        overflow: "hidden",
         ml: { sm: `${drawerWidth}px` },
       }}
     >

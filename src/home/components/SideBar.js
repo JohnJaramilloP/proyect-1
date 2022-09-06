@@ -1,4 +1,13 @@
-import { PermDataSetting, FindInPage, Group, GroupAdd, LogoutOutlined, PersonPinCircle } from "@mui/icons-material";
+import {
+  PermDataSetting,
+  FindInPage,
+  Group,
+  GroupAdd,
+  LogoutOutlined,
+  PersonPinCircle,
+  PeopleOutline,
+  BusinessCenter
+} from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -22,9 +31,8 @@ export const SideBar = ({
   valueSideBarHidden,
   handleDrawerOpen,
   drawerWidth,
-  handleClose
+  handleClose,
 }) => {
-
   const navigate = useNavigate();
 
   const handleBacklogin = () => {
@@ -36,7 +44,7 @@ export const SideBar = ({
       component="nav"
       sx={{
         width: { xs: drawerWidth },
-        flexShrink: { sm: 0 }
+        flexShrink: { sm: 0 },
       }}
     >
       <Drawer
@@ -71,44 +79,57 @@ export const SideBar = ({
           <List>
             {[
               "Casos",
+              "Casos_Recepcionados",
+              "Casos_Asignados",
               "Estudiantes",
               "Asesores",
               "Personas",
-              "Configuracion"
+              "Configuracion",
             ].map((text) => (
-              <ListItem 
-                key={text} disablePadding
+              <ListItem
+                key={text}
+                disablePadding
                 sx={{
-                    height: "10vh",
+                  height: "10vh",
                 }}
-                >
+              >
                 <NavLink
-                className="nav-item"
-                to={text}
-                style={{
-                  textDecoration: "none",
-                  color: "#000000",
-                }}
-                >
-                <ListItemButton
-                  name={text}
-                  onClick={() => (handleDrawerOpen(), handleClose())}
-                  sx={{
-                    display: { xs: "flex" },
-                    fontSize: "bold"
+                  className="nav-item"
+                  to={text}
+                  style={{
+                    textDecoration: "none",
+                    color: "#000000",
                   }}
                 >
-                  <ListItemIcon>
-                    {text === "Casos" && <FindInPage />}
-                    {text === "Estudiantes" && <Group />}
-                    {text === "Asesores" && <PersonPinCircle />}
-                    {text === "Personas" && <GroupAdd />}
-                    {text === "Configuracion" && <PermDataSetting />}
-                  </ListItemIcon>
-                  <Grid container>
-                    <ListItemText primary={text} />
-                  </Grid>
-                </ListItemButton>
+                  <ListItemButton
+                    name={text}
+                    onClick={() => (handleDrawerOpen(), handleClose())}
+                    sx={{
+                      display: { xs: "flex" },
+                      fontSize: "bold",
+                    }}
+                  >
+                    <ListItemIcon>
+                      {text === "Casos" && <FindInPage />}
+                      {text === "Estudiantes" && <Group />}
+                      {text === "Casos_Recepcionados" && <PeopleOutline />}
+                      {text === "Casos_Asignados" && <BusinessCenter />}
+                      {text === "Asesores" && <PersonPinCircle />}
+                      {text === "Personas" && <GroupAdd />}
+                      {text === "Configuracion" && <PermDataSetting />}
+                    </ListItemIcon>
+                    <Grid container>
+                      <ListItemText
+                        primary={
+                          text === "Casos_Recepcionados"
+                            ? "Casos Recepcionados"
+                            : text === "Casos_Asignados"
+                            ? "Casos Asignados"
+                            : text
+                        }
+                      />
+                    </Grid>
+                  </ListItemButton>
                 </NavLink>
               </ListItem>
             ))}
@@ -133,14 +154,10 @@ export const SideBar = ({
             >
               <img src={superAdmin} alt="super-admin" />
             </ImageListItem>
-            <Button
-            onClick={handleBacklogin}
-            >
-            <IconButton
-             color="error"
-             >
-              <LogoutOutlined />
-            </IconButton>
+            <Button onClick={handleBacklogin}>
+              <IconButton color="error">
+                <LogoutOutlined />
+              </IconButton>
             </Button>
           </Grid>
         </Grid>

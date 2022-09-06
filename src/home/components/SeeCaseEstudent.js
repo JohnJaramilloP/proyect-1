@@ -31,32 +31,6 @@ const {
   graphicSupportOptions,
 } = require("../components/services");
 
-const names = [
-  "Oliver Hansen",
-  "Van Henry",
-  "April Tucker",
-  "Ralph Hubbard",
-  "Omar Alexander",
-  "Carlos Abbott",
-  "Miriam Wagner",
-  "Bradley Wilkerson",
-  "Virginia Andrews",
-  "Kelly Snyder",
-];
-
-const nombres = [
-  "Ricardo Vélez",
-  "Carolina García",
-  "Luis Pérez",
-  "Carlos Mejía",
-  "Eliana Marín",
-  "Katherine Zapata",
-  "John Hoyos",
-  "Wilson Londoño",
-  "Virginia Ramírez",
-  "Pedro Cruz",
-];
-
 const recepcion = ["Si", "No"];
 
 const participacion = ["Si", "No", "No aplica"];
@@ -69,7 +43,7 @@ const representacionTerceros = [
   "Representación a terceros",
 ];
 
-export const SeeCase = ({ setViews }) => {
+export const SeeCaseEstudent = ({ setViews }) => {
   const handleView = () => {
     setViews(1);
   };
@@ -194,63 +168,6 @@ export const SeeCase = ({ setViews }) => {
         >
           Caso:
         </Typography>
-      </Grid>
-
-      {/* select asesor estudiante */}
-
-      <Grid
-        container
-        sx={{
-          padding: "20px 50px",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Grid>
-          <Typography variant="h4">Asignar estudiante</Typography>
-
-          <FormControl sx={{ m: 1, width: "100%" }}>
-            <InputLabel id="demo-simple-select-label">Nombre</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select-label"
-              value={data.studentAssigne}
-              onChange={handleChange}
-              input={<OutlinedInput label="Name" />}
-              MenuProps={MenuProps}
-              name="studentAssigne"
-            >
-              {names.map((name) => (
-                <MenuItem key={name} value={name}>
-                  {name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-
-        <Grid>
-          <Typography variant="h4">Asignar asesor</Typography>
-          <FormControl sx={{ m: 1, width: "100%" }}>
-            <InputLabel id="demo-simple-select-label">Nombre</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select-label"
-              value={data.advisor}
-              onChange={handleChange}
-              input={<OutlinedInput label="Name" />}
-              MenuProps={MenuProps}
-              name="advisor"
-            >
-              {nombres.map((name) => (
-                <MenuItem key={name} value={name}>
-                  {name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
       </Grid>
 
       {/* informacion caso */}

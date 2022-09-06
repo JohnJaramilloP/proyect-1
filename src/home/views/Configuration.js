@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import { Box } from "@material-ui/core";
 import DataGrid, {
   Column,
   FilterRow,
@@ -14,6 +13,7 @@ import DataGrid, {
   Form,
   Selection,
   SearchPanel,
+  RequiredRule,
 } from "devextreme-react/data-grid";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -261,7 +261,7 @@ export const Configuration = () => {
   const cellrender = (row) => {
     let apellido1 = row.data.lastName1 === null ? "" : row.data.lastName1;
     let apellido2 = row.data.lastName2 === null ? "" : row.data.lastName2;
-    return <p>{`${apellido1} ${apellido2}`}</p>
+    return <p>{`${apellido1} ${apellido2}`}</p>;
   };
 
   let positionEditorOptions = {
@@ -270,7 +270,8 @@ export const Configuration = () => {
     value: "",
   };
 
-  console.log("data", data)
+  console.log(data);
+
   return (
     <div>
       <Grid
@@ -445,7 +446,7 @@ export const Configuration = () => {
                       res.id
                         ? alert("success", "Elemento creado")
                         : alert("error", "Error al eliminar");
-                        attentionPlaces().then(res => setData(res))
+                      attentionPlaces().then((res) => setData(res));
                     });
                     break;
                   case "Áreas":
@@ -453,7 +454,7 @@ export const Configuration = () => {
                       res.id
                         ? alert("success", "Elemento creado")
                         : alert("error", "Error al eliminar");
-                        areas().then(res => setData(res))
+                      areas().then((res) => setData(res));
                     });
                     break;
                   case "Materia":
@@ -461,7 +462,7 @@ export const Configuration = () => {
                       res.id
                         ? alert("success", "Elemento creado")
                         : alert("error", "Error al eliminar");
-                        subjectMatters().then(res => setData(res))
+                      subjectMatters().then((res) => setData(res));
                     });
                     break;
                   case "Origen":
@@ -469,7 +470,7 @@ export const Configuration = () => {
                       res.id
                         ? alert("success", "Elemento creado")
                         : alert("error", "Error al eliminar");
-                        origins().then(res => setData(res))
+                      origins().then((res) => setData(res));
                     });
                     break;
                   case "Calidad":
@@ -477,7 +478,7 @@ export const Configuration = () => {
                       res.id
                         ? alert("success", "Elemento creado")
                         : alert("error", "Error al eliminar");
-                        capacities().then(res => setData(res))
+                      capacities().then((res) => setData(res));
                     });
                     break;
                   case "Funcionario Judicial":
@@ -485,7 +486,7 @@ export const Configuration = () => {
                       res.id
                         ? alert("success", "Elemento creado")
                         : alert("error", "Error al eliminar");
-                        legalOfficerOptions().then(res => setData(res))
+                      legalOfficerOptions().then((res) => setData(res));
                     });
                     break;
                   case "Resultado de la atención":
@@ -493,7 +494,7 @@ export const Configuration = () => {
                       res.id
                         ? alert("success", "Elemento creado")
                         : alert("error", "Error al eliminar");
-                        attentionResults().then(res => setData(res))
+                      attentionResults().then((res) => setData(res));
                     });
                     break;
                   case "Eficacia":
@@ -501,7 +502,7 @@ export const Configuration = () => {
                       res.id
                         ? alert("success", "Elemento creado")
                         : alert("error", "Error al eliminar");
-                        efficacyOptions().then(res => setData(res))
+                      efficacyOptions().then((res) => setData(res));
                     });
                     break;
                   case "Estado de los casos":
@@ -509,7 +510,7 @@ export const Configuration = () => {
                       res.id
                         ? alert("success", "Elemento creado")
                         : alert("error", "Error al eliminar");
-                        caseStatuses().then(res => setData(res))
+                      caseStatuses().then((res) => setData(res));
                     });
                     break;
                   case "Resultado de la audiencia":
@@ -517,7 +518,7 @@ export const Configuration = () => {
                       res.id
                         ? alert("success", "Elemento creado")
                         : alert("error", "Error al eliminar");
-                        audienceResults().then(res => setData(res))
+                      audienceResults().then((res) => setData(res));
                     });
                     break;
                   case "Opciones de soporte gráfico":
@@ -526,7 +527,7 @@ export const Configuration = () => {
                         res.id
                           ? alert("success", "Elemento creado")
                           : alert("error", "Error al eliminar");
-                          graphicSupportOptions().then(res => setData(res))
+                        graphicSupportOptions().then((res) => setData(res));
                       }
                     );
                     break;
@@ -535,7 +536,7 @@ export const Configuration = () => {
                       res.id
                         ? alert("success", "Elemento creado")
                         : alert("error", "Error al eliminar");
-                        idTypes().then(res => setData(res))
+                      idTypes().then((res) => setData(res));
                     });
                     break;
                   case "Tipos de archivo":
@@ -543,7 +544,7 @@ export const Configuration = () => {
                       res.id
                         ? alert("success", "Elemento creado")
                         : alert("error", "Error al eliminar");
-                        fileTypes().then(res => setData(res))
+                      fileTypes().then((res) => setData(res));
                     });
                     break;
 
@@ -673,11 +674,13 @@ export const Configuration = () => {
                   title="Consultorio Jurídico"
                   showTitle={true}
                   width={700}
-                  height={620}
+                  height={240}
                 />
                 <Form>
                   <Item itemType="group" colCount={2} colSpan={2}>
-                    <Item dataField="name" caption="Nombre" required />
+                    <Item dataField="name" caption="Nombre">
+                      <RequiredRule message="Este campo es requerido" />
+                    </Item>
                     <Item dataField="description" caption="Descripción" />
                   </Item>
                 </Form>
@@ -716,156 +719,164 @@ export const Configuration = () => {
             width: "100%",
           }}
         >
-          <DataGrid
-            dataSource={data}
-            keyExpr="id"
-            showColumnLines={true}
-            // onRowClick={e => console.log(e)}
-            onExporting={(e) => {}}
-            showHeaderFilter={true}
-            showRowLines={true}
-            columnAutoWidth={true}
-            showBorders={true}
-            onRowRemoved={(row) => {
-              let id = row.data.id;
-              deletePeople(id).then((res) => {
-                res.request.status === 204
-                  ? alert("success", "Elemento eliminado")
-                  : alert("error", "Error al eliminar");
-              });
-            }}
-            onRowInserted={(row) => {
-              console.log("event row", row)
-              let typeId = [];
+          <Box width="100%">
+            <DataGrid
+              dataSource={data}
+              keyExpr="id"
+              showColumnLines={true}
+              // onRowClick={e => console.log(e)}
+              onExporting={(e) => {}}
+              showHeaderFilter={true}
+              showRowLines={true}
+              columnAutoWidth={true}
+              showBorders={true}
+              onRowRemoved={(row) => {
+                let id = row.data.id;
+                deletePeople(id).then((res) => {
+                  res.request.status === 204
+                    ? alert("success", "Elemento eliminado")
+                    : alert("error", "Error al eliminar");
+                });
+              }}
+              onRowInserted={(row) => {
+                let typeId = [];
 
-              idType.forEach(
-                (e) => e.name === row.data.idTypeId && typeId.push(e.id)
-              );
+                idType.forEach(
+                  (e) => e.name === row.data.idTypeId && typeId.push(e.id)
+                );
 
-              console.log("id a enviar", typeId[0]);
+                let name = row.data.name;
+                let lastName1 = row.data.lastName1;
+                let lastName2 = row.data.lastName2;
+                let idTypeId = typeId[0];
+                let idNumber = row.data.idNumber;
+                let email = row.data.email;
+                let tel = row.data.tel;
+                let birthdate = row.data.birthdate;
 
-              let name = row.data.name;
-              let lastName1 = row.data.lastName1;
-              let lastName2 = row.data.lastName2;
-              let idTypeId = typeId[0];
-              let idNumber = row.data.idNumber;
-              let email = row.data.email;
-              let tel = row.data.tel;
-              let birthdate = row.data.birthdate;
+                createPeople(
+                  name,
+                  lastName1,
+                  lastName2,
+                  idTypeId,
+                  idNumber,
+                  email,
+                  tel,
+                  birthdate
+                ).then((res) => {
+                  res.id
+                    ? alert("success", "Elemento creado")
+                    : alert("error", "Error al crear persona");
+                  people().then((res) => setData(res));
+                });
+              }}
+              onInitialized={() => {}}
+              onRowUpdated={(row) => {
+                let id = row.data.id;
+                let name = row.data.name;
+                let lastName1 = row.data.lastName1;
+                let lastName2 = row.data.lastName2;
+                let idTypeId = row.data.idTypeId;
+                let idNumber = row.data.idNumber;
+                let email = row.data.email;
+                let tel = row.data.tel;
+                let birthdate = row.data.birthdate;
 
-              createPeople(
-                name,
-                lastName1,
-                lastName2,
-                idTypeId,
-                idNumber,
-                email,
-                tel,
-                birthdate
-              ).then((res) => {
-                res.id
-                  ? alert("success", "Elemento creado")
-                  : alert("error", "Error al crear persona");
-                  people().then(res => setData(res))
-              });
-            }}
-            onInitialized={() => {}}
-            onRowUpdated={(row) => {
-              let id = row.data.id;
-              let name = row.data.name;
-              let lastName1 = row.data.lastName1;
-              let lastName2 = row.data.lastName2;
-              let idTypeId = row.data.idTypeId;
-              let idNumber = row.data.idNumber;
-              let email = row.data.email;
-              let tel = row.data.tel;
-              let birthdate = row.data.birthdate;
-
-              updatePeople(
-                id,
-                name,
-                lastName1,
-                lastName2,
-                idTypeId,
-                idNumber,
-                email,
-                tel,
-                birthdate
-              ).then((res) => {
-                res.length > 0
-                  ? alert("success", "Elemento editado")
-                  : alert("error", "Error al editar");
-              });
-            }}
-            rowAlternationEnabled={true}
-          >
-            <Editing
-              mode="popup"
-              allowUpdating={true}
-              allowAdding={true}
-              allowDeleting={true}
-              useIcons={true}
-              texts={texts2}
+                updatePeople(
+                  id,
+                  name,
+                  lastName1,
+                  lastName2,
+                  idTypeId,
+                  idNumber,
+                  email,
+                  tel,
+                  birthdate
+                ).then((res) => {
+                  res.length > 0
+                    ? alert("success", "Elemento editado")
+                    : alert("error", "Error al editar");
+                });
+              }}
+              rowAlternationEnabled={true}
             >
-              <Popup
-                title="Consultorio Jurídico"
-                showTitle={true}
-                width={700}
-                height={620}
+              <Editing
+                mode="popup"
+                allowUpdating={true}
+                allowAdding={true}
+                allowDeleting={true}
+                useIcons={true}
+                texts={texts2}
+              >
+                <Popup
+                  title="Consultorio Jurídico"
+                  showTitle={true}
+                  width={700}
+                  height={350}
+                />
+                <Form>
+                  <Item itemType="group" colCount={2} colSpan={2}>
+                    <Item dataField="name" caption="Nombre" />
+                    <Item dataField="lastName1" caption="Primer apellido" />
+                    <Item dataField="lastName2" caption="Segundo apellido" />
+                    <Item
+                      dataField="idTypeId"
+                      editorType="dxSelectBox"
+                      editorOptions={positionEditorOptions}
+                    />
+                    {/* <Item dataField="idTypeId" caption="Tipo de documento" /> */}
+                    <Item dataField="idNumber" caption="Número de documento" />
+                    <Item dataField="email" caption="Correo" />
+                    <Item dataField="tel" caption="Teléfono" />
+                    <Item dataField="birthdate" caption="Fecha de nacimineto" />
+                  </Item>
+                </Form>
+              </Editing>
+              <HeaderFilter visible={true} />
+              <FilterRow visible={true} />
+              <Selection
+                mode="multiple"
+                deferred={true}
+                showCheckBoxesMode="always"
               />
-              <Form>
-                <Item itemType="group" colCount={2} colSpan={2}>
-                  <Item dataField="name" caption="Nombre"/>
-                  <Item dataField="lastName1" caption="Primer apellido" />
-                  <Item dataField="lastName2" caption="Segundo apellido" />
-                  <Item
-                    dataField="idTypeId"
-                    editorType="dxSelectBox"
-                    editorOptions={positionEditorOptions}
-                  />
-                  {/* <Item dataField="idTypeId" caption="Tipo de documento" /> */}
-                  <Item dataField="idNumber" caption="Número de documento" />
-                  <Item dataField="email" caption="Correo" />
-                  <Item dataField="tel" caption="Teléfono" />
-                  <Item dataField="birthdate" caption="Fecha de nacimineto" />
-                </Item>
-              </Form>
-            </Editing>
-            <HeaderFilter visible={true} />
-            <Selection
-              mode="multiple"
-              deferred={true}
-              showCheckBoxesMode="always"
-            />
-            <Column dataField="name" caption="Nombre" />
-            <Column caption="Apellidos" cellRender={cellrender} width={200}/>
-            <Column dataField="lastName1" caption="Primer apellido" visible={false} />
-            <Column dataField="lastName2" caption="Segundo apellido" visible={false} />
-            <Column
-              dataField="idTypeId"
-              caption="Tipo de documento"
-              visible={false}
-            />
-            <Column dataField="idType.name" caption="Tipo de documento" />
-            <Column dataField="idNumber" caption="Número de documento" />
-            <Column dataField="email" caption="Correo" />
-            <Column dataField="tel" caption="Teléfono" />
-            <Column dataField="birthdate" caption="Fecha de nacimineto" />
-            <Paging defaultPageSize={10} />
-            <Pager
-              visible={true}
-              allowedPageSizes={allowedPageSizes}
-              displayMode="full"
-              showPageSizeSelector={true}
-              showInfo={true}
-              showNavigationButtons={true}
-            />
-            <Export
-              enabled={true}
-              allowExportSelectedData={true}
-              texts={texts}
-            />
-          </DataGrid>
+              <Column dataField="name" caption="Nombre" />
+              <Column caption="Apellidos" cellRender={cellrender} width={200} />
+              <Column
+                dataField="lastName1"
+                caption="Primer apellido"
+                visible={false}
+              />
+              <Column
+                dataField="lastName2"
+                caption="Segundo apellido"
+                visible={false}
+              />
+              <Column
+                dataField="idTypeId"
+                caption="Tipo de documento"
+                visible={false}
+              />
+              <Column dataField="idType.name" caption="Tipo de documento" />
+              <Column dataField="idNumber" caption="Número de documento" />
+              <Column dataField="email" caption="Correo" />
+              <Column dataField="tel" caption="Teléfono" />
+              <Column dataField="birthdate" caption="Fecha de nacimineto" />
+              <Paging defaultPageSize={10} />
+              <Pager
+                visible={true}
+                allowedPageSizes={allowedPageSizes}
+                displayMode="full"
+                showPageSizeSelector={true}
+                showInfo={true}
+                showNavigationButtons={true}
+              />
+              <Export
+                enabled={true}
+                allowExportSelectedData={true}
+                texts={texts}
+              />
+            </DataGrid>
+          </Box>
         </Card>
       )}
     </div>

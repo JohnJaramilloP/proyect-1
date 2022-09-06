@@ -4,9 +4,11 @@ import { Advisers } from "../views/Advisers";
 import { Estudents } from "../views/Estudents";
 import { WelcomeView } from "../views/WelcomeView";
 import { Cases } from "../views/Cases";
+import { CasesReceived } from "../views/CasesReceived";
 import { Configuration } from "../views/Configuration";
 import { Persons } from "../views/Persons";
 import { SeeCase } from "../components";
+import { CasesAssigned } from "../views/CasesAssigned";
 
 export const HomeRoutes = () => {
   return (
@@ -14,6 +16,8 @@ export const HomeRoutes = () => {
       <Routes>
         <Route path="/Bienvenido" element={<WelcomeView />} />
         <Route path="/Casos" element={<Cases />} />
+        <Route path="Casos_Recepcionados" element={<CasesReceived />} />
+        <Route path="Casos_Asignados" element={<CasesAssigned />} />
         <Route path="/Estudiantes" element={<Estudents />} />
         <Route path="/Asesores" element={<Advisers />} />
         <Route path="/Personas" element={<Persons />} />

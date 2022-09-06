@@ -1,23 +1,65 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
 import Swal from "sweetalert2";
 
-const ModalCreatePerson = ({ add, setAdd, addDepartment }) => {
+const {
+  idTypes,
+  updatePeople,
+  createPeople,
+  deletePeople,
+} = require("../components/services.js");
+
+const ModalCreatePerson = ({ add, setAdd }) => {
   const [valueInput, setValueInput] = useState({
-    nombre:"",
-    cedula:"",
-    estrato: "",
-    documentacion:"",
+    name: "",
+    lastName1: "",
+    lastName2: "",
+    idNumber: "",
+    idTypeId: "",
+    email: "",
+    tel: "",
+    birthdate: "",
   });
+  const [idTypeSelectItems, setIdTypeSelectItems] = useState([]);
+
+  useEffect(() => {
+    idTypes().then((id) => {
+      setIdTypeSelectItems(id);
+    });
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value)
+    console.log(name, value);
     setValueInput((prevState) => ({
       ...prevState,
       [name]: value,
     }));
+  };
+
+  const createPerson = () => {
+    if (valueInput.name !== "") {
+      let name = valueInput.name;
+      let lastName1 = valueInput.lastName1;
+      let lastName2 = valueInput.lastName1;
+      let idTypeId = valueInput.idTypeId;
+      let idNumber = valueInput.idNumber;
+      let email = valueInput.email;
+      let tel = valueInput.tel;
+      let birthdate = valueInput.birthdate ? valueInput.birthdate : null;
+
+      createPeople(
+        name,
+        lastName1,
+        lastName2,
+        idTypeId,
+        idNumber,
+        email,
+        tel,
+        birthdate
+      ).then((e) => console.log("res create", e));
+    }
   };
 
   const showAlert = () => {
@@ -38,70 +80,126 @@ const ModalCreatePerson = ({ add, setAdd, addDepartment }) => {
   };
 
   return (
-    <Modal isOpen={add} centered>
+    <Modal
+      isOpen={add}
+      centered
+      style={{
+        top: 100,
+      }}
+    >
       <ModalHeader>
         <div>
           <h3>Crear nueva persona</h3>
         </div>
       </ModalHeader>
       <ModalBody>
-        <label>Nombres y apellidos</label>
+        <label>Nombres</label>
         <input
           className="form-control"
           type="text"
-          name="nombre"
-          value={valueInput.nombre}
+          name="name"
+          value={valueInput.name}
           onChange={handleChange}
           title="Este campo es requerido"
           required
         />
+        <label>Apellido1</label>
+        <input
+          className="form-control"
+          type="text"
+          name="lastName1"
+          value={valueInput.lastName1}
+          onChange={handleChange}
+          title="Este campo es requerido"
+          required
+        />
+
+        <label>Apellido2</label>
+        <input
+          className="form-control"
+          type="text"
+          name="lastName2"
+          value={valueInput.lastName2}
+          onChange={handleChange}
+          title="Este campo es requerido"
+          required
+        />
+
+        <label
+          style={{
+            marginTop: "5px",
+          }}
+        >
+          Tipo de documento
+        </label>
+        <br />
+        <select
+          placeholder="Elige el tipo de documento"
+          name="idTypeId"
+          value={valueInput.idTypeId}
+          onChange={handleChange}
+          style={{
+            width: "100%",
+            height: "40px",
+            border: "1px solid #00000030",
+            borderRadius: 5,
+          }}
+        >
+          {idTypeSelectItems.map((e) => (
+            <option value={e.id}>{e.name}</option>
+          ))}
+        </select>
+        <br />
 
         <label>Cédula</label>
         <input
           className="form-control"
           type="text"
-          name="cedula"
-          value={valueInput.cedula}
+          name="idNumber"
+          value={valueInput.idNumber}
           onChange={handleChange}
           title="Este campo es requerido"
           required
         />
 
-        <label>Estrato</label>
+        <label>Correo</label>
         <input
           className="form-control"
           type="text"
-          name="estrato"
-          value={valueInput.estrato}
+          name="email"
+          value={valueInput.email}
           onChange={handleChange}
-          title="Este campo es requerido"
-          required
         />
 
-        <label>Trae documentación</label>
+        <label>Teléfono</label>
         <input
           className="form-control"
           type="text"
-          name="documentacion"
-          value={valueInput.documentacion}
+          name="tel"
+          value={valueInput.tel}
           onChange={handleChange}
-          title="Este campo es requerido"
-          required
+        />
+
+        <label>Fecha de nacimineto</label>
+        <input
+          className="form-control"
+          type="text"
+          name="birthdate"
+          value={valueInput.birthdate}
+          onChange={handleChange}
         />
         <form
           action="../../form-result.php"
           method="post"
           enctype="multipart/form-data"
           target="_blank"
-        >
-          <p>Sube la documentación: </p>
-          <input type="file" name="archivosubido" />
-          <br />
-          {/* <input type="submit" value="Enviar datos" /> */}
-        </form>
+        ></form>
       </ModalBody>
       <ModalFooter>
-        <Button color="primary" onClick={() => (showAlert(), setAdd())}>
+        <Button
+          color="primary"
+          onClick={() => (showAlert(), setAdd(), createPerson())}
+        >
           Agregar
         </Button>
         <Button color="danger" onClick={() => setAdd()}>

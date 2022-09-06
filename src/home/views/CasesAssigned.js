@@ -16,11 +16,9 @@ import DataGrid, {
   RequiredRule,
 } from "devextreme-react/data-grid";
 import { Button, Grid, IconButton, Box, Card, Typography } from "@mui/material";
-import { DeleteForeverSharp, EditSharp, Visibility  } from "@mui/icons-material";
-
-import { SeeCase } from "../components";
-import ModalCreateCase from "../components/ModalCreateCase";
-import ModalEditCase from "../components/ModalEditCase";
+import { DeleteForeverSharp, EditSharp, Visibility } from "@mui/icons-material";
+import { AiFillEye } from "react-icons/ai";
+import { SeeCaseEstudent } from "../components/SeeCaseEstudent";
 
 const texts = {
   exportAll: "Exportar todos los datos",
@@ -45,16 +43,12 @@ const data = [
   },
 ];
 
-
-export const Cases = () => {
+export const CasesAssigned = () => {
   const [views, setViews] = useState(1);
-  const [openModalCreate, setOpenModalCreate] = useState(false);
-  const [openModalEdit, setOpenModalEdit] = useState(false);
 
   const renderGridCell = (row) => <Visibility 
   onClick={() => setViews(2)}
   sx={{cursor: "pointer"}} />;
-
 
   return (
     <Grid container>
@@ -65,48 +59,7 @@ export const Cases = () => {
           justifyContent="center"
           alignItems="center"
         >
-          <ModalCreateCase add={openModalCreate} setAdd={setOpenModalCreate} />
-          <ModalEditCase add={openModalEdit} setAdd={setOpenModalEdit} />
-
-          <Typography variant="h4">Casos</Typography>
-
-          <Grid
-            container
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              margin: "10px 0",
-            }}
-          >
-            <Button
-              onClick={setOpenModalEdit}
-              sx={{
-                padding: 1,
-                margin: 2,
-                background: "#0275d8",
-                "&:hover": {
-                  background: "#369ffa",
-                },
-              }}
-            >
-              Editar caso
-            </Button>
-
-            <Button
-              onClick={setOpenModalCreate}
-              sx={{
-                padding: 1,
-                margin: 2,
-                background: "#0275d8",
-                "&:hover": {
-                  background: "#369ffa",
-                },
-              }}
-            >
-              Agregar caso
-            </Button>
-          </Grid>
+          <Typography variant="h4">Casos asignados</Typography>
 
           <Grid container>
             <Card
@@ -177,7 +130,7 @@ export const Cases = () => {
 
       {views === 2 && (
         <Grid>
-          <SeeCase setViews={setViews} />
+          <SeeCaseEstudent setViews={setViews} />
         </Grid>
       )}
     </Grid>

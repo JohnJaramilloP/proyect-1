@@ -1,81 +1,85 @@
-import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import { Button, Grid, IconButton } from "@mui/material";
+import { useState } from "react";
+import Swal from "sweetalert2";
+import { Box, Button, Card, Grid, Typography } from "@mui/material";
 import { DeleteForeverSharp, EditSharp } from "@mui/icons-material";
 import ModalCreatePerson from "../components/ModalCreatePerson";
-import { useState } from "react";
 
-const columns = [
-  { id: "nombre", label: "Nombre", minWidth: 120 },
-  { id: "especialidad", label: "Especialidad", minWidth: 120 },
-  {
-    id: "estudiantesCargo",
-    label: "Estudiantes a Cargo",
-    minWidth: 120,
-    format: (value) => value.toLocaleString(),
-  },
-  { id: "caso", label: "Casos", minWidth: 120 },
-  { id: "estadoCaso", label: "Estado del Caso", minWidth: 120 },
-  { id: "editar", label: "Editar", minWidth: 120 },
-  { id: "eliminar", label: "Eliminar", minWidth: 120 },
-];
+import DataGrid, {
+  Column,
+  FilterRow,
+  HeaderFilter,
+  Pager,
+  Paging,
+  Export,
+  Lookup,
+  Editing,
+  Item,
+  Popup,
+  Form,
+  Selection,
+  SearchPanel,
+  RequiredRule,
+} from "devextreme-react/data-grid";
+import { useEffect } from "react";
 
-function createData(
-  nombre,
-  especialidad,
-  estudiantesCargo,
-  caso,
-  estadoCaso,
-  editar,
-  eliminar
-) {
-  return {
-    nombre,
-    especialidad,
-    estudiantesCargo,
-    caso,
-    estadoCaso,
-    editar,
-    eliminar,
-  };
-}
+const {
+  idTypes,
+  people,
+  updatePeople,
+  createPeople,
+  deletePeople,
+} = require("../components/services.js");
 
-const rows = [
-  createData("01", "cod-123", 1324171354, 3287263, "aa"),
-  createData("China", "CN", "css", 9596961),
-  createData("Italy", "IT", 60483973, 301340),
-  createData("United States", "US", 327167434, 9833520),
-  createData("Canada", "CA", 37602103, 9984670),
-  createData("Australia", "AU", 25475400, 7692024),
-  createData("Germany", "DE", 83019200, 357578),
-  createData("Ireland", "IE", 4857000, 70273),
-  createData("Mexico", "MX", 126577691, 1972550),
-  createData("Japan", "JP", 126317000, 377973),
-  createData("France", "FR", 67022000, 640679),
-  createData("United Kingdom", "GB", 67545757, 242495),
-  createData("Russia", "RU", 146793744, 17098246),
-  createData("Nigeria", "NG", 200962417, 923768),
-  createData("Brazil", "BR", 210147125, 8515767),
-];
+const texts = {
+  exportAll: "Exportar todos los datos",
+  exportSelectedRows: "Exportar filas seleccionadas",
+  exportTo: "Export",
+};
+
+const texts2 = {
+  confirmDeleteMessage: "Estas seguro de eliminar la referencia?",
+};
+
+const allowedPageSizes = [5, 10, "Todos"];
 
 export const Persons = () => {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [openModal, setOpenModal] = useState(false);
+  const [data, setData] = useState([]);
+  const [idTypeSelectItems, setIdTypeSelectItems] = useState([]);
+  const [idType, setIdType] = useState([]);
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  const cellrender = (row) => {
+    let apellido1 = row.data.lastName1 === null ? "" : row.data.lastName1;
+    let apellido2 = row.data.lastName2 === null ? "" : row.data.lastName2;
+    return <p>{`${apellido1} ${apellido2}`}</p>;
   };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
+  let positionEditorOptions = {
+    items: idTypeSelectItems,
+    searchEnabled: true,
+    value: "",
+  };
+
+  useEffect(() => {
+    people().then((people) => {
+      setData(people);
+    });
+
+    idTypes().then((id) => {
+      let idType = id.map((e) => e.name);
+      setIdTypeSelectItems(idType);
+      setIdType(id);
+    });
+  }, []);
+
+  const alert = (icon, text) => {
+    Swal.fire({
+      position: "center",
+      icon: icon,
+      title: text,
+      showConfirmButton: false,
+      timer: 1500,
+    });
   };
 
   return (
@@ -85,7 +89,7 @@ export const Persons = () => {
       justifyContent="center"
       alignItems="center"
     >
-      <Button 
+      {/* <Button
       onClick={setOpenModal}
       sx={{ 
         padding: 1, 
@@ -98,72 +102,175 @@ export const Persons = () => {
         Agregar persona
       </Button>
 
-      <ModalCreatePerson add={openModal} setAdd={setOpenModal} />
+      <ModalCreatePerson add={openModal} setAdd={setOpenModal} /> */}
 
-      <Paper sx={{ sm: { maxWidth: "60vw" }, overflow: "hidden" }}>
-        <TableContainer sx={{ width: "80vw", maxHeight: 590 }}>
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <TableRow>
-                {columns.map((column) => (
-                  <TableCell
-                    key={column.id}
-                    align={column.align}
-                    style={{ minWidth: column.minWidth }}
-                  >
-                    {column.label}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => {
-                  return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={row.nombre}
-                    >
-                      {columns.map((column) => {
-                        const value = row[column.id];
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            {column.format && typeof value === "number" ? (
-                              column.format(value)
-                            ) : column.id !== "editar" ? (
-                              value
-                            ) : (
-                              <IconButton>
-                                <EditSharp color="error" />
-                              </IconButton>
-                            )}
-                            {column.id === "eliminar" && (
-                              <IconButton color="error">
-                                <DeleteForeverSharp />
-                              </IconButton>
-                            )}
-                          </TableCell>
-                        );
-                      })}
-                    </TableRow>
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
+      <Typography variant="h4">Personas</Typography>
+
+      <Card
+        style={{
+          padding: 10,
+          width: "100%",
+        }}
+      >
+        <Box width="100%">
+          <DataGrid
+            dataSource={data}
+            keyExpr="id"
+            showColumnLines={true}
+            // onRowClick={e => console.log(e)}
+            onExporting={(e) => {}}
+            showHeaderFilter={true}
+            showRowLines={true}
+            columnAutoWidth={true}
+            showBorders={true}
+            onRowRemoved={(row) => {
+              let id = row.data.id;
+              deletePeople(id).then((res) => {
+                res.request.status === 204
+                  ? alert("success", "Elemento eliminado")
+                  : alert("error", "Error al eliminar");
+              });
+            }}
+            onRowInserted={(row) => {
+              let typeId = [];
+
+              idType.forEach(
+                (e) => e.name === row.data.idTypeId && typeId.push(e.id)
+              );
+
+              let name = row.data.name;
+              let lastName1 = row.data.lastName1;
+              let lastName2 = row.data.lastName2;
+              let idTypeId = typeId[0];
+              let idNumber = row.data.idNumber;
+              let email = row.data.email;
+              let tel = row.data.tel;
+              let birthdate = row.data.birthdate;
+
+              createPeople(
+                name,
+                lastName1,
+                lastName2,
+                idTypeId,
+                idNumber,
+                email,
+                tel,
+                birthdate
+              ).then((res) => {
+                res.id
+                  ? alert("success", "Elemento creado")
+                  : alert("error", "Error al crear persona");
+                people().then((res) => setData(res));
+              });
+            }}
+            onInitialized={() => {}}
+            onRowUpdated={(row) => {
+              let id = row.data.id;
+              let name = row.data.name;
+              let lastName1 = row.data.lastName1;
+              let lastName2 = row.data.lastName2;
+              let idTypeId = row.data.idTypeId;
+              let idNumber = row.data.idNumber;
+              let email = row.data.email;
+              let tel = row.data.tel;
+              let birthdate = row.data.birthdate;
+
+              updatePeople(
+                id,
+                name,
+                lastName1,
+                lastName2,
+                idTypeId,
+                idNumber,
+                email,
+                tel,
+                birthdate
+              ).then((res) => {
+                res.length > 0
+                  ? alert("success", "Elemento editado")
+                  : alert("error", "Error al editar");
+              });
+            }}
+            rowAlternationEnabled={true}
+          >
+            <Editing
+              mode="popup"
+              allowUpdating={true}
+              allowAdding={true}
+              allowDeleting={true}
+              useIcons={true}
+              texts={texts2}
+            >
+              <Popup
+                title="Consultorio Jurídico"
+                showTitle={true}
+                width={700}
+                height={350}
+              />
+              <Form>
+                <Item itemType="group" colCount={2} colSpan={2}>
+                  <Item dataField="name" caption="Nombre" />
+                  <Item dataField="lastName1" caption="Primer apellido" />
+                  <Item dataField="lastName2" caption="Segundo apellido" />
+                  <Item
+                    dataField="idTypeId"
+                    editorType="dxSelectBox"
+                    editorOptions={positionEditorOptions}
+                  />
+                  {/* <Item dataField="idTypeId" caption="Tipo de documento" /> */}
+                  <Item dataField="idNumber" caption="Número de documento" />
+                  <Item dataField="email" caption="Correo" />
+                  <Item dataField="tel" caption="Teléfono" />
+                  <Item dataField="birthdate" caption="Fecha de nacimineto" />
+                </Item>
+              </Form>
+            </Editing>
+            <HeaderFilter visible={true} />
+            <FilterRow visible={true} />
+            <Selection
+              mode="multiple"
+              deferred={true}
+              showCheckBoxesMode="always"
+            />
+            <Column dataField="name" caption="Nombre" />
+            <Column caption="Apellidos" cellRender={cellrender} width={200} />
+            <Column
+              dataField="lastName1"
+              caption="Primer apellido"
+              visible={false}
+            />
+            <Column
+              dataField="lastName2"
+              caption="Segundo apellido"
+              visible={false}
+            />
+            <Column
+              dataField="idTypeId"
+              caption="Tipo de documento"
+              visible={false}
+            />
+            <Column dataField="idType.name" caption="Tipo de documento" />
+            <Column dataField="idNumber" caption="Número de documento" />
+            <Column dataField="email" caption="Correo" />
+            <Column dataField="tel" caption="Teléfono" />
+            <Column dataField="birthdate" caption="Fecha de nacimineto" />
+            <Paging defaultPageSize={10} />
+            <Pager
+              visible={true}
+              allowedPageSizes={allowedPageSizes}
+              displayMode="full"
+              showPageSizeSelector={true}
+              showInfo={true}
+              showNavigationButtons={true}
+            />
+            <Export
+              enabled={true}
+              allowExportSelectedData={true}
+              texts={texts}
+            />
+          </DataGrid>
+        </Box>
+      </Card>
     </Grid>
   );
 };
