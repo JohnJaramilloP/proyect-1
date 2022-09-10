@@ -221,7 +221,7 @@ export const Persons = () => {
                   <Item dataField="idNumber" caption="Número de documento" />
                   <Item dataField="email" caption="Correo" />
                   <Item dataField="tel" caption="Teléfono" />
-                  <Item dataField="birthdate" caption="Fecha de nacimineto" />
+                  <Item dataField="birthdate" caption="Fecha de nacimineto" editorOptions={{placeholder: "aaaa/mm/dd"}}/>
                 </Item>
               </Form>
             </Editing>

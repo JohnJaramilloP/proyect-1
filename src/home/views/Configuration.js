@@ -282,7 +282,7 @@ export const Configuration = () => {
           margin: " 10px 0",
         }}
       >
-        <Typography variant="h4">Configuración:</Typography>
+        <Typography variant="h4">Configuración</Typography>
       </Grid>
 
       <Grid>

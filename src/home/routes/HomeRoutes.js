@@ -9,6 +9,7 @@ import { Configuration } from "../views/Configuration";
 import { Persons } from "../views/Persons";
 import { SeeCase } from "../components";
 import { CasesAssigned } from "../views/CasesAssigned";
+import { SeeCaseEstudent } from "../components/SeeCaseEstudent";
 
 export const HomeRoutes = () => {
   return (
@@ -23,6 +24,7 @@ export const HomeRoutes = () => {
         <Route path="/Personas" element={<Persons />} />
         <Route path="/Configuracion" element={<Configuration />} />
         <Route path="/Ver_caso" element={<SeeCase />} />
+        <Route path="/Ver_caso_ase_estu" element={<SeeCaseEstudent />} />
         <Route path="/" element={<Navigate to="/Bienvenido" />} />
       </Routes>
     </div>

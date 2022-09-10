@@ -10,6 +10,7 @@ import { CgClose } from "react-icons/cg";
 import { Button } from "reactstrap";
 import Swal from "sweetalert2";
 import { Delete } from "@mui/icons-material";
+import { useLocation } from "react-router-dom";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -129,6 +130,9 @@ export const SeeCaseEstudent = ({ setViews }) => {
     });
   };
 
+  const location = useLocation();
+  const { id } = location.state;
+  console.log(id);
 
   return (
     <Grid

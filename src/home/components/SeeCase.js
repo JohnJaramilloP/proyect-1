@@ -10,6 +10,7 @@ import { CgClose } from "react-icons/cg";
 import { Button } from "reactstrap";
 import Swal from "sweetalert2";
 import { Delete } from "@mui/icons-material";
+import { Link, useLocation } from "react-router-dom";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -24,12 +25,22 @@ const MenuProps = {
 
 const {
   areas,
+  attentionPlaces,
   subjectMatters,
   origins,
   capacities,
+  caseStatuses,
   audienceResults,
   graphicSupportOptions,
 } = require("../components/services");
+
+const {
+  cases,
+  casesId,
+  createCases,
+  updateCases,
+  deleteCases,
+} = require("../components/servicesCases.js");
 
 const names = [
   "Oliver Hansen",
@@ -62,53 +73,101 @@ const recepcion = ["Si", "No"];
 const participacion = ["Si", "No", "No aplica"];
 
 const representacionTerceros = [
-  "Asesoría",
-  "Elaboración de demanda",
-  "Contestación de demanda",
-  "Acción constitucional",
-  "Representación a terceros",
+  { id: 1, name: "ASESORIA" },
+  { id: 2, name: "ELABORACION DE DEMANDA" },
+  { id: 3, name: "CONTESTACION DE DEMANDA" },
+  { id: 4, name: "ACCION CONSTITUCIONAL" },
+  { id: 5, name: "REPRESANTACION A TERCEROS" },
 ];
 
-export const SeeCase = ({ setViews }) => {
-  const handleView = () => {
-    setViews(1);
-  };
+export const SeeCase = () => {
+  const location = useLocation();
+  const { id } = location.state;
 
   const [data, setData] = useState({
-    id: "2233",
-    year: "2022",
-    internalNumber: "Radicado",
-    attentionConsultantDate: "12 de noviembre",
-    receptionDate: "20 de noviembre",
-    plaintiff: "Demandante",
-    defendant: "Demandado",
-    area: "CIVIL Y COMERCIAL",
-    origin: "USUARIO INTERNO",
-    matter: "Contratos",
-    receivedCase: "Si",
-    studentRecepcionist: "Juan Pérez",
-    studentRecepcionistCapacity: "Estudiante",
-    attentionPlace: "Centro principal",
-    studentAssigne: "Oliver Hansen",
-    studentAsigneeCapacity: "Abogado",
-    appointmentDateByUser: "3 de julio",
-    individualParticipation: "Si",
-    advisor: "Ricardo Vélez",
-    thirdPartyRepresentation: "Asesoría",
-    audienceDateTime: "15 de agosto",
-    audienceTime: "03:00",
-    audienceResult: "ACTA DE ACUERDO PARCIAL",
-    caseStatus: "Conciliacion",
-    receiverStudent: "Carlos Marín",
-    studentPeaceFulCertificate: "En espera",
-    graphicSupport: "FAMILIA",
+    id: "",
+    year: "",
+    internalNumber: "",
+    attentionConsultantDate: "",
+    receptionDate: "",
+    plaintiff: "",
+    defendant: "",
+    area: "",
+    origin: "",
+    matter: "",
+    receivedCase: "",
+    studentRecepcionist: "",
+    studentRecepcionistCapacity: "",
+    attentionPlace: "",
+    studentAssignee: "",
+    studentAsigneeCapacity: "",
+    appointmentDateByUser: "",
+    individualParticipation: "",
+    advisor: "",
+    thirdPartyRepresentation: "",
+    audienceDateTime: "",
+    audienceTime: "",
+    audienceResult: "",
+    caseStatus: "",
+    receiverStudent: "",
+    studentPeaceFulCertificate: "",
+    graphicSupport: "",
   });
   const [area, setArea] = useState([]);
+  const [attentionPlace, setattentionPlace] = useState([]);
+  const [estadoCaso, setEstadoCaso] = useState([])
   const [origen, setOrigen] = useState([]);
   const [calidad, setCalidad] = useState([]);
   const [materia, setMateria] = useState([]);
   const [resultadoAudiencia, setResultadoAudiencia] = useState([]);
   const [graficar, setGraficar] = useState([]);
+
+  useEffect(() => {
+    casesId(id).then((_case) => {
+      console.log("datassss", _case);
+      setData({
+        id: _case.id,
+        year: _case.year,
+        internalNumber: _case.internalNumber,
+        attentionConsultantDate: _case.attentionConsultantDate,
+        receptionDate: _case.receptionDate,
+        plaintiff: _case.plaintiff && _case.plaintiff.name,
+        defendant: _case.defendant && _case.defendant.name,
+        area: _case.area && _case.area.id,
+        origin: _case.origin && _case.origin.id,
+        matter: _case.matter && _case.matter.id,
+        receivedCase: _case.receivedCase === true ? "Si" : "No",
+        studentRecepcionist:
+          _case.studentRecepcionist && _case.studentRecepcionist.name,
+        studentRecepcionistCapacity:
+          _case.studentRecepcionistCapacity &&
+          _case.studentRecepcionistCapacity.id,
+        attentionPlace: _case.attentionPlace && _case.attentionPlace.id,
+        studentAssignee: _case.studentAssignee && _case.studentAssignee.name,
+        studentAsigneeCapacity:
+          _case.studentAssigneeCapacity && _case.studentAssigneeCapacity.id,
+        appointmentDateByUser:
+          _case.appointmentDateByUser === false ? "No" : "Si",
+        individualParticipation:
+          _case.individualParticipation && _case.individualParticipation.name,
+        advisor: _case.advisor && _case.advisor.name,
+        thirdPartyRepresentation:
+          _case.thirdPartyRepresentation && _case.thirdPartyRepresentation.id,
+        audienceDateTime:
+          _case.audienceDateTime && _case.audienceDateTime.substring(0, 10),
+        audienceTime:
+          _case.audienceDateTime && _case.audienceDateTime.substring(11, 16),
+        audienceResult: _case.audienceResult && _case.audienceResult.id,
+        caseStatus: _case.caseStatus && _case.caseStatus.id,
+        receiverStudent: _case.receiverStudent && _case.receiverStudent.name,
+        studentPeaceFulCertificate:
+          _case.studentPeaceFulCertificate === false
+            ? "No"
+            : "Si",
+        graphicSupport: _case.graphicSupport && _case.graphicSupport.id,
+      });
+    });
+  }, []);
 
   const handleChange = (e) => {
     const { value, name } = e.target;
@@ -119,31 +178,79 @@ export const SeeCase = ({ setViews }) => {
   };
 
   useEffect(() => {
-    areas().then((res) => {
-      let areas = res.map((res) => res.name);
+    areas().then((areas) => {
       setArea(areas);
     });
-    origins().then((res) => {
-      let origen = res.map((res) => res.name);
+    attentionPlaces().then((places) => {
+      setattentionPlace(places);
+    });
+    origins().then((origen) => {
       setOrigen(origen);
     });
-    capacities().then((res) => {
-      let calidad = res.map((res) => res.name);
+    caseStatuses().then(estado => {
+      setEstadoCaso(estado);
+    });
+    capacities().then((calidad) => {
       setCalidad(calidad);
     });
-    subjectMatters().then((res) => {
-      let materia = res.map((res) => res.name);
+    subjectMatters().then((materia) => {
       setMateria(materia);
     });
-    audienceResults().then((res) => {
-      let resultado = res.map((res) => res.name);
+    audienceResults().then((resultado) => {
       setResultadoAudiencia(resultado);
     });
     graphicSupportOptions().then((res) => {
-      let resultado = res.map((res) => res.name);
-      setGraficar(resultado);
+      setGraficar(res);
     });
   }, []);
+
+  const updateCase = () => {
+    let body = {
+      socioeconomicLevel: data.socioeconomicLevel,
+      year: data.year,
+      internalNumber: data.internalNumber,
+      attentionConsultantDate: data.attentionConsultantDate,
+      receptionDate: data.receptionDate,
+      plaintiffId: 1,
+      defendantId: 1,
+      areaId: data.area,
+      matterId: data.matter,
+      originId: data.origin,
+      receivedCase:
+        data.receivedCase === "Si"
+          ? true
+          : data.receivedCase === "No"
+          ? false
+          : null,
+      studentRecepcionistId: 1,
+      studentRecepcionistCapacityId: data.studentRecepcionistCapacity,
+      attentionPlaceId: data.attentionPlace,
+      studentAssigneeId: 1,
+      studentAssigneeCapacityId: data.studentAsigneeCapacity,
+      appointmentDateByUser:
+        data.appointmentDateByUser === "Si"
+          ? true
+          : data.appointmentDateByUser === "No"
+          ? false
+          : null,
+      individualParticipationId: data.individualParticipation === "Si" ? 1 : 2,
+      advisorId: 1,
+      thirdPartyRepresentationId: data.thirdPartyRepresentation,
+      audienceDateTime: `${data.audienceDateTime}T${data.audienceTime}:02.000Z`,
+      audienceResultId: data.audienceResult,
+      caseStatusId: data.caseStatus,
+      receiverStudentId: 1,
+      studentPeacefulCertificate:
+        data.studentPeaceFulCertificate === "Si"
+          ? true
+          : false,
+      graphicSupportId: data.graphicSupport,
+    };
+    updateCases(id, body).then(res =>{
+      res[0] === 1 &&  alert("success", "Cambios guardados");
+      res.name === "AxiosError" &&  alert("error", "Error al guardar");
+    });
+  };
 
   const alert = (icon, text) => {
     Swal.fire({
@@ -155,7 +262,6 @@ export const SeeCase = ({ setViews }) => {
     });
   };
 
-
   return (
     <Grid
       container
@@ -165,16 +271,18 @@ export const SeeCase = ({ setViews }) => {
         position: "relative",
       }}
     >
-      <CgClose
-        onClick={handleView}
-        style={{
-          fontSize: 35,
-          position: "absolute",
-          right: 15,
-          top: 15,
-          cursor: "pointer",
-        }}
-      />
+      <Link to={"/Casos"}>
+        <CgClose
+          style={{
+            fontSize: 35,
+            position: "absolute",
+            right: 15,
+            top: 15,
+            cursor: "pointer",
+            color: "#000000",
+          }}
+        />
+      </Link>
 
       {/* titulo */}
 
@@ -192,7 +300,7 @@ export const SeeCase = ({ setViews }) => {
             margin: "0 auto",
           }}
         >
-          Caso:
+          Caso: {data.id}
         </Typography>
       </Grid>
 
@@ -207,7 +315,10 @@ export const SeeCase = ({ setViews }) => {
           alignItems: "center",
         }}
       >
-        <Grid>
+        <Grid
+        md={5}
+        xs={11}
+        >
           <Typography variant="h4">Asignar estudiante</Typography>
 
           <FormControl sx={{ m: 1, width: "100%" }}>
@@ -215,11 +326,11 @@ export const SeeCase = ({ setViews }) => {
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select-label"
-              value={data.studentAssigne}
+              value={data.studentAssignee}
               onChange={handleChange}
               input={<OutlinedInput label="Name" />}
               MenuProps={MenuProps}
-              name="studentAssigne"
+              name="studentAssignee"
             >
               {names.map((name) => (
                 <MenuItem key={name} value={name}>
@@ -230,7 +341,10 @@ export const SeeCase = ({ setViews }) => {
           </FormControl>
         </Grid>
 
-        <Grid>
+        <Grid
+           md={5}
+           xs={11}
+        >
           <Typography variant="h4">Asignar asesor</Typography>
           <FormControl sx={{ m: 1, width: "100%" }}>
             <InputLabel id="demo-simple-select-label">Nombre</InputLabel>
@@ -265,8 +379,9 @@ export const SeeCase = ({ setViews }) => {
         <Grid
           container
           className="container"
+          md={5}
+          xs={11}
           style={{
-            width: "45%",
             display: "flex",
             flexDirection: "column",
           }}
@@ -287,15 +402,16 @@ export const SeeCase = ({ setViews }) => {
             variant="outlined"
             value={data.id}
             name="id"
-            onChange={handleChange}
+            disabled
           />
         </Grid>
 
         <Grid
           container
           className="container"
+          md={5}
+          xs={11}
           style={{
-            width: "45%",
             display: "flex",
             flexDirection: "column",
           }}
@@ -331,8 +447,9 @@ export const SeeCase = ({ setViews }) => {
         <Grid
           container
           className="container"
+          md={5}
+          xs={11}
           style={{
-            width: "45%",
             display: "flex",
             flexDirection: "column",
           }}
@@ -360,8 +477,9 @@ export const SeeCase = ({ setViews }) => {
         <Grid
           container
           className="container"
+          md={5}
+          xs={11}
           style={{
-            width: "45%",
             display: "flex",
             flexDirection: "column",
           }}
@@ -383,6 +501,7 @@ export const SeeCase = ({ setViews }) => {
             value={data.attentionConsultantDate}
             name="attentionConsultantDate"
             onChange={handleChange}
+            type="date"
           />
         </Grid>
       </Grid>
@@ -397,8 +516,9 @@ export const SeeCase = ({ setViews }) => {
         <Grid
           container
           className="container"
+          md={5}
+          xs={11}
           style={{
-            width: "45%",
             display: "flex",
             flexDirection: "column",
           }}
@@ -420,14 +540,16 @@ export const SeeCase = ({ setViews }) => {
             value={data.receptionDate}
             name="receptionDate"
             onChange={handleChange}
+            type="date"
           />
         </Grid>
 
         <Grid
           container
           className="container"
+          md={5}
+          xs={11}
           style={{
-            width: "45%",
             display: "flex",
             flexDirection: "column",
           }}
@@ -463,8 +585,9 @@ export const SeeCase = ({ setViews }) => {
         <Grid
           container
           className="container"
+          md={5}
+          xs={11}
           style={{
-            width: "45%",
             display: "flex",
             flexDirection: "column",
           }}
@@ -492,8 +615,9 @@ export const SeeCase = ({ setViews }) => {
         <Grid
           container
           className="container"
+          md={5}
+          xs={11}
           style={{
-            width: "45%",
             display: "flex",
             flexDirection: "column",
           }}
@@ -508,9 +632,8 @@ export const SeeCase = ({ setViews }) => {
               {" "}
               Área (CIVIL, FAMILIA, COMERCIAL, LABORAL, PENAL)
             </Typography>
-
             <FormControl sx={{ m: 1, width: "100%" }}>
-              <InputLabel id="demo-simple-select-label">Area</InputLabel>
+              <InputLabel id="demo-simple-select-label">Área</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select-label"
@@ -520,9 +643,9 @@ export const SeeCase = ({ setViews }) => {
                 MenuProps={MenuProps}
                 name="area"
               >
-                {area.map((name) => (
-                  <MenuItem key={name} value={name}>
-                    {name}
+                {area.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.name}
                   </MenuItem>
                 ))}
               </Select>
@@ -541,8 +664,9 @@ export const SeeCase = ({ setViews }) => {
         <Grid
           container
           className="container"
+          md={5}
+          xs={11}
           style={{
-            width: "45%",
             display: "flex",
             flexDirection: "column",
           }}
@@ -568,9 +692,9 @@ export const SeeCase = ({ setViews }) => {
                 MenuProps={MenuProps}
                 name="matter"
               >
-                {materia.map((name) => (
-                  <MenuItem key={name} value={name}>
-                    {name}
+                {materia.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.name}
                   </MenuItem>
                 ))}
               </Select>
@@ -581,8 +705,9 @@ export const SeeCase = ({ setViews }) => {
         <Grid
           container
           className="container"
+          md={5}
+          xs={11}
           style={{
-            width: "45%",
             display: "flex",
             flexDirection: "column",
           }}
@@ -608,9 +733,9 @@ export const SeeCase = ({ setViews }) => {
                 MenuProps={MenuProps}
                 name="origin"
               >
-                {origen.map((name) => (
-                  <MenuItem key={name} value={name}>
-                    {name}
+                {origen.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.name}
                   </MenuItem>
                 ))}
               </Select>
@@ -629,8 +754,9 @@ export const SeeCase = ({ setViews }) => {
         <Grid
           container
           className="container"
+          md={5}
+          xs={11}
           style={{
-            width: "45%",
             display: "flex",
             flexDirection: "column",
           }}
@@ -669,8 +795,9 @@ export const SeeCase = ({ setViews }) => {
         <Grid
           container
           className="container"
+          md={5}
+          xs={11}
           style={{
-            width: "45%",
             display: "flex",
             flexDirection: "column",
           }}
@@ -706,8 +833,9 @@ export const SeeCase = ({ setViews }) => {
         <Grid
           container
           className="container"
+          md={5}
+          xs={11}
           style={{
-            width: "45%",
             display: "flex",
             flexDirection: "column",
           }}
@@ -722,21 +850,34 @@ export const SeeCase = ({ setViews }) => {
           >
             LUGAR DE ATENCIÓN
           </Typography>
-          <TextField
-            id="outlined-basic"
-            label="LUGAR DE ATENCIÓN"
-            variant="outlined"
-            value={data.attentionPlace}
-            name="attentionPlace"
-            onChange={handleChange}
-          />
+          <FormControl sx={{ m: 1, width: "100%" }}>
+            <InputLabel id="demo-simple-select-label">
+              Lugar de ateción
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select-label"
+              value={data.attentionPlace}
+              onChange={handleChange}
+              input={<OutlinedInput label="Name" />}
+              MenuProps={MenuProps}
+              name="attentionPlace"
+            >
+              {attentionPlace.map((option) => (
+                <MenuItem key={option.id} value={option.id}>
+                  {option.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Grid>
 
         <Grid
           container
           className="container"
+          md={5}
+          xs={11}
           style={{
-            width: "45%",
             display: "flex",
             flexDirection: "column",
           }}
@@ -762,9 +903,9 @@ export const SeeCase = ({ setViews }) => {
                 MenuProps={MenuProps}
                 name="studentRecepcionistCapacity"
               >
-                {calidad.map((name) => (
-                  <MenuItem key={name} value={name}>
-                    {name}
+                {calidad.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.name}
                   </MenuItem>
                 ))}
               </Select>
@@ -783,8 +924,9 @@ export const SeeCase = ({ setViews }) => {
         <Grid
           container
           className="container"
+          md={5}
+          xs={11}
           style={{
-            width: "45%",
             display: "flex",
             flexDirection: "column",
           }}
@@ -803,8 +945,8 @@ export const SeeCase = ({ setViews }) => {
             id="outlined-basic"
             label="ESTUDIANTE A QUIEN SE LE ASIGNO EL CASO"
             variant="outlined"
-            value={data.studentAssigne}
-            name="studentAssigne"
+            value={data.studentAssignee}
+            name="studentAssignee"
             disabled
           />
         </Grid>
@@ -812,8 +954,9 @@ export const SeeCase = ({ setViews }) => {
         <Grid
           container
           className="container"
+          md={5}
+          xs={11}
           style={{
-            width: "45%",
             display: "flex",
             flexDirection: "column",
           }}
@@ -828,14 +971,24 @@ export const SeeCase = ({ setViews }) => {
           >
             CALIDAD (E/A)
           </Typography>
-          <TextField
-            id="outlined-basic"
-            label="CALIDAD (E/A)"
-            variant="outlined"
-            value={data.studentAsigneeCapacity}
-            name="studentAsigneeCapacity"
-            onChange={handleChange}
-          />
+          <FormControl sx={{ m: 1, width: "100%" }}>
+            <InputLabel id="demo-simple-select-label">Calidad</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select-label"
+              value={data.studentAsigneeCapacity}
+              onChange={handleChange}
+              input={<OutlinedInput label="Name" />}
+              MenuProps={MenuProps}
+              name="studentAsigneeCapacity"
+            >
+              {calidad.map((option) => (
+                <MenuItem key={option.id} value={option.id}>
+                  {option.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Grid>
       </Grid>
 
@@ -849,8 +1002,9 @@ export const SeeCase = ({ setViews }) => {
         <Grid
           container
           className="container"
+          md={5}
+          xs={11}
           style={{
-            width: "45%",
             display: "flex",
             flexDirection: "column",
           }}
@@ -863,23 +1017,36 @@ export const SeeCase = ({ setViews }) => {
               marginBottom: 10,
             }}
           >
-            FECHA DE CITACION DE PARTE USUARIO (MARCAR SI O NO)
+            FECHA DE CITACION DE PARTE USUARIO
           </Typography>
-          <TextField
-            id="outlined-basic"
-            label="FECHA DE CITACION DE PARTE USUARIO (MARCAR SI O NO)"
-            variant="outlined"
-            value={data.appointmentDateByUser}
-            name="appointmentDateByUser"
-            onChange={handleChange}
-          />
+          <FormControl sx={{ m: 1, width: "100%" }}>
+              <InputLabel id="demo-simple-select-label">
+                Fecha de participación de usuario
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select-label"
+                value={data.appointmentDateByUser}
+                onChange={handleChange}
+                input={<OutlinedInput label="Name" />}
+                MenuProps={MenuProps}
+                name="appointmentDateByUser"
+              >
+                {recepcion.map((name) => (
+                  <MenuItem key={name} value={name}>
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
         </Grid>
 
         <Grid
           container
           className="container"
+          md={5}
+          xs={11}
           style={{
-            width: "45%",
             display: "flex",
             flexDirection: "column",
           }}
@@ -907,7 +1074,7 @@ export const SeeCase = ({ setViews }) => {
                 MenuProps={MenuProps}
                 name="individualParticipation"
               >
-                {participacion.map((name) => (
+                {recepcion.map((name) => (
                   <MenuItem key={name} value={name}>
                     {name}
                   </MenuItem>
@@ -928,8 +1095,9 @@ export const SeeCase = ({ setViews }) => {
         <Grid
           container
           className="container"
+          md={5}
+          xs={11}
           style={{
-            width: "45%",
             display: "flex",
             flexDirection: "column",
           }}
@@ -957,8 +1125,9 @@ export const SeeCase = ({ setViews }) => {
         <Grid
           container
           className="container"
+          md={5}
+          xs={11}
           style={{
-            width: "45%",
             display: "flex",
             flexDirection: "column",
           }}
@@ -975,7 +1144,7 @@ export const SeeCase = ({ setViews }) => {
 
             <FormControl sx={{ m: 1, width: "100%" }}>
               <InputLabel id="demo-simple-select-label">
-                Representación
+                Representación a terceros
               </InputLabel>
               <Select
                 labelId="demo-simple-select-label"
@@ -986,9 +1155,9 @@ export const SeeCase = ({ setViews }) => {
                 MenuProps={MenuProps}
                 name="thirdPartyRepresentation"
               >
-                {representacionTerceros.map((name) => (
-                  <MenuItem key={name} value={name}>
-                    {name}
+                {representacionTerceros.map(option => (
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.name}
                   </MenuItem>
                 ))}
               </Select>
@@ -1007,8 +1176,9 @@ export const SeeCase = ({ setViews }) => {
         <Grid
           container
           className="container"
+          md={5}
+          xs={11}
           style={{
-            width: "45%",
             display: "flex",
             flexDirection: "column",
           }}
@@ -1030,14 +1200,16 @@ export const SeeCase = ({ setViews }) => {
             value={data.audienceDateTime}
             name="audienceDateTime"
             onChange={handleChange}
+            type="date"
           />
         </Grid>
 
         <Grid
           container
           className="container"
+          md={5}
+          xs={11}
           style={{
-            width: "45%",
             display: "flex",
             flexDirection: "column",
           }}
@@ -1059,6 +1231,7 @@ export const SeeCase = ({ setViews }) => {
             value={data.audienceTime}
             name="audienceTime"
             onChange={handleChange}
+            type="time"
           />
         </Grid>
       </Grid>
@@ -1073,8 +1246,9 @@ export const SeeCase = ({ setViews }) => {
         <Grid
           container
           className="container"
+          md={5}
+          xs={11}
           style={{
-            width: "45%",
             display: "flex",
             flexDirection: "column",
           }}
@@ -1100,9 +1274,9 @@ export const SeeCase = ({ setViews }) => {
                 MenuProps={MenuProps}
                 name="audienceResult"
               >
-                {resultadoAudiencia.map((name) => (
-                  <MenuItem key={name} value={name}>
-                    {name}
+                {resultadoAudiencia.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.name}
                   </MenuItem>
                 ))}
               </Select>
@@ -1113,8 +1287,9 @@ export const SeeCase = ({ setViews }) => {
         <Grid
           container
           className="container"
+          md={5}
+          xs={11}
           style={{
-            width: "45%",
             display: "flex",
             flexDirection: "column",
           }}
@@ -1129,14 +1304,24 @@ export const SeeCase = ({ setViews }) => {
           >
             ESTADO DEL PROCESO O RESULTADO DEL PROCESO
           </Typography>
-          <TextField
-            id="outlined-basic"
-            label="ESTADO DEL PROCESO O RESULTADO DEL PROCESO"
-            variant="outlined"
-            value={data.caseStatus}
-            name="caseStatus"
-            onChange={handleChange}
-          />
+          <FormControl sx={{ m: 1, width: "100%" }}>
+              <InputLabel id="demo-simple-select-label">ESTADO DEL PROCESO O RESULTADO DEL PROCESO</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select-label"
+                value={data.caseStatus}
+                onChange={handleChange}
+                input={<OutlinedInput label="Name" />}
+                MenuProps={MenuProps}
+                name="caseStatus"
+              >
+                {estadoCaso.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
         </Grid>
       </Grid>
 
@@ -1150,8 +1335,9 @@ export const SeeCase = ({ setViews }) => {
         <Grid
           container
           className="container"
+          md={5}
+          xs={11}
           style={{
-            width: "45%",
             display: "flex",
             flexDirection: "column",
           }}
@@ -1179,8 +1365,9 @@ export const SeeCase = ({ setViews }) => {
         <Grid
           container
           className="container"
+          md={5}
+          xs={11}
           style={{
-            width: "45%",
             display: "flex",
             flexDirection: "column",
           }}
@@ -1195,14 +1382,26 @@ export const SeeCase = ({ setViews }) => {
           >
             PAZ Y SALVO DE ESTUDIANTE EN CONSULTORIO
           </Typography>
-          <TextField
-            id="outlined-basic"
-            label="PAZ Y SALVO DE ESTUDIANTE EN CONSULTORIO"
-            variant="outlined"
-            value={data.studentPeaceFulCertificate}
-            name="studentPeaceFulCertificate"
-            onChange={handleChange}
-          />
+          <FormControl sx={{ m: 1, width: "100%" }}>
+              <InputLabel id="demo-simple-select-label">
+              PAZ Y SALVO DE ESTUDIANTE EN CONSULTORIO
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select-label"
+                value={data.studentPeaceFulCertificate}
+                onChange={handleChange}
+                input={<OutlinedInput label="Name" />}
+                MenuProps={MenuProps}
+                name="studentPeaceFulCertificate"
+              >
+                {recepcion.map((name) => (
+                  <MenuItem key={name} value={name}>
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
         </Grid>
       </Grid>
 
@@ -1216,8 +1415,9 @@ export const SeeCase = ({ setViews }) => {
         <Grid
           container
           className="container"
+          md={5}
+          xs={11}
           style={{
-            width: "45%",
             display: "flex",
             flexDirection: "column",
           }}
@@ -1246,9 +1446,9 @@ export const SeeCase = ({ setViews }) => {
               MenuProps={MenuProps}
               name="graphicSupport"
             >
-              {graficar.map((name) => (
-                <MenuItem key={name} value={name}>
-                  {name}
+              {graficar.map((option) => (
+                <MenuItem key={option.id} value={option.id}>
+                  {option.name}
                 </MenuItem>
               ))}
             </Select>
@@ -1258,8 +1458,9 @@ export const SeeCase = ({ setViews }) => {
         <Grid
           container
           className="container"
+          md={5}
+          xs={11}
           style={{
-            width: "45%",
             display: "flex",
             flexDirection: "column",
           }}
@@ -1389,38 +1590,48 @@ export const SeeCase = ({ setViews }) => {
         </Grid>
       </Grid>
 
-      <Button
-        onClick={() => {
-          handleView();
-          alert("success", "Cambios guardados");
-        }}
-        style={{
-          width: "200px",
-          height: "50px",
-          margin: "10px auto",
-          borderRadius: "50px",
-          fontSize: 22,
-          background: "#369ffa",
-          border: "none",
+      <Grid
+        container
+        sx={{
+          display: "flex",
+          justifyContent: "space-around",
         }}
       >
-        Guardar cambios
-      </Button>
+        <Link to={"/Casos"}>
+          <Button
+            onClick={() => {
+              updateCase();
+            }}
+            style={{
+              width: "200px",
+              height: "50px",
+              margin: "10px auto",
+              borderRadius: "50px",
+              fontSize: 22,
+              background: "#369ffa",
+              border: "none",
+            }}
+          >
+            Guardar cambios
+          </Button>
+        </Link>
 
-      <Button
-        onClick={handleView}
-        style={{
-          width: "200px",
-          height: "50px",
-          margin: "10px auto",
-          borderRadius: "50px",
-          fontSize: 22,
-          background: "#dc3545",
-          border: "none",
-        }}
-      >
-        Salir
-      </Button>
+        <Link to={"/Casos"}>
+          <Button
+            style={{
+              width: "200px",
+              height: "50px",
+              margin: "10px auto",
+              borderRadius: "50px",
+              fontSize: 22,
+              background: "#dc3545",
+              border: "none",
+            }}
+          >
+            Salir
+          </Button>
+        </Link>
+      </Grid>
     </Grid>
   );
 };

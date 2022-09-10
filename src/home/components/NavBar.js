@@ -20,9 +20,8 @@ export const NavBar = ({
   drawerWidth = 240,
   handleDrawerOpen,
   handleClose,
-  valueSideBarHidden
+  valueSideBarHidden,
 }) => {
-
   return (
     <AppBar
       position="fixed"
@@ -48,7 +47,7 @@ export const NavBar = ({
             sx={{ mr: 2 }}
             onClick={() => (handleDrawerOpen(), handleClose())}
           >
-            {valueSideBarHidden ? <MenuOutlined /> : <ArrowForward />}
+            <MenuOutlined />
           </IconButton>
           <Grid
             component="div"

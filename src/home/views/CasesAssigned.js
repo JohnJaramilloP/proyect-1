@@ -19,6 +19,7 @@ import { Button, Grid, IconButton, Box, Card, Typography } from "@mui/material";
 import { DeleteForeverSharp, EditSharp, Visibility } from "@mui/icons-material";
 import { AiFillEye } from "react-icons/ai";
 import { SeeCaseEstudent } from "../components/SeeCaseEstudent";
+import { Link } from "react-router-dom";
 
 const texts = {
   exportAll: "Exportar todos los datos",
@@ -44,95 +45,86 @@ const data = [
 ];
 
 export const CasesAssigned = () => {
-  const [views, setViews] = useState(1);
-
-  const renderGridCell = (row) => <Visibility 
-  onClick={() => setViews(2)}
-  sx={{cursor: "pointer"}} />;
+  const renderGridCell = (row) => {
+    return (
+      <Link to={"/Ver_caso_ase_estu"} state={{ id: "456" }}>
+        <Visibility sx={{ cursor: "pointer", color: "#000000" }} />
+      </Link>
+    );
+  };
 
   return (
     <Grid container>
-      {views === 1 && (
-        <Grid
-          container
-          direction="column"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Typography variant="h4">Casos asignados</Typography>
+      <Grid
+        container
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Typography variant="h4">Casos asignados</Typography>
 
-          <Grid container>
-            <Card
-              style={{
-                padding: 10,
-                width: "100%",
-              }}
-            >
-              <Box width="100%">
-                <DataGrid
-                  dataSource={data}
-                  keyExpr="id"
-                  showColumnLines={true}
-                  // onRowClick={e => console.log(e)}
-                  onExporting={(e) => {}}
-                  showHeaderFilter={true}
-                  showRowLines={true}
-                  columnAutoWidth={true}
-                  showBorders={true}
-                  onRowRemoved={(row) => {}}
-                  onRowInserted={(row) => {}}
-                  onInitialized={() => {}}
-                  onRowUpdated={(row) => {}}
-                  rowAlternationEnabled={true}
-                >
-                  <HeaderFilter visible={true} />
-                  <Selection
-                    mode="multiple"
-                    deferred={true}
-                    showCheckBoxesMode="always"
-                  />
-                  <Column dataField="id" caption="Número" />
-                  <Column dataField="year" caption="Año" />
-                  <Column
-                    dataField="internalNumber"
-                    caption="Radicado Interno"
-                  />
-                  <Column
-                    dataField="attentionConsultantDate"
-                    caption="Fecha Atención Asesoría"
-                  />
-                  <Column
-                    dataField="receptionDate"
-                    caption="Fecha Recepción Caso"
-                  />
-                  <Column dataField="plaintiff" caption="Parte Accionante" />
-                  <Column caption="Ver Caso" cellRender={renderGridCell} />
-                  <Paging defaultPageSize={10} />
-                  <Pager
-                    visible={true}
-                    allowedPageSizes={allowedPageSizes}
-                    displayMode="full"
-                    showPageSizeSelector={true}
-                    showInfo={true}
-                    showNavigationButtons={true}
-                  />
-                  <Export
-                    enabled={true}
-                    allowExportSelectedData={true}
-                    texts={texts}
-                  />
-                </DataGrid>
-              </Box>
-            </Card>
-          </Grid>
+        <Grid container>
+          <Card
+            style={{
+              padding: 10,
+              width: "100%",
+            }}
+          >
+            <Box width="100%">
+              <DataGrid
+                dataSource={data}
+                keyExpr="id"
+                showColumnLines={true}
+                // onRowClick={e => console.log(e)}
+                onExporting={(e) => {}}
+                showHeaderFilter={true}
+                showRowLines={true}
+                columnAutoWidth={true}
+                showBorders={true}
+                onRowRemoved={(row) => {}}
+                onRowInserted={(row) => {}}
+                onInitialized={() => {}}
+                onRowUpdated={(row) => {}}
+                rowAlternationEnabled={true}
+              >
+                <HeaderFilter visible={true} />
+                <Selection
+                  mode="multiple"
+                  deferred={true}
+                  showCheckBoxesMode="always"
+                />
+                <Column dataField="id" caption="Número" />
+                <Column dataField="year" caption="Año" />
+                <Column dataField="internalNumber" caption="Radicado Interno" />
+                <Column
+                  dataField="attentionConsultantDate"
+                  caption="Fecha Atención Asesoría"
+                />
+                <Column
+                  dataField="receptionDate"
+                  caption="Fecha Recepción Caso"
+                />
+                <Column dataField="plaintiff" caption="Parte Accionante" />
+                <Column caption="Ver Caso" cellRender={renderGridCell} />
+                <Paging defaultPageSize={10} />
+                <Pager
+                  visible={true}
+                  allowedPageSizes={allowedPageSizes}
+                  displayMode="full"
+                  showPageSizeSelector={true}
+                  showInfo={true}
+                  showNavigationButtons={true}
+                />
+                <Export
+                  enabled={true}
+                  allowExportSelectedData={true}
+                  texts={texts}
+                />
+              </DataGrid>
+            </Box>
+          </Card>
         </Grid>
-      )}
-
-      {views === 2 && (
-        <Grid>
-          <SeeCaseEstudent setViews={setViews} />
-        </Grid>
-      )}
+      </Grid>
     </Grid>
   );
 };

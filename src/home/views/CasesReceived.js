@@ -135,7 +135,27 @@ export const CasesReceived = () => {
                 onRowUpdated={(row) => {}}
                 rowAlternationEnabled={true}
               >
+                <Editing
+                  mode="popup"
+                  allowAdding={true}
+                  allowDeleting={true}
+                  allowUpdating={true}
+                >
+                  <Popup
+                    title="LISTADO DE CASOS"
+                    showTitle={true}
+                    width={500}
+                    height={380}
+                  />
+                  <Item itemType="group" colCount={2} colSpan={2}>
+                    <Item dataField="name" caption="Nombre" />
+                    <Item dataField="lastName" caption="Apellidos" />
+                    <Item dataField="identification" caption="Cédula" />
+                    <Item dataField="socioeconomicLevel" caption="Estrato" />
+                  </Item>
+                </Editing>
                 <HeaderFilter visible={true} />
+                <FilterRow visible={true} />
                 <Selection
                   mode="multiple"
                   deferred={true}
