@@ -10,6 +10,8 @@ import { Persons } from "../views/Persons";
 import { SeeCase } from "../components";
 import { CasesAssigned } from "../views/CasesAssigned";
 import { SeeCaseEstudent } from "../components/SeeCaseEstudent";
+import { EstudentsAdviser } from "../views/EstudentsAdviser";
+import { CasesAssignedAdviser } from "../views/CasesAssignedAdviser";
 
 export const HomeRoutes = () => {
   return (
@@ -19,7 +21,9 @@ export const HomeRoutes = () => {
         <Route path="/Casos" element={<Cases />} />
         <Route path="Casos_Recepcionados" element={<CasesReceived />} />
         <Route path="Casos_Asignados" element={<CasesAssigned />} />
+        <Route path="Casos_Asignados_asesor" element={<CasesAssignedAdviser />} />
         <Route path="/Estudiantes" element={<Estudents />} />
+        <Route path="/Estudiantes_Asesor" element={<EstudentsAdviser />} />
         <Route path="/Asesores" element={<Advisers />} />
         <Route path="/Personas" element={<Persons />} />
         <Route path="/Configuracion" element={<Configuration />} />

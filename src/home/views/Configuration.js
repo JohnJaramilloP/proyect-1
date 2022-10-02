@@ -120,7 +120,7 @@ const names = [
   "Eficacia",
   "Resultado de la audiencia",
   "Tipos de identificación",
-  "Personas",
+  "Usuarios",
   "Estado de los casos",
   "Tipos de archivo",
   "Opciones de soporte gráfico",
@@ -228,7 +228,7 @@ export const Configuration = () => {
           setViewGrid(1);
         });
         break;
-      case "Personas":
+      case "Usuarios":
         people().then((res) => {
           setData(res);
           setViewGrid(2);
@@ -820,15 +820,17 @@ export const Configuration = () => {
                     <Item dataField="lastName1" caption="Primer apellido" />
                     <Item dataField="lastName2" caption="Segundo apellido" />
                     <Item
-                      dataField="idTypeId"
+                      dataField="Personas"
                       editorType="dxSelectBox"
                       editorOptions={positionEditorOptions}
                     />
-                    {/* <Item dataField="idTypeId" caption="Tipo de documento" /> */}
-                    <Item dataField="idNumber" caption="Número de documento" />
-                    <Item dataField="email" caption="Correo" />
-                    <Item dataField="tel" caption="Teléfono" />
-                    <Item dataField="birthdate" caption="Fecha de nacimineto" />
+                    <Item
+                      dataField="Roles"
+                      editorType="dxSelectBox"
+                      editorOptions={positionEditorOptions}
+                    />
+                    <Item dataField="user" caption="Usuario" />
+                    <Item dataField="password" caption="Contraseña" />
                   </Item>
                 </Form>
               </Editing>
@@ -839,6 +841,7 @@ export const Configuration = () => {
                 deferred={true}
                 showCheckBoxesMode="always"
               />
+              <Column dataField="role" caption="Rol" />
               <Column dataField="name" caption="Nombre" />
               <Column caption="Apellidos" cellRender={cellrender} width={200} />
               <Column
@@ -851,16 +854,8 @@ export const Configuration = () => {
                 caption="Segundo apellido"
                 visible={false}
               />
-              <Column
-                dataField="idTypeId"
-                caption="Tipo de documento"
-                visible={false}
-              />
-              <Column dataField="idType.name" caption="Tipo de documento" />
-              <Column dataField="idNumber" caption="Número de documento" />
-              <Column dataField="email" caption="Correo" />
-              <Column dataField="tel" caption="Teléfono" />
-              <Column dataField="birthdate" caption="Fecha de nacimineto" />
+              <Column dataField="user" caption="Usuario" />
+              <Column dataField="password" caption="Contraseña" />
               <Paging defaultPageSize={10} />
               <Pager
                 visible={true}

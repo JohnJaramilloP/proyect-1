@@ -54,7 +54,7 @@ const texts2 = {
 
 const allowedPageSizes = [5, 10, "Todos"];
 
-export const CasesAssigned = () => {
+export const CasesAssignedAdviser = () => {
   const [data, setData] = useState({});
   const [showLoading, setShowLoading] = useState(true);
   const [persons, setPersons] = useState([]);
@@ -118,7 +118,7 @@ export const CasesAssigned = () => {
           justifyContent="center"
           alignItems="center"
         >
-          <Typography variant="h4">Casos Asignados - "Estudiante"</Typography>
+          <Typography variant="h4">Casos Asignados - "Asesor"</Typography>
 
           <Grid container>
             <Card

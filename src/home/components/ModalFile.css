@@ -1,0 +1,15 @@
+.label1::before {
+        content: "";
+        width: 12px;
+        height: 12px;
+        margin-right: 8px;
+        background-color: transparent;
+        display: inline-block;
+        border: 1px solid #00FFFF;
+        border-radius: 50%;
+}
+
+.checkedActiveDelimiter::before  {
+        background: rgba(0, 255, 255, .5)
+}
+

@@ -25,7 +25,7 @@ import {
   Typography,
 } from "@mui/material";
 import { NavLink, useNavigate } from "react-router-dom";
-import superAdmin from "../../assets/images/super-admin.jpeg";
+import superAdmin from "../../assets/images/admin-sinfondo.png";
 
 export const SideBar = ({
   valueSideBarHidden,
@@ -60,7 +60,8 @@ export const SideBar = ({
         <Grid
           component="div"
           sx={{
-            backgroundColor: "secondary.main",
+            background: "#D9D9D9",
+            // color: "#ffffff",
             height: "100vh",
           }}
         >
@@ -81,7 +82,9 @@ export const SideBar = ({
               "Casos",
               "Casos_Recepcionados",
               "Casos_Asignados",
+              "Casos_Asignados_asesor",
               "Estudiantes",
+              "Estudiantes_asesor",
               "Asesores",
               "Personas",
               "Configuracion",
@@ -98,7 +101,7 @@ export const SideBar = ({
                   to={text}
                   style={{
                     textDecoration: "none",
-                    color: "#000000",
+                    color: "#000000"
                   }}
                 >
                   <ListItemButton
@@ -109,11 +112,17 @@ export const SideBar = ({
                       fontSize: "bold",
                     }}
                   >
-                    <ListItemIcon>
+                    <ListItemIcon
+                    // sx={{
+                    //   color: "#ffffff"
+                    // }}
+                    >
                       {text === "Casos" && <FindInPage />}
                       {text === "Estudiantes" && <Group />}
+                      {text === "Estudiantes_asesor" && <Group />}
                       {text === "Casos_Recepcionados" && <PeopleOutline />}
                       {text === "Casos_Asignados" && <BusinessCenter />}
+                      {text === "Casos_Asignados_asesor" && <BusinessCenter />}
                       {text === "Asesores" && <PersonPinCircle />}
                       {text === "Personas" && <GroupAdd />}
                       {text === "Configuracion" && <PermDataSetting />}
@@ -125,6 +134,10 @@ export const SideBar = ({
                             ? "Casos Recepcionados"
                             : text === "Casos_Asignados"
                             ? "Casos Asignados"
+                            : text === "Casos_Asignados_asesor"
+                            ? "Casos Asignados"
+                            : text === "Estudiantes_asesor"
+                            ? "Estudiantes"
                             : text
                         }
                       />
@@ -140,14 +153,13 @@ export const SideBar = ({
             justifyContent="center"
             alignItems="center"
             sx={{
-              mt: 2,
-              pl: 1,
+              pl: 2,
             }}
           >
             <ImageListItem
               variant="standard"
               sx={{
-                width: { xs: 160, md: 180 },
+                width: { xs: 140, md: 160 },
                 mr: 2,
                 mb: 2,
               }}

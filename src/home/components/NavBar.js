@@ -13,8 +13,8 @@ import {
   LogoutOutlined,
   MenuOutlined,
 } from "@mui/icons-material";
-import logoTec from "../../assets/images/logo-tec.jpg";
-import logoTec2 from "../../assets/images/logo-tec-2.png";
+import logoTec from "../../assets/images/logo-sinfondo.png";
+import logoTec2 from "../../assets/images/logo-sinfondo.png";
 
 export const NavBar = ({
   drawerWidth = 240,
@@ -27,6 +27,7 @@ export const NavBar = ({
       position="fixed"
       sx={{
         width: { sm: `calc(100% - ${drawerWidth}px)` },
+        // background: "#ffffff",
         height: 70,
         display: "flex",
         justifyContent: "center",

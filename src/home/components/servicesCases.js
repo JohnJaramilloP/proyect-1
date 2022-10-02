@@ -66,7 +66,38 @@ export async function deleteCases(id) {
     axios
       .delete(URL + "cases/" + id)
       .then(function (response) {
-        // console.log(CircularJSON.stringify(response.data));
+        resolve(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+        resolve(error);
+      });
+  });
+}
+
+export async function uploadFile (id, files) {
+  const formData = new FormData();
+  for (let i = 0; i < files.length; i++) {
+    formData.append(`file[${i}]`, files[i])
+  };
+  formData.append('caseId', id);
+  return new Promise((resolve, reject) => {
+  axios.post(URL + "files/", formData)
+  .then(function (response) {
+    resolve(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+    resolve(error);
+  });
+  });
+}
+
+export async function deleteFile(id, name) {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(URL + "files/" + id + "?fileName=" + name)
+      .then(function (response) {
         resolve(response);
       })
       .catch(function (error) {
