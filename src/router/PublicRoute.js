@@ -7,9 +7,13 @@ const PublicRoute = ({ children }) => {
 
   const {auth, handleAuth} = useContext(AuthContext)
 
+  const path = localStorage.getItem("lastPath");
+  const pathName = path ? path : "/Bienvenido";
+  console.log("desde public", pathName)
+
     const logged = auth.login
 
-  return auth.login ? <Navigate to="/Bienvenido" /> : children 
+  return auth.login ? <Navigate to={pathName} /> : children 
 }
 
 export default PublicRoute

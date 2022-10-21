@@ -70,13 +70,15 @@ export const Persons = () => {
     value: "",
   };
 
+  const roleId = localStorage.getItem("role")
+
   useEffect(() => {
-    auth.role === 3 &&
+    roleId === "3" &&
       people(auth.tokken).then((people) => {
         setData(people);
         setShowLoading(false);
       });
-    auth.role === 1 &&
+      roleId === "1" &&
     peopleToEstudents(auth.tokken).then((people) => {
         setData(people);
         setShowLoading(false);

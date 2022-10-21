@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom'
+import React, { useContext, useEffect } from 'react';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { AuthRoutes } from '../auth/routes/AuthRoutes';
 import { Principal } from '../home/pages/Principal';
 import PrivateRoute from './PrivateRoute';
@@ -11,52 +11,18 @@ import Swal from 'sweetalert2';
 const { checkUrl } = require("../home/components/servicesCases");
 
 export const AppRouter = () => {
+  
+  const { auth, handleAuth } = useContext(AuthContext);
 
-//   const { auth, handleAuth } = useContext(AuthContext);
+const{pathname} = useLocation();
 
-//   const alert = (icon, text) => {
-//     Swal.fire({
-//       icon: icon,
-//       title: 'Oops...',
-//       text: text,
-//     })
-//   };
+const lastPath = pathname
 
-// axios.interceptors.response.use(
-//   (response) => {
-//     return response;
-//   },
-//   async (error) => {
-//     const originalConfig = error.config;
-//     if (error.response) {
-//       if (error.response.status === 401 ) {
-//         // originalConfig._retry = true;
-//         console.log("erorrr 402 interceptor")
-//         loginRefresh().then( res => {
-//           console.log("res token refresh", res)
-//           handleAuth(true, res.accessToken)
-//           alert("error", "Tu tiempo de inactividad ha superado lo estalecido, consulta de nuevo la información!!!")
-//           if (!!res.response && res.response.status === 406) {
-//             handleAuth(false, '');
-//             <Navigate to="/auth/login" />;
-//             console.log("error 406");
-//             alert("error", "Tu tiempo de inactividad ha superado lo estalecido, accede de nuevo!!!")
-//           }
-//         })
-//         // Do something, call refreshToken() request for example;
-//         // return a request
-//         // return axios_instance(config);
-//       }
-
-//       // if (error.response.status === ANOTHER_STATUS_CODE) {
-//       //   // Do something 
-//       //   return Promise.reject(error.response.data);
-//       // }
-//     }
-
-//     return Promise.reject(error);
-//   }
-// );
+useEffect(() => {
+  if (pathname !== "/auth/login"){
+    localStorage.setItem("lastPath", lastPath)
+  }
+}, [lastPath])
 
 
   return (

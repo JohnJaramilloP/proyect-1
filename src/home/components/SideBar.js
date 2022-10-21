@@ -44,29 +44,33 @@ export const SideBar = ({
   const navigate = useNavigate();
 
   const { auth, handleAuth } = useContext(AuthContext);
-  const [roleId, setRoleId] = useState([]);
 
   useEffect(() => {
     menuOptions(auth.tokken).then((res) => {
       let options = res[0].roleId;
-      setRoleId(options);
-      handleAuth(true, auth.tokken, options)
+      handleAuth(true, auth.tokken)
+      localStorage.setItem("role", options)
     });
   }, []);
 
   const handleBacklogin = () => {
     handleAuth(false, '');
     navigate("/auth/login");
+    localStorage.setItem("role", "")
   };
 
+  const roleId = localStorage.getItem("role")
+
   let options =
-    roleId === 1
+    roleId === "1"
       ? ["Casos_Recepcionados", "Casos_Asignados", "Personas"]
-      : roleId === 2
+      : roleId === "2"
       ? ["Casos_Asignados_asesor", "Estudiantes_asesor"]
-      : roleId === 3
+      : roleId === "3"
       ? ["Casos", "Estudiantes", "Asesores", "Personas", "Configuracion"]
       : "";
+
+console.log("sidebar role", roleId )
 
   return (
     <Box
@@ -114,7 +118,7 @@ export const SideBar = ({
               pl: 2,
             }}
           >
-            {auth.role === 3 && <ImageListItem
+            {roleId === "3" && <ImageListItem
               variant="standard"
               sx={{
                 width: { xs: 160, md: 180 },
@@ -124,7 +128,7 @@ export const SideBar = ({
               <img src={superAdmin} alt="super-admin" />
             </ImageListItem>}
 
-            {auth.role === 2 && <ImageListItem
+            {roleId === "2" && <ImageListItem
               variant="standard"
               sx={{
                 width: { xs: 90, md: 110 },
@@ -134,7 +138,7 @@ export const SideBar = ({
               <img src={lawyer} alt="super-admin" />
             </ImageListItem>}
 
-            {auth.role === 1 && <ImageListItem
+            {roleId === "1" && <ImageListItem
               variant="standard"
               sx={{
                 width: { xs: 100, md: 120 },
