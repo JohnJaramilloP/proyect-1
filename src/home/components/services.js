@@ -6,10 +6,14 @@ let CircularJSON = require("circular-json");
 
 // Lugares de atención
 
-export async function attentionPlaces() {
+export async function attentionPlaces(tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .get(URL + "attention-places")
+      .get(URL + "attention-places", {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         resolve(response.data);
       })
@@ -19,12 +23,16 @@ export async function attentionPlaces() {
   });
 }
 
-export async function createPlace(name, description) {
+export async function createPlace(name, description, tokken) {
   return new Promise((resolve, reject) => {
     axios
       .post(URL + "attention-places", {
         name: name,
         description: description,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
       })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response));
@@ -36,14 +44,18 @@ export async function createPlace(name, description) {
   });
 }
 
-export async function updatePlace(id, name, description) {
+export async function updatePlace(id, name, description, tokken) {
   let elem = {
     name: name,
     description: description,
   };
   return new Promise((resolve, reject) => {
     axios
-      .put(URL + "attention-places/" + id, elem)
+      .put(URL + "attention-places/" + id, elem, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response.data));
         resolve(response.data);
@@ -55,10 +67,14 @@ export async function updatePlace(id, name, description) {
   });
 }
 
-export async function deletePlace(id) {
+export async function deletePlace(id, tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .delete(URL + "attention-places/" + id)
+      .delete(URL + "attention-places/" + id, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response.data));
         resolve(response);
@@ -72,10 +88,14 @@ export async function deletePlace(id) {
 
 // Áreas
 
-export async function areas() {
+export async function areas(tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .get(URL + "areas")
+      .get(URL + "areas", {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         resolve(response.data);
       })
@@ -85,12 +105,16 @@ export async function areas() {
   });
 }
 
-export async function createArea(name, description) {
+export async function createArea(name, description, tokken) {
   return new Promise((resolve, reject) => {
     axios
       .post(URL + "areas", {
         name: name,
         description: description,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
       })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response));
@@ -102,14 +126,18 @@ export async function createArea(name, description) {
   });
 }
 
-export async function updateArea(id, name, description) {
+export async function updateArea(id, name, description, tokken) {
   let elem = {
     name: name,
     description: description,
   };
   return new Promise((resolve, reject) => {
     axios
-      .put(URL + "areas/" + id, elem)
+      .put(URL + "areas/" + id, elem, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response.data));
         resolve(response.data);
@@ -121,10 +149,14 @@ export async function updateArea(id, name, description) {
   });
 }
 
-export async function deleteArea(id) {
+export async function deleteArea(id, tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .delete(URL + "areas/" + id)
+      .delete(URL + "areas/" + id, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response.data));
         resolve(response);
@@ -138,10 +170,14 @@ export async function deleteArea(id) {
 
 // Materia
 
-export async function subjectMatters() {
+export async function subjectMatters(tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .get(URL + "subject-matters")
+      .get(URL + "subject-matters", {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         resolve(response.data);
       })
@@ -151,12 +187,16 @@ export async function subjectMatters() {
   });
 }
 
-export async function createSubjectMatters(name, description) {
+export async function createSubjectMatters(name, description, tokken) {
   return new Promise((resolve, reject) => {
     axios
       .post(URL + "subject-matters", {
         name: name,
         description: description,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
       })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response));
@@ -168,14 +208,18 @@ export async function createSubjectMatters(name, description) {
   });
 }
 
-export async function updateSubjectMatters(id, name, description) {
+export async function updateSubjectMatters(id, name, description, tokken) {
   let elem = {
     name: name,
     description: description,
   };
   return new Promise((resolve, reject) => {
     axios
-      .put(URL + "subject-matters/" + id, elem)
+      .put(URL + "subject-matters/" + id, elem, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response.data));
         resolve(response.data);
@@ -187,10 +231,14 @@ export async function updateSubjectMatters(id, name, description) {
   });
 }
 
-export async function deleteSubjectMatters(id) {
+export async function deleteSubjectMatters(id, tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .delete(URL + "subject-matters/" + id)
+      .delete(URL + "subject-matters/" + id, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response.data));
         resolve(response);
@@ -204,10 +252,14 @@ export async function deleteSubjectMatters(id) {
 
 // Origen
 
-export async function origins() {
+export async function origins(tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .get(URL + "origins")
+      .get(URL + "origins", {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         resolve(response.data);
       })
@@ -217,12 +269,16 @@ export async function origins() {
   });
 }
 
-export async function createOrigins(name, description) {
+export async function createOrigins(name, description, tokken) {
   return new Promise((resolve, reject) => {
     axios
       .post(URL + "origins", {
         name: name,
         description: description,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
       })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response));
@@ -234,14 +290,18 @@ export async function createOrigins(name, description) {
   });
 }
 
-export async function updateOrigins(id, name, description) {
+export async function updateOrigins(id, name, description, tokken) {
   let elem = {
     name: name,
     description: description,
   };
   return new Promise((resolve, reject) => {
     axios
-      .put(URL + "origins/" + id, elem)
+      .put(URL + "origins/" + id, elem, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response.data));
         resolve(response.data);
@@ -253,10 +313,14 @@ export async function updateOrigins(id, name, description) {
   });
 }
 
-export async function deleteOrigins(id) {
+export async function deleteOrigins(id, tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .delete(URL + "origins/" + id)
+      .delete(URL + "origins/" + id, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response.data));
         resolve(response);
@@ -270,10 +334,14 @@ export async function deleteOrigins(id) {
 
 // Calidad
 
-export async function capacities() {
+export async function capacities(tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .get(URL + "capacities")
+      .get(URL + "capacities", {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         resolve(response.data);
       })
@@ -283,12 +351,16 @@ export async function capacities() {
   });
 }
 
-export async function createCapacities(name, description) {
+export async function createCapacities(name, description, tokken) {
   return new Promise((resolve, reject) => {
     axios
       .post(URL + "capacities", {
         name: name,
         description: description,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
       })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response));
@@ -300,14 +372,18 @@ export async function createCapacities(name, description) {
   });
 }
 
-export async function updateCapacities(id, name, description) {
+export async function updateCapacities(id, name, description, tokken) {
   let elem = {
     name: name,
     description: description,
   };
   return new Promise((resolve, reject) => {
     axios
-      .put(URL + "capacities/" + id, elem)
+      .put(URL + "capacities/" + id, elem, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response.data));
         resolve(response.data);
@@ -319,10 +395,14 @@ export async function updateCapacities(id, name, description) {
   });
 }
 
-export async function deleteCapacities(id) {
+export async function deleteCapacities(id, tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .delete(URL + "capacities/" + id)
+      .delete(URL + "capacities/" + id, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response.data));
         resolve(response);
@@ -336,10 +416,14 @@ export async function deleteCapacities(id) {
 
 // Funcionario Judicial
 
-export async function legalOfficerOptions() {
+export async function legalOfficerOptions(tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .get(URL + "legal-officer-options")
+      .get(URL + "legal-officer-options", {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         resolve(response.data);
       })
@@ -349,12 +433,16 @@ export async function legalOfficerOptions() {
   });
 }
 
-export async function createLegalOfficerOptions(name, description) {
+export async function createLegalOfficerOptions(name, description, tokken) {
   return new Promise((resolve, reject) => {
     axios
       .post(URL + "legal-officer-options", {
         name: name,
         description: description,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
       })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response));
@@ -366,14 +454,18 @@ export async function createLegalOfficerOptions(name, description) {
   });
 }
 
-export async function updateLegalOfficerOptions(id, name, description) {
+export async function updateLegalOfficerOptions(id, name, description, tokken) {
   let elem = {
     name: name,
     description: description,
   };
   return new Promise((resolve, reject) => {
     axios
-      .put(URL + "legal-officer-options/" + id, elem)
+      .put(URL + "legal-officer-options/" + id, elem, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response.data));
         resolve(response.data);
@@ -385,10 +477,14 @@ export async function updateLegalOfficerOptions(id, name, description) {
   });
 }
 
-export async function deleteLegalOfficerOptions(id) {
+export async function deleteLegalOfficerOptions(id, tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .delete(URL + "legal-officer-options/" + id)
+      .delete(URL + "legal-officer-options/" + id, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response.data));
         resolve(response);
@@ -402,10 +498,14 @@ export async function deleteLegalOfficerOptions(id) {
 
 // Resultado de la atencion
 
-export async function attentionResults() {
+export async function attentionResults(tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .get(URL + "attention-results")
+      .get(URL + "attention-results", {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         resolve(response.data);
       })
@@ -415,12 +515,16 @@ export async function attentionResults() {
   });
 }
 
-export async function createAttentionResults(name, description) {
+export async function createAttentionResults(name, description, tokken) {
   return new Promise((resolve, reject) => {
     axios
       .post(URL + "attention-results", {
         name: name,
         description: description,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
       })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response));
@@ -432,14 +536,18 @@ export async function createAttentionResults(name, description) {
   });
 }
 
-export async function updateAttentionResults(id, name, description) {
+export async function updateAttentionResults(id, name, description, tokken) {
   let elem = {
     name: name,
     description: description,
   };
   return new Promise((resolve, reject) => {
     axios
-      .put(URL + "attention-results/" + id, elem)
+      .put(URL + "attention-results/" + id, elem, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response.data));
         resolve(response.data);
@@ -451,10 +559,14 @@ export async function updateAttentionResults(id, name, description) {
   });
 }
 
-export async function deleteAttentionResults(id) {
+export async function deleteAttentionResults(id, tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .delete(URL + "attention-results/" + id)
+      .delete(URL + "attention-results/" + id, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response.data));
         resolve(response);
@@ -468,10 +580,14 @@ export async function deleteAttentionResults(id) {
 
 // Eficacia
 
-export async function efficacyOptions() {
+export async function efficacyOptions(tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .get(URL + "efficacy-options")
+      .get(URL + "efficacy-options", {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         resolve(response.data);
       })
@@ -481,12 +597,16 @@ export async function efficacyOptions() {
   });
 }
 
-export async function createEfficacyOptions(name, description) {
+export async function createEfficacyOptions(name, description, tokken) {
   return new Promise((resolve, reject) => {
     axios
       .post(URL + "efficacy-options", {
         name: name,
         description: description,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
       })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response));
@@ -498,14 +618,18 @@ export async function createEfficacyOptions(name, description) {
   });
 }
 
-export async function updateEfficacyOptions(id, name, description) {
+export async function updateEfficacyOptions(id, name, description, tokken) {
   let elem = {
     name: name,
     description: description,
   };
   return new Promise((resolve, reject) => {
     axios
-      .put(URL + "efficacy-options/" + id, elem)
+      .put(URL + "efficacy-options/" + id, elem, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response.data));
         resolve(response.data);
@@ -517,10 +641,14 @@ export async function updateEfficacyOptions(id, name, description) {
   });
 }
 
-export async function deleteEfficacyOptions(id) {
+export async function deleteEfficacyOptions(id, tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .delete(URL + "efficacy-options/" + id)
+      .delete(URL + "efficacy-options/" + id, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response.data));
         resolve(response);
@@ -534,10 +662,14 @@ export async function deleteEfficacyOptions(id) {
 
 // Estado de los casos
 
-export async function caseStatuses() {
+export async function caseStatuses(tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .get(URL + "case-statuses")
+      .get(URL + "case-statuses", {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         resolve(response.data);
       })
@@ -547,12 +679,16 @@ export async function caseStatuses() {
   });
 }
 
-export async function createCaseStatuses(name, description) {
+export async function createCaseStatuses(name, description, tokken) {
   return new Promise((resolve, reject) => {
     axios
       .post(URL + "case-statuses", {
         name: name,
         description: description,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
       })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response));
@@ -564,14 +700,18 @@ export async function createCaseStatuses(name, description) {
   });
 }
 
-export async function updateCaseStatuses(id, name, description) {
+export async function updateCaseStatuses(id, name, description, tokken) {
   let elem = {
     name: name,
     description: description,
   };
   return new Promise((resolve, reject) => {
     axios
-      .put(URL + "case-statuses/" + id, elem)
+      .put(URL + "case-statuses/" + id, elem, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response.data));
         resolve(response.data);
@@ -583,10 +723,14 @@ export async function updateCaseStatuses(id, name, description) {
   });
 }
 
-export async function deleteCaseStatuses(id) {
+export async function deleteCaseStatuses(id, tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .delete(URL + "case-statuses/" + id)
+      .delete(URL + "case-statuses/" + id, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response.data));
         resolve(response);
@@ -600,10 +744,14 @@ export async function deleteCaseStatuses(id) {
 
 // Resultado de la audiencia
 
-export async function audienceResults() {
+export async function audienceResults(tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .get(URL + "audience-results")
+      .get(URL + "audience-results", {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         resolve(response.data);
       })
@@ -613,12 +761,16 @@ export async function audienceResults() {
   });
 }
 
-export async function createAudienceResults(name, description) {
+export async function createAudienceResults(name, description, tokken) {
   return new Promise((resolve, reject) => {
     axios
       .post(URL + "audience-results", {
         name: name,
         description: description,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
       })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response));
@@ -630,14 +782,18 @@ export async function createAudienceResults(name, description) {
   });
 }
 
-export async function updateAudienceResults(id, name, description) {
+export async function updateAudienceResults(id, name, description, tokken) {
   let elem = {
     name: name,
     description: description,
   };
   return new Promise((resolve, reject) => {
     axios
-      .put(URL + "audience-results/" + id, elem)
+      .put(URL + "audience-results/" + id, elem, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response.data));
         resolve(response.data);
@@ -649,10 +805,14 @@ export async function updateAudienceResults(id, name, description) {
   });
 }
 
-export async function deleteAudienceResults(id) {
+export async function deleteAudienceResults(id, tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .delete(URL + "audience-results/" + id)
+      .delete(URL + "audience-results/" + id, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response.data));
         resolve(response);
@@ -666,10 +826,14 @@ export async function deleteAudienceResults(id) {
 
 // Opciones de soporte gráfico
 
-export async function graphicSupportOptions() {
+export async function graphicSupportOptions(tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .get(URL + "graphic-support-options")
+      .get(URL + "graphic-support-options", {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         resolve(response.data);
       })
@@ -679,12 +843,16 @@ export async function graphicSupportOptions() {
   });
 }
 
-export async function createGraphicSupportOptions(name, description) {
+export async function createGraphicSupportOptions(name, description, tokken) {
   return new Promise((resolve, reject) => {
     axios
       .post(URL + "graphic-support-options", {
         name: name,
         description: description,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
       })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response));
@@ -696,14 +864,18 @@ export async function createGraphicSupportOptions(name, description) {
   });
 }
 
-export async function updateGraphicSupportOptions(id, name, description) {
+export async function updateGraphicSupportOptions(id, name, description, tokken) {
   let elem = {
     name: name,
     description: description,
   };
   return new Promise((resolve, reject) => {
     axios
-      .put(URL + "graphic-support-options/" + id, elem)
+      .put(URL + "graphic-support-options/" + id, elem, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response.data));
         resolve(response.data);
@@ -715,10 +887,14 @@ export async function updateGraphicSupportOptions(id, name, description) {
   });
 }
 
-export async function deleteGraphicSupportOptions(id) {
+export async function deleteGraphicSupportOptions(id, tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .delete(URL + "graphic-support-options/" + id)
+      .delete(URL + "graphic-support-options/" + id, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response.data));
         resolve(response);
@@ -732,10 +908,14 @@ export async function deleteGraphicSupportOptions(id) {
 
 // Tipos de identificación
 
-export async function idTypes() {
+export async function idTypes(tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .get(URL + "id-types")
+      .get(URL + "id-types", {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         resolve(response.data);
       })
@@ -745,12 +925,16 @@ export async function idTypes() {
   });
 }
 
-export async function createIdTypes(name, description) {
+export async function createIdTypes(name, description, tokken) {
   return new Promise((resolve, reject) => {
     axios
       .post(URL + "id-types", {
         name: name,
         description: description,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
       })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response));
@@ -762,14 +946,18 @@ export async function createIdTypes(name, description) {
   });
 }
 
-export async function updateIdTypes(id, name, description) {
+export async function updateIdTypes(id, name, description, tokken) {
   let elem = {
     name: name,
     description: description,
   };
   return new Promise((resolve, reject) => {
     axios
-      .put(URL + "id-types/" + id, elem)
+      .put(URL + "id-types/" + id, elem, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response.data));
         resolve(response.data);
@@ -781,10 +969,14 @@ export async function updateIdTypes(id, name, description) {
   });
 }
 
-export async function deleteIdTypes(id) {
+export async function deleteIdTypes(id, tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .delete(URL + "id-types/" + id)
+      .delete(URL + "id-types/" + id, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response.data));
         resolve(response);
@@ -798,10 +990,14 @@ export async function deleteIdTypes(id) {
 
 // Tipos de archivo
 
-export async function fileTypes() {
+export async function fileTypes(tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .get(URL + "file-types")
+      .get(URL + "file-types", {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         resolve(response.data);
       })
@@ -811,12 +1007,16 @@ export async function fileTypes() {
   });
 }
 
-export async function createFileTypes(name, description) {
+export async function createFileTypes(name, description, tokken) {
   return new Promise((resolve, reject) => {
     axios
       .post(URL + "file-types", {
         name: name,
         description: description,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
       })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response));
@@ -828,14 +1028,18 @@ export async function createFileTypes(name, description) {
   });
 }
 
-export async function updateFileTypes(id, name, description) {
+export async function updateFileTypes(id, name, description, tokken) {
   let elem = {
     name: name,
     description: description,
   };
   return new Promise((resolve, reject) => {
     axios
-      .put(URL + "file-types/" + id, elem)
+      .put(URL + "file-types/" + id, elem, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response.data));
         resolve(response.data);
@@ -847,10 +1051,14 @@ export async function updateFileTypes(id, name, description) {
   });
 }
 
-export async function deleteFileTypes(id) {
+export async function deleteFileTypes(id, tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .delete(URL + "file-types/" + id)
+      .delete(URL + "file-types/" + id, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response.data));
         resolve(response);
@@ -864,10 +1072,14 @@ export async function deleteFileTypes(id) {
 
 // Personas
 
-export async function people() {
+export async function people(tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .get(URL + "people")
+      .get(URL + "people", {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         resolve(response.data);
       })
@@ -885,7 +1097,8 @@ export async function createPeople(
   idNumber,
   email,
   tel,
-  birthdate
+  birthdate, 
+  tokken
 ) {
   return new Promise((resolve, reject) => {
     axios
@@ -898,6 +1111,10 @@ export async function createPeople(
         email: email,
         tel: tel,
         birthdate: birthdate,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
       })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response));
@@ -918,7 +1135,8 @@ export async function updatePeople(
   idNumber,
   email,
   tel,
-  birthdate
+  birthdate, 
+  tokken
 ) {
   return new Promise((resolve, reject) => {
     axios
@@ -931,6 +1149,10 @@ export async function updatePeople(
         email: email,
         tel: tel,
         birthdate: birthdate,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
       })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response.data));
@@ -943,10 +1165,14 @@ export async function updatePeople(
   });
 }
 
-export async function deletePeople(id) {
+export async function deletePeople(id, tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .delete(URL + "people/" + id)
+      .delete(URL + "people/" + id, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
       .then(function (response) {
         // console.log(CircularJSON.stringify(response.data));
         resolve(response);
@@ -957,3 +1183,127 @@ export async function deletePeople(id) {
       });
   });
 }
+
+// Usuarios
+
+export async function users(tokken) {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(URL + "users", {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
+      .then(function (response) {
+        resolve(response.data);
+      })
+      .catch(function (error) {
+        resolve(error.response);
+      });
+  });
+}
+
+export async function createUsers(
+  username,
+  pwd,
+  roleId,
+  personId,
+  tokken
+) {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(URL + "users", {
+        username: username,
+        pwd: pwd,
+        roleId: roleId,
+        personId: personId
+      }, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
+      .then(function (response) {
+        // console.log(CircularJSON.stringify(response));
+        resolve(response.data);
+      })
+      .catch(function (error) {
+        resolve(error);
+      });
+  });
+}
+
+export async function updateUsers(
+  id,
+  username,
+  pwd,
+  roleId,
+  tokken
+) {
+  return new Promise((resolve, reject) => {
+    let password = !!pwd && pwd;
+    console.log("pwddddd", password)
+   if (!!pwd) {
+    axios
+    .put(URL + "users/" + id, {
+      username: username,
+      pwd: password,
+      roleId: roleId,
+    }, {
+      headers: {
+        'Authorization': `Bearer ${tokken}`
+      }
+    })
+    .then(function (response) {
+      // console.log(CircularJSON.stringify(response.data));
+      resolve(response.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+      resolve(error);
+    });
+   } else {
+    axios
+    .put(URL + "users/" + id, {
+      username: username,
+      roleId: roleId,
+    }, {
+      headers: {
+        'Authorization': `Bearer ${tokken}`
+      }
+    })
+    .then(function (response) {
+      // console.log(CircularJSON.stringify(response.data));
+      resolve(response.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+      resolve(error);
+    });
+   }
+  });
+}
+
+export async function deleteUsers(id, tokken) {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(URL + "users/" + id, {
+        headers: {
+          'Authorization': `Bearer ${tokken}`
+        }
+      })
+      .then(function (response) {
+        // console.log(CircularJSON.stringify(response.data));
+        resolve(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+        resolve(error);
+      });
+  });
+}
+
+
+
+
+
+

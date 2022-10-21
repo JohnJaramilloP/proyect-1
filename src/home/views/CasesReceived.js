@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import DataGrid, {
   Column,
   FilterRow,
@@ -29,17 +29,18 @@ import LoadingOverlay from "react-loading-overlay";
 import { SeeCase } from "../components";
 import { Link } from "react-router-dom";
 import "../components/ModalFile.css";
+import AuthContext from "../../auth/context/AuthContext";
 
 const { idTypes, people } = require("../components/services.js");
 
 const {
-  cases,
   createCases,
   updateCases,
   deleteCases,
   casesId,
   deleteFile,
   uploadFile,
+  receivedCases
 } = require("../components/servicesCases.js");
 
 const texts = {
@@ -50,9 +51,13 @@ const texts = {
 
 const texts2 = {
   confirmDeleteMessage: "Estas seguro de eliminar el caso?",
+  saveRowChanges: "Guardar",
+  cancelRowChanges: "Cancelar",
+  deleteRow: "Eliminar",
+  editRow: "Editar"
 };
 
-const allowedPageSizes = [5, 10, "Todos"];
+const allowedPageSizes = [5, 10, 15, 20];
 
 export const CasesReceived = () => {
   const [data, setData] = useState({});
@@ -65,8 +70,10 @@ export const CasesReceived = () => {
   const [files, setFiles] = useState([]);
   const [load, setLoad] = useState(false);
 
+  const { auth, handleAuth } = useContext(AuthContext);
+
   useEffect(() => {
-    cases().then((cases) => {
+    receivedCases(auth.tokken).then((cases) => {
       setData(cases);
       setShowLoading(false);
     });
@@ -88,13 +95,13 @@ export const CasesReceived = () => {
 
   const renderGridCell1 = (row) => {
     return (
-      <PostAdd
+      !!row.data.studentAssignee ? "" : <PostAdd
         sx={{ cursor: "pointer", color: "#009929" }}
         onClick={() => {
           let caseId = row.data.id;
           setIdCase(row.data.id);
           console.log("rowdata", row.data);
-          casesId(caseId).then(
+          casesId(caseId, auth.tokken).then(
             (_case) => setFiles(_case.files),
             setShowModal(!showModal)
           );
@@ -105,7 +112,7 @@ export const CasesReceived = () => {
 
   const renderGridCell2 = (row) => {
     return (
-      <Delete
+      !!row.data.studentAssignee ? "" : <Delete
         sx={{ cursor: "pointer", color: "#009929" }}
         onClick={() => {
           Swal.fire({
@@ -119,7 +126,7 @@ export const CasesReceived = () => {
             confirmButtonText: "Sí",
           }).then((result) => {
             if (result.isConfirmed) {
-              deleteCases(row.data.id).then((res) => {
+              deleteCases(row.data.id, auth.tokken).then((res) => {
                 if (res.status === 204) {
                   setLoad(!load);
                   alert("success", "Caso Eliminado");
@@ -135,9 +142,18 @@ export const CasesReceived = () => {
   };
 
   useEffect(() => {
-    people().then((people) => {
+    people(auth.tokken).then((people) => {
       setPersons(people);
-      setPersonsSelect(people.map((person) => person.name));
+      setPersonsSelect(
+        people.map(
+          (e) =>
+            e.name +
+            " " +
+            (e.lastName1 === null ? "" : e.lastName1) +
+            " " +
+            (e.lastName2 === null ? "" : e.lastName2)
+        )
+      );
     });
   }, []);
 
@@ -145,6 +161,10 @@ export const CasesReceived = () => {
     items: personsSelect,
     searchEnabled: true,
     value: "",
+  };
+
+  let positionEditorOptions1 = {
+    min: new Date(),
   };
 
   console.log("data", data);
@@ -181,14 +201,26 @@ export const CasesReceived = () => {
                   onRowRemoved={(row) => {}}
                   onRowInserted={(row) => {
                     setShowLoading(true);
-                    let person = persons.filter(
-                      (e) => e.name === row.data.plaintiff.name
-                    );
+                    let person = [];
+                    persons.filter((e) => {
+                      if (
+                        e.name +
+                          " " +
+                          (e.lastName1 === null ? "" : e.lastName1) +
+                          " " +
+                          (e.lastName2 === null ? "" : e.lastName2) ===
+                        row.data.plaintiff.name
+                      ) {
+                        person.push(e.id);
+                      }
+                    });
+
                     let data = {
-                      plaintiffId: person[0].id,
+                      plaintiffId: person,
                       socioeconomicLevel: row.data.socioeconomicLevel,
+                      attentionConsultantDate: row.data.attentionConsultantDate,
                     };
-                    createCases(data).then(
+                    createCases(data, auth.tokken).then(
                       (res) =>
                         res.plaintiffId &&
                         (alert("success", "Caso creado"), setLoad(!load))
@@ -208,7 +240,7 @@ export const CasesReceived = () => {
                     texts={texts2}
                   >
                     <Popup
-                      title="LISTADO DE CASOS"
+                      title="Crear Caso"
                       useIcons={true}
                       showTitle={true}
                       // width={600}
@@ -227,6 +259,12 @@ export const CasesReceived = () => {
                           dataField="socioeconomicLevel"
                           caption="Estrato"
                         />
+                        <Item
+                          dataField="attentionConsultantDate"
+                          caption="Fecha de Recepción"
+                          editorType="dxDateBox"
+                          editorOptions={positionEditorOptions1}
+                        />
                       </Item>
                     </Form>
                   </Editing>
@@ -239,11 +277,12 @@ export const CasesReceived = () => {
                   />
                   <Column dataField="id" caption="Número" />
                   <Column dataField="year" caption="Año" />
-                  <Column dataField="plaintiff.name" caption="Nombre" />
+                  <Column dataField="plaintiff.name" caption="Parte Accionante" />
                   <Column dataField="plaintiff.lastName1" caption="Apellido1" />
                   <Column dataField="plaintiff.lastName2" caption="Apellido2" />
                   <Column dataField="plaintiff.idNumber" caption="Cédula" />
                   <Column dataField="socioeconomicLevel" caption="Estrato" />
+                  <Column dataField="attentionConsultantDate" caption="Fecha de Atención" />
                   <Column
                     caption="Cargar Documento"
                     cellRender={renderGridCell1}
@@ -257,6 +296,7 @@ export const CasesReceived = () => {
                     showPageSizeSelector={true}
                     showInfo={true}
                     showNavigationButtons={true}
+                    infoText= 'Página {0} de {1} ({2} Registros)'
                   />
                   <Export
                     enabled={true}
@@ -392,7 +432,7 @@ export const CasesReceived = () => {
                                 confirmButtonText: "Sí",
                               }).then((result) => {
                                 if (result.isConfirmed) {
-                                  deleteFile(e.id, e.url.split("/")[4]).then(
+                                  deleteFile(e.id, e.url.split("/")[4], auth.tokken).then(
                                     (res) => {
                                       if (res.status === 204) {
                                         alert("success", "Documento eliminado");
@@ -431,11 +471,11 @@ export const CasesReceived = () => {
                       border: "none",
                     }}
                     onClick={() => {
-                      uploadFile(idCase, fileUp).then((res) =>
+                      uploadFile(idCase, fileUp, auth.tokken).then((res) =>
                         res.status === 200
                           ? (alert("success", "Cambios guardados"),
                             setShowModal(!showModal),
-                            casesId(idCase).then(
+                            casesId(idCase, auth.tokken).then(
                               (_case) => setFiles(_case.files),
                               setShowModal(!showModal)
                             ),

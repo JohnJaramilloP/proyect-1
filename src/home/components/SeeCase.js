@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
@@ -6,14 +6,18 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { Grid, TextField, Typography } from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
+import Modal from "@mui/material/Modal";
 import { CgClose } from "react-icons/cg";
 import { Button } from "reactstrap";
 import Swal from "sweetalert2";
-import { Delete, Add } from "@mui/icons-material";
-import { Link, useLocation } from "react-router-dom";
+import { Delete, Add, Edit } from "@mui/icons-material";
+import { Link, useParams } from "react-router-dom";
 import SelectSeeCase from "./SelectSeeCase";
 import TextfieldDate from "./TextfieldDate";
 import Textfield from "./Textfield";
+import AuthContext from "../../auth/context/AuthContext";
+import { ModalAddPerson } from "./ModalAddPerson";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -35,6 +39,7 @@ const {
   caseStatuses,
   audienceResults,
   graphicSupportOptions,
+  people,
 } = require("../components/services");
 
 const {
@@ -42,33 +47,9 @@ const {
   updateCases,
   uploadFile,
   deleteFile,
+  estudentsList,
+  advisorsList,
 } = require("../components/servicesCases.js");
-
-const names = [
-  "Oliver Hansen",
-  "Van Henry",
-  "April Tucker",
-  "Ralph Hubbard",
-  "Omar Alexander",
-  "Carlos Abbott",
-  "Miriam Wagner",
-  "Bradley Wilkerson",
-  "Virginia Andrews",
-  "Kelly Snyder",
-];
-
-const nombres = [
-  "Ricardo Vélez",
-  "Carolina García",
-  "Luis Pérez",
-  "Carlos Mejía",
-  "Eliana Marín",
-  "Katherine Zapata",
-  "John Hoyos",
-  "Wilson Londoño",
-  "Virginia Ramírez",
-  "Pedro Cruz",
-];
 
 const recepcion = ["Si", "No"];
 
@@ -81,8 +62,10 @@ const representacionTerceros = [
 ];
 
 export const SeeCase = () => {
-  const location = useLocation();
-  const { id } = location.state;
+
+  const { id } = useParams();
+
+  const { auth, handleAuth } = useContext(AuthContext);
 
   const [data, setData] = useState({
     id: "",
@@ -91,7 +74,9 @@ export const SeeCase = () => {
     attentionConsultantDate: "",
     receptionDate: "",
     plaintiff: "",
+    plaintiffName: "",
     defendant: "",
+    defendantName: "",
     area: "",
     origin: "",
     matter: "",
@@ -100,16 +85,19 @@ export const SeeCase = () => {
     studentRecepcionistCapacity: "",
     attentionPlace: "",
     studentAssignee: "",
+    studentAssigneeName: "",
     studentAsigneeCapacity: "",
     appointmentDateByUser: "",
     individualParticipation: "",
     advisor: "",
+    advisorName: "",
     thirdPartyRepresentation: "",
     audienceDateTime: "",
     audienceTime: "",
     audienceResult: "",
     caseStatus: "",
     receiverStudent: "",
+    receiverStudentName: "",
     studentPeaceFulCertificate: "",
     graphicSupport: "",
     files: [],
@@ -124,9 +112,14 @@ export const SeeCase = () => {
   const [resultadoAudiencia, setResultadoAudiencia] = useState([]);
   const [graficar, setGraficar] = useState([]);
   const [cantidad, setCantidad] = useState([1]);
+  const [peopleList, setPeopleList] = useState([]);
+  const [estudents, setEstudents] = useState([]);
+  const [advisors, setAdvisors] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [nameValue, setNameValue] = useState({});
 
   useEffect(() => {
-    casesId(id).then((_case) => {
+    casesId(id, auth.tokken).then((_case) => {
       console.log("datassss", _case);
       setData({
         id: _case.id && _case.id,
@@ -135,8 +128,30 @@ export const SeeCase = () => {
         attentionConsultantDate:
           _case.attentionConsultantDate && _case.attentionConsultantDate,
         receptionDate: _case.receptionDate && _case.receptionDate,
-        plaintiff: _case.plaintiff && _case.plaintiff.name,
-        defendant: _case.defendant && _case.defendant.name,
+        plaintiff: _case.plaintiff && _case.plaintiff.id,
+        plaintiffName:
+          _case.plaintiff &&
+          _case.plaintiff.name +
+            " " +
+            (_case.plaintiff.lastName1 === null
+              ? ""
+              : _case.plaintiff.lastName1) +
+            " " +
+            (_case.plaintiff.lastName2 === null
+              ? ""
+              : _case.plaintiff.lastName2),
+        defendant: _case.defendant && _case.defendant.id,
+        defendantName:
+          _case.defendant &&
+          _case.defendant.name +
+            " " +
+            (_case.defendant.lastName1 === null
+              ? ""
+              : _case.defendant.lastName1) +
+            " " +
+            (_case.defendant.lastName2 === null
+              ? ""
+              : _case.defendant.lastName2),
         area: _case.area && _case.area.id,
         origin: _case.origin && _case.origin.id,
         matter: _case.matter && _case.matter.id,
@@ -148,7 +163,18 @@ export const SeeCase = () => {
           _case.studentRecepcionistCapacity &&
           _case.studentRecepcionistCapacity.id,
         attentionPlace: _case.attentionPlace && _case.attentionPlace.id,
-        studentAssignee: _case.studentAssignee && _case.studentAssignee.name,
+        studentAssignee: _case.studentAssignee && _case.studentAssignee.id,
+        studentAssigneeName:
+          _case.studentAssignee &&
+          _case.studentAssignee.name +
+            " " +
+            (_case.studentAssignee.lastName1 === null
+              ? ""
+              : _case.studentAssignee.lastName1) +
+            " " +
+            (_case.studentAssignee.lastName2 === null
+              ? ""
+              : _case.studentAssignee.lastName2),
         studentAsigneeCapacity:
           _case.studentAssigneeCapacity && _case.studentAssigneeCapacity.id,
         appointmentDateByUser:
@@ -157,7 +183,14 @@ export const SeeCase = () => {
             : "Si",
         individualParticipation:
           _case.individualParticipation && _case.individualParticipation.name,
-        advisor: _case.advisor && _case.advisor.name,
+        advisor: _case.advisor && _case.advisor.id,
+        advisorName:
+          _case.advisor &&
+          _case.advisor.name +
+            " " +
+            (_case.advisor.lastName1 === null ? "" : _case.advisor.lastName1) +
+            " " +
+            (_case.advisor.lastName2 === null ? "" : _case.advisor.lastName2),
         thirdPartyRepresentation:
           _case.thirdPartyRepresentation && _case.thirdPartyRepresentation.id,
         audienceDateTime:
@@ -166,7 +199,18 @@ export const SeeCase = () => {
           _case.audienceDateTime && _case.audienceDateTime.substring(11, 16),
         audienceResult: _case.audienceResult && _case.audienceResult.id,
         caseStatus: _case.caseStatus && _case.caseStatus.id,
-        receiverStudent: _case.receiverStudent && _case.receiverStudent.name,
+        receiverStudent: _case.receiverStudent && _case.receiverStudent.id,
+        receiverStudentName:
+          _case.receiverStudent &&
+          _case.receiverStudent.name +
+            " " +
+            (_case.receiverStudent.lastName1 === null
+              ? ""
+              : _case.receiverStudent.lastName1) +
+            " " +
+            (_case.receiverStudent.lastName2 === null
+              ? ""
+              : _case.receiverStudent.lastName2),
         studentPeaceFulCertificate:
           _case.studentPeaceFulCertificate &&
           _case.studentPeaceFulCertificate === false
@@ -186,30 +230,47 @@ export const SeeCase = () => {
     });
   };
 
+  const handleChangePersons = (name, value, name2, value2) => {
+    setData({
+      ...data,
+      [name]: value,
+      [name2]: value2,
+    });
+  };
+
   useEffect(() => {
-    areas().then((areas) => {
+    areas(auth.tokken).then((areas) => {
       setArea(areas);
     });
-    attentionPlaces().then((places) => {
+    attentionPlaces(auth.tokken).then((places) => {
       setattentionPlace(places);
     });
-    origins().then((origen) => {
+    origins(auth.tokken).then((origen) => {
       setOrigen(origen);
     });
-    caseStatuses().then((estado) => {
+    caseStatuses(auth.tokken).then((estado) => {
       setEstadoCaso(estado);
     });
-    capacities().then((calidad) => {
+    capacities(auth.tokken).then((calidad) => {
       setCalidad(calidad);
     });
-    subjectMatters().then((materia) => {
+    subjectMatters(auth.tokken).then((materia) => {
       setMateria(materia);
     });
-    audienceResults().then((resultado) => {
+    audienceResults(auth.tokken).then((resultado) => {
       setResultadoAudiencia(resultado);
     });
-    graphicSupportOptions().then((res) => {
+    graphicSupportOptions(auth.tokken).then((res) => {
       setGraficar(res);
+    });
+    people(auth.tokken).then((people) => {
+      setPeopleList(people);
+    });
+    estudentsList(auth.tokken).then((estudents) => {
+      setEstudents(estudents);
+    });
+    advisorsList(auth.tokken).then((advisors) => {
+      setAdvisors(advisors);
     });
   }, []);
 
@@ -220,8 +281,8 @@ export const SeeCase = () => {
       internalNumber: data.internalNumber,
       attentionConsultantDate: data.attentionConsultantDate,
       receptionDate: data.receptionDate,
-      plaintiffId: 1,
-      defendantId: 1,
+      plaintiffId: data.plaintiff,
+      defendantId: data.defendant,
       areaId: data.area,
       matterId: data.matter,
       originId: data.origin,
@@ -231,10 +292,10 @@ export const SeeCase = () => {
           : data.receivedCase === "No"
           ? false
           : null,
-      studentRecepcionistId: 1,
+      // studentRecepcionistId: data.studentRecepcionist,
       studentRecepcionistCapacityId: data.studentRecepcionistCapacity,
       attentionPlaceId: data.attentionPlace,
-      studentAssigneeId: 1,
+      studentAssigneeId: data.studentAssignee,
       studentAssigneeCapacityId: data.studentAsigneeCapacity,
       appointmentDateByUser:
         data.appointmentDateByUser === "Si"
@@ -243,22 +304,22 @@ export const SeeCase = () => {
           ? false
           : null,
       individualParticipationId: data.individualParticipation === "Si" ? 1 : 2,
-      advisorId: 1,
+      advisorId: data.advisor,
       thirdPartyRepresentationId: data.thirdPartyRepresentation,
       audienceDateTime: data.audienceDateTime
         ? `${data.audienceDateTime}T${data.audienceTime}:02.000Z`
         : null,
       audienceResultId: data.audienceResult,
       caseStatusId: data.caseStatus,
-      receiverStudentId: 1,
+      receiverStudentId: data.receiverStudent,
       studentPeacefulCertificate:
         data.studentPeaceFulCertificate === "Si" ? true : false,
       graphicSupportId: data.graphicSupport,
     };
-    updateCases(id, body).then((res) => {
+    updateCases(id, body, auth.tokken).then((res) => {
       let id = data.id;
       if (res[0] === 1) {
-        uploadFile(id, fileUp).then((res) =>
+        uploadFile(id, fileUp, auth.tokken).then((res) =>
           res.status === 200
             ? alert("success", "Cambios guardados")
             : alert("error", "Error al guardar")
@@ -285,6 +346,8 @@ export const SeeCase = () => {
   const saveFile = (e) => {
     setFileUp([...fileUp, e.target.files[0]]);
   };
+
+  console.log("id", id);
 
   return (
     <Grid
@@ -317,14 +380,10 @@ export const SeeCase = () => {
           width: "100%",
           margin: "20px 0",
           display: "flex",
-          justifyContent: "center"
+          justifyContent: "center",
         }}
       >
-        <Typography
-          variant="h4"
-        >
-          Caso: {data.id}
-        </Typography>
+        <Typography variant="h4">Caso: {data.id}</Typography>
       </Grid>
 
       {/* informacion caso */}
@@ -336,7 +395,7 @@ export const SeeCase = () => {
           padding: "15px 0",
         }}
       >
-        <Textfield data={data.id} name="id" label="Número" disabled={true} />
+        <Textfield data={data.id} name="id" label="NÚMERO" disabled={true} />
 
         <Textfield
           data={data.year}
@@ -391,14 +450,47 @@ export const SeeCase = () => {
             flexDirection: "column",
           }}
         >
-          <SelectSeeCase
-            label="PARTE ACCIONANTE"
-            name="plaintiff"
-            value={data.plaintiff}
-            onChangeValue={handleChange}
-            menuProp={MenuProps}
-            data={names}
-          />
+          <Typography
+            variant="p"
+            className="title"
+            style={{
+              marginBottom: 10,
+            }}
+          >
+            PARTE ACCIONANTE
+          </Typography>
+          <Grid
+            style={{
+              display: "flex",
+            }}
+          >
+            <TextField
+              id="outlined-basic"
+              label="PARTE ACCIONANTE"
+              variant="outlined"
+              value={data.plaintiffName}
+              name="plaintiff"
+              inputProps={{ readOnly: true }}
+              style={{
+                width: "95%",
+              }}
+            />
+            <Tooltip title="Seleccionar Parte Accionante">
+              <Button
+                onClick={() => {
+                  setShowModal(!showModal);
+                  setNameValue({
+                    name: "plaintiff",
+                    value: data.plaintiff,
+                    name2: "plaintiffName",
+                    value2: data.plaintiffName,
+                  });
+                }}
+              >
+                <Edit />
+              </Button>
+            </Tooltip>
+          </Grid>
         </Grid>
       </Grid>
 
@@ -419,15 +511,49 @@ export const SeeCase = () => {
             flexDirection: "column",
           }}
         >
-          <SelectSeeCase
-            label="PARTE ACCIONADA"
-            name="defendant"
-            value={data.defendant}
-            onChangeValue={handleChange}
-            menuProp={MenuProps}
-            data={names}
-          />
+          <Typography
+            variant="p"
+            className="title"
+            style={{
+              marginBottom: 10,
+            }}
+          >
+            PARTE ACCIONADA
+          </Typography>
+          <Grid
+            style={{
+              display: "flex",
+            }}
+          >
+            <TextField
+              id="outlined-basic"
+              label="PARTE ACCIONADA"
+              variant="outlined"
+              value={data.defendantName}
+              name="defendant"
+              inputProps={{ readOnly: true }}
+              style={{
+                width: "95%",
+              }}
+            />
+            <Tooltip title="Seleccionar Parte Accionada">
+              <Button
+                onClick={() => {
+                  setShowModal(!showModal);
+                  setNameValue({
+                    name: "defendant",
+                    value: data.defendant,
+                    name2: "defendantName",
+                    value2: data.defendantName,
+                  });
+                }}
+              >
+                <Edit />
+              </Button>
+            </Tooltip>
+          </Grid>
         </Grid>
+
         <Grid
           container
           className="container"
@@ -467,7 +593,7 @@ export const SeeCase = () => {
           }}
         >
           <SelectSeeCase
-            label="Materia"
+            label="MATERIA"
             name="matter"
             value={data.matter}
             onChangeValue={handleChange}
@@ -517,7 +643,7 @@ export const SeeCase = () => {
           <Grid>
             <Typography variant="p">SE RECEPCIONó EL CASO</Typography>
             <FormControl sx={{ m: 1, width: "100%" }}>
-              <InputLabel id="demo-simple-select-label">Recepción</InputLabel>
+              <InputLabel id="demo-simple-select-label">SE RECEPCIONó EL CASO</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select-label"
@@ -562,7 +688,7 @@ export const SeeCase = () => {
             variant="outlined"
             value={data.studentRecepcionist}
             name="studentRecepcionist"
-            onChange={handleChange}
+            inputProps={{ readOnly: true }}
           />
         </Grid>
       </Grid>
@@ -585,7 +711,7 @@ export const SeeCase = () => {
           }}
         >
           <SelectSeeCase
-            label="Lugar de ateción"
+            label="LUGAR DE ATENCIÓN"
             name="attentionPlace"
             value={data.attentionPlace}
             onChangeValue={handleChange}
@@ -604,7 +730,7 @@ export const SeeCase = () => {
           }}
         >
           <SelectSeeCase
-            label="CALIDAD(E/A)"
+            label="CALIDAD(E/A) ESTUDIANTE RECEPTOR"
             name="studentRecepcionistCapacity"
             value={data.studentRecepcionistCapacity}
             onChangeValue={handleChange}
@@ -631,14 +757,47 @@ export const SeeCase = () => {
             flexDirection: "column",
           }}
         >
-          <SelectSeeCase
-            label=" ESTUDIANTE A QUIEN SE LE ASIGNO EL CASO"
-            name="studentAssignee"
-            value={data.studentAssignee}
-            onChangeValue={handleChange}
-            menuProp={MenuProps}
-            data={names}
-          />
+          <Typography
+            variant="p"
+            className="title"
+            style={{
+              marginBottom: 10,
+            }}
+          >
+            ESTUDIANTE A QUIEN SE LE ASIGNO EL CASO
+          </Typography>
+          <Grid
+            style={{
+              display: "flex",
+            }}
+          >
+            <TextField
+              id="outlined-basic"
+              label="ESTUDIANTE A QUIEN SE LE ASIGNO EL CASO"
+              variant="outlined"
+              value={data.studentAssigneeName}
+              name="studentAssignee"
+              inputProps={{ readOnly: true }}
+              style={{
+                width: "95%",
+              }}
+            />
+            <Tooltip title="Seleccionar Estudiante">
+              <Button
+                onClick={() => {
+                  setShowModal(!showModal);
+                  setNameValue({
+                    name: "studentAssignee",
+                    value: data.studentAssignee,
+                    name2: "studentAssigneeName",
+                    value2: data.studentAssigneeName,
+                  });
+                }}
+              >
+                <Edit />
+              </Button>
+            </Tooltip>
+          </Grid>
         </Grid>
 
         <Grid
@@ -652,7 +811,7 @@ export const SeeCase = () => {
           }}
         >
           <SelectSeeCase
-            label="CALIDAD (E/A)"
+            label="CALIDAD (E/A) ESTUDIANTE ASIGNADO"
             name="studentAsigneeCapacity"
             value={data.studentAsigneeCapacity}
             onChangeValue={handleChange}
@@ -690,7 +849,7 @@ export const SeeCase = () => {
           </Typography>
           <FormControl sx={{ m: 1, width: "100%" }}>
             <InputLabel id="demo-simple-select-label">
-              Fecha de participación de usuario
+            FECHA DE CITACION DE PARTE USUARIO
             </InputLabel>
             <Select
               labelId="demo-simple-select-label"
@@ -725,7 +884,7 @@ export const SeeCase = () => {
 
             <FormControl sx={{ m: 1, width: "100%" }}>
               <InputLabel id="demo-simple-select-label">
-                Participación
+              TUVO PARTICIPACIÓN INDIVIDUAL
               </InputLabel>
               <Select
                 labelId="demo-simple-select-label"
@@ -764,14 +923,47 @@ export const SeeCase = () => {
             flexDirection: "column",
           }}
         >
-          <SelectSeeCase
-            label="NOMBRE DEL ASESOR"
-            name="advisor"
-            value={data.advisor}
-            onChangeValue={handleChange}
-            menuProp={MenuProps}
-            data={nombres}
-          />
+          <Typography
+            variant="p"
+            className="title"
+            style={{
+              marginBottom: 10,
+            }}
+          >
+            NOMBRE DEL ASESOR
+          </Typography>
+          <Grid
+            style={{
+              display: "flex",
+            }}
+          >
+            <TextField
+              id="outlined-basic"
+              label="NOMBRE DEL ASESOR"
+              variant="outlined"
+              value={data.advisorName}
+              name="advisor"
+              inputProps={{ readOnly: true }}
+              style={{
+                width: "95%",
+              }}
+            />
+            <Tooltip title="Seleccionar Asesor">
+              <Button
+                onClick={() => {
+                  setShowModal(!showModal);
+                  setNameValue({
+                    name: "advisor",
+                    value: data.advisor,
+                    name2: "advisorName",
+                    value2: data.advisorName,
+                  });
+                }}
+              >
+                <Edit />
+              </Button>
+            </Tooltip>
+          </Grid>
         </Grid>
 
         <Grid
@@ -791,7 +983,7 @@ export const SeeCase = () => {
 
             <FormControl sx={{ m: 1, width: "100%" }}>
               <InputLabel id="demo-simple-select-label">
-                Representación a terceros
+              REALIZÓ REPRESENTACION DE TERCEROS
               </InputLabel>
               <Select
                 labelId="demo-simple-select-label"
@@ -899,14 +1091,47 @@ export const SeeCase = () => {
             flexDirection: "column",
           }}
         >
-          <SelectSeeCase
-            label="ESTUDIANTE QUE RECIBE EL CASO"
-            name="receiverStudent"
-            value={data.receiverStudent}
-            onChangeValue={handleChange}
-            menuProp={MenuProps}
-            data={names}
-          />
+          <Typography
+            variant="p"
+            className="title"
+            style={{
+              marginBottom: 10,
+            }}
+          >
+            ESTUDIANTE QUE RECIBE EL CASO
+          </Typography>
+          <Grid
+            style={{
+              display: "flex",
+            }}
+          >
+            <TextField
+              id="outlined-basic"
+              label="ESTUDIANTE QUE RECIBE EL CASO"
+              variant="outlined"
+              value={data.receiverStudentName}
+              name="receiverStudent"
+              inputProps={{ readOnly: true }}
+              style={{
+                width: "95%",
+              }}
+            />
+            <Tooltip title="Seleccionar Estudiante">
+              <Button
+                onClick={() => {
+                  setShowModal(!showModal);
+                  setNameValue({
+                    name: "receiverStudent",
+                    value: data.receiverStudent,
+                    name2: "receiverStudentName",
+                    value2: data.receiverStudentName,
+                  });
+                }}
+              >
+                <Edit />
+              </Button>
+            </Tooltip>
+          </Grid>
         </Grid>
 
         <Grid
@@ -1102,16 +1327,18 @@ export const SeeCase = () => {
                           confirmButtonText: "Sí",
                         }).then((result) => {
                           if (result.isConfirmed) {
-                            deleteFile(e.id, e.url.split("/")[4]).then(
-                              (res) => {
-                                res.status === 204
-                                  ? alert("success", "Documento eliminado")
-                                  : alert("error", "Error al eliminar");
-                                casesId(id).then((_case) =>
-                                  setData({ files: _case.files })
-                                );
-                              }
-                            );
+                            deleteFile(
+                              e.id,
+                              e.url.split("/")[4],
+                              auth.tokken
+                            ).then((res) => {
+                              res.status === 204
+                                ? alert("success", "Documento eliminado")
+                                : alert("error", "Error al eliminar");
+                              casesId(id, auth.tokken).then((_case) =>
+                                setData({ files: _case.files })
+                              );
+                            });
                             alert("success", "Documento eliminado");
                           }
                         });
@@ -1169,6 +1396,27 @@ export const SeeCase = () => {
           </Button>
         </Link>
       </Grid>
+
+      {showModal && (
+        <Modal
+          open={showModal}
+          onClose={() => setShowModal(false)}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <ModalAddPerson
+            persons={peopleList}
+            showModal={setShowModal}
+            nameValue={nameValue}
+            handleChange={handleChangePersons}
+            estudents={estudents}
+            advisors={advisors}
+          />
+        </Modal>
+      )}
     </Grid>
   );
 };

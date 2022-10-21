@@ -6,7 +6,7 @@ import {
   LogoutOutlined,
   PersonPinCircle,
   PeopleOutline,
-  BusinessCenter
+  BusinessCenter,
 } from "@mui/icons-material";
 import {
   Box,
@@ -21,11 +21,19 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  TextField,
   Toolbar,
   Typography,
 } from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
+import { useContext, useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import superAdmin from "../../assets/images/admin-sinfondo.png";
+import estudent from "../../assets/images/estudent.png";
+import lawyer from "../../assets/images/lawyer.png";
+import AuthContext from "../../auth/context/AuthContext";
+
+const { menuOptions } = require("../components/servicesCases.js");
 
 export const SideBar = ({
   valueSideBarHidden,
@@ -35,9 +43,30 @@ export const SideBar = ({
 }) => {
   const navigate = useNavigate();
 
+  const { auth, handleAuth } = useContext(AuthContext);
+  const [roleId, setRoleId] = useState([]);
+
+  useEffect(() => {
+    menuOptions(auth.tokken).then((res) => {
+      let options = res[0].roleId;
+      setRoleId(options);
+      handleAuth(true, auth.tokken, options)
+    });
+  }, []);
+
   const handleBacklogin = () => {
+    handleAuth(false, '');
     navigate("/auth/login");
   };
+
+  let options =
+    roleId === 1
+      ? ["Casos_Recepcionados", "Casos_Asignados", "Personas"]
+      : roleId === 2
+      ? ["Casos_Asignados_asesor", "Estudiantes_asesor"]
+      : roleId === 3
+      ? ["Casos", "Estudiantes", "Asesores", "Personas", "Configuracion"]
+      : "";
 
   return (
     <Box
@@ -71,82 +100,11 @@ export const SideBar = ({
             }}
           >
             <Typography variant="h6" noWrap component="div">
-              Menu
+              Consultorio Jurídico
             </Typography>
           </Toolbar>
 
           <Divider />
-
-          <List>
-            {[
-              "Casos",
-              "Casos_Recepcionados",
-              "Casos_Asignados",
-              "Casos_Asignados_asesor",
-              "Estudiantes",
-              "Estudiantes_asesor",
-              "Asesores",
-              "Personas",
-              "Configuracion",
-            ].map((text) => (
-              <ListItem
-                key={text}
-                disablePadding
-                sx={{
-                  height: "10vh",
-                }}
-              >
-                <NavLink
-                  className="nav-item"
-                  to={text}
-                  style={{
-                    textDecoration: "none",
-                    color: "#000000"
-                  }}
-                >
-                  <ListItemButton
-                    name={text}
-                    onClick={() => (handleDrawerOpen(), handleClose())}
-                    sx={{
-                      display: { xs: "flex" },
-                      fontSize: "bold",
-                    }}
-                  >
-                    <ListItemIcon
-                    // sx={{
-                    //   color: "#ffffff"
-                    // }}
-                    >
-                      {text === "Casos" && <FindInPage />}
-                      {text === "Estudiantes" && <Group />}
-                      {text === "Estudiantes_asesor" && <Group />}
-                      {text === "Casos_Recepcionados" && <PeopleOutline />}
-                      {text === "Casos_Asignados" && <BusinessCenter />}
-                      {text === "Casos_Asignados_asesor" && <BusinessCenter />}
-                      {text === "Asesores" && <PersonPinCircle />}
-                      {text === "Personas" && <GroupAdd />}
-                      {text === "Configuracion" && <PermDataSetting />}
-                    </ListItemIcon>
-                    <Grid container>
-                      <ListItemText
-                        primary={
-                          text === "Casos_Recepcionados"
-                            ? "Casos Recepcionados"
-                            : text === "Casos_Asignados"
-                            ? "Casos Asignados"
-                            : text === "Casos_Asignados_asesor"
-                            ? "Casos Asignados"
-                            : text === "Estudiantes_asesor"
-                            ? "Estudiantes"
-                            : text
-                        }
-                      />
-                    </Grid>
-                  </ListItemButton>
-                </NavLink>
-              </ListItem>
-            ))}
-          </List>
           <Grid
             container
             direction="column"
@@ -156,22 +114,110 @@ export const SideBar = ({
               pl: 2,
             }}
           >
-            <ImageListItem
+            {auth.role === 3 && <ImageListItem
               variant="standard"
               sx={{
-                width: { xs: 140, md: 160 },
-                mr: 2,
-                mb: 2,
+                width: { xs: 160, md: 180 },
+                margin: "20px auto"
               }}
             >
               <img src={superAdmin} alt="super-admin" />
-            </ImageListItem>
-            <Button onClick={handleBacklogin}>
-              <IconButton color="error">
-                <LogoutOutlined />
-              </IconButton>
-            </Button>
+            </ImageListItem>}
+
+            {auth.role === 2 && <ImageListItem
+              variant="standard"
+              sx={{
+                width: { xs: 90, md: 110 },
+                margin: "20px auto"
+              }}
+            >
+              <img src={lawyer} alt="super-admin" />
+            </ImageListItem>}
+
+            {auth.role === 1 && <ImageListItem
+              variant="standard"
+              sx={{
+                width: { xs: 100, md: 120 },
+                margin: "20px auto"
+              }}
+            >
+              <img src={estudent} alt="super-admin" />
+            </ImageListItem>}
+
+            <Tooltip title="Cerrar Sesión">
+              <Button onClick={handleBacklogin}>
+                <IconButton color="error">
+                  <LogoutOutlined />
+                </IconButton>
+              </Button>
+            </Tooltip>
           </Grid>
+
+          <List>
+            {!!options &&
+              options.map((text) => (
+                <ListItem
+                  key={text}
+                  disablePadding
+                  sx={{
+                    height: "10vh",
+                  }}
+                >
+                  <NavLink
+                    className="nav-item"
+                    to={text}
+                    style={{
+                      textDecoration: "none",
+                      color: "#000000",
+                    }}
+                  >
+                    <ListItemButton
+                      name={text}
+                      onClick={() => (handleDrawerOpen(), handleClose())}
+                      sx={{
+                        display: { xs: "flex" },
+                        fontSize: "bold",
+                      }}
+                    >
+                      <ListItemIcon
+                      // sx={{
+                      //   color: "#ffffff"
+                      // }}
+                      >
+                        {text === "Casos" && <FindInPage />}
+                        {text === "Estudiantes" && <Group />}
+                        {text === "Estudiantes_asesor" && <Group />}
+                        {text === "Casos_Recepcionados" && <PeopleOutline />}
+                        {text === "Casos_Asignados" && <BusinessCenter />}
+                        {text === "Casos_Asignados_asesor" && (
+                          <BusinessCenter />
+                        )}
+                        {text === "Asesores" && <PersonPinCircle />}
+                        {text === "Personas" && <GroupAdd />}
+                        {text === "Configuracion" && <PermDataSetting />}
+                      </ListItemIcon>
+                      <Grid container>
+                        <ListItemText
+                          primary={
+                            text === "Casos_Recepcionados"
+                              ? "Casos Recepcionados"
+                              : text === "Casos_Asignados"
+                              ? "Casos Asignados"
+                              : text === "Casos_Asignados_asesor"
+                              ? "Casos Asignados"
+                              : text === "Estudiantes_asesor"
+                              ? "Estudiantes"
+                              : text === "Configuracion"
+                              ? "Configuración"
+                              : text
+                          }
+                        />
+                      </Grid>
+                    </ListItemButton>
+                  </NavLink>
+                </ListItem>
+              ))}
+          </List>
         </Grid>
       </Drawer>
     </Box>

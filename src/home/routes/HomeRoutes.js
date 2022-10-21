@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
+import AuthContext from "../../auth/context/AuthContext";
+import { loginRefresh } from "../components/servicesCases";
 import { Advisers } from "../views/Advisers";
 import { Estudents } from "../views/Estudents";
 import { WelcomeView } from "../views/WelcomeView";
@@ -14,6 +16,24 @@ import { EstudentsAdviser } from "../views/EstudentsAdviser";
 import { CasesAssignedAdviser } from "../views/CasesAssignedAdviser";
 
 export const HomeRoutes = () => {
+
+  const { auth, handleAuth } = useContext(AuthContext);
+
+  useEffect(() => {
+    console.log('UPDATING TOKEN')
+
+    loginRefresh().then((res) => {
+      if (!!res.response && res.response.status === 406) {
+        handleAuth(false, "");
+        <Navigate to="/auth/login" />;
+      }
+      if (res.accessToken) {
+        console.log('UPDATING TOKEN')
+        handleAuth(true, res.accessToken);
+      }
+    });
+  }, []);
+
   return (
     <div>
       <Routes>
@@ -27,8 +47,8 @@ export const HomeRoutes = () => {
         <Route path="/Asesores" element={<Advisers />} />
         <Route path="/Personas" element={<Persons />} />
         <Route path="/Configuracion" element={<Configuration />} />
-        <Route path="/Ver_caso" element={<SeeCase />} />
-        <Route path="/Ver_caso_ase_estu" element={<SeeCaseEstudent />} />
+        <Route path="/Ver_caso/:id" element={<SeeCase />} />
+        <Route path="/Ver_caso_ase_estu/:id" element={<SeeCaseEstudent />} />
         <Route path="/" element={<Navigate to="/Bienvenido" />} />
       </Routes>
     </div>

@@ -7,7 +7,6 @@ import {
   Select,
   Typography,
 } from "@mui/material";
-import PropTypes from "prop-types";
 
 const SelectSeeCase = ({
   label,
@@ -33,7 +32,7 @@ const SelectSeeCase = ({
         >
           {data.map((option) => (
             <MenuItem key={option.id} value={option.id}>
-              {option.name}
+              {option.name + " " + (option.lastName1 ? option.lastName1 : "") + " " + (option.lastName2 ? option.lastName2 : "")}
             </MenuItem>
           ))}
         </Select>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import DataGrid, {
   Column,
   FilterRow,
@@ -26,6 +26,7 @@ import "devextreme/dist/css/dx.light.css";
 import { Box, Card, Grid, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { CommentBankSharp, Place } from "@mui/icons-material";
+import AuthContext from "../../auth/context/AuthContext.js";
 
 const {
   attentionPlaces,
@@ -41,7 +42,7 @@ const {
   graphicSupportOptions,
   idTypes,
   fileTypes,
-  people,
+  users,
   createPlace,
   createArea,
   createSubjectMatters,
@@ -55,6 +56,7 @@ const {
   createGraphicSupportOptions,
   createIdTypes,
   createFileTypes,
+  createUsers,
   updatePlace,
   updateArea,
   updateSubjectMatters,
@@ -68,7 +70,7 @@ const {
   updateGraphicSupportOptions,
   updateIdTypes,
   updateFileTypes,
-  updatePeople,
+  updateUsers,
   deletePlace,
   deleteArea,
   deleteSubjectMatters,
@@ -82,8 +84,8 @@ const {
   deleteGraphicSupportOptions,
   deleteIdTypes,
   deleteFileTypes,
-  createPeople,
-  deletePeople,
+  deleteUsers,
+  people,
 } = require("../components/services.js");
 
 const texts = {
@@ -93,10 +95,14 @@ const texts = {
 };
 
 const texts2 = {
-  confirmDeleteMessage: "Estas seguro de eliminar la referencia?",
+  confirmDeleteMessage: "Estas seguro de eliminar el caso?",
+  saveRowChanges: "Guardar",
+  cancelRowChanges: "Cancelar",
+  deleteRow: "Eliminar",
+  editRow: "Editar"
 };
 
-const allowedPageSizes = [5, 10, "Todos"];
+const allowedPageSizes = [5, 10, 15, 20];
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -140,8 +146,10 @@ export const Configuration = () => {
   const [optionSelect, setOptionSelect] = useState([]);
   const [data, setData] = useState([]);
   const [viewGrid, setViewGrid] = useState(1);
-  const [idTypeSelectItems, setIdTypeSelectItems] = useState([]);
-  const [idType, setIdType] = useState([]);
+  const [peopleSelectItems, setPeopleSelectItems] = useState([]);
+  const [idPerson, setIdPerson] = useState([]);
+
+  const { auth, handleAuth } = useContext(AuthContext);
 
   const handleChange = (event) => {
     const {
@@ -149,87 +157,89 @@ export const Configuration = () => {
     } = event;
     setOptionSelect(typeof value === "string" ? value.split(",") : value);
 
+    console.log("tokken", auth.tokken);
+
     switch (event.target.value) {
       case "Lugares de atención":
-        attentionPlaces().then((res) => {
+        attentionPlaces(auth.tokken).then((res) => {
           setData(res);
           setViewGrid(1);
         });
         break;
       case "Áreas":
-        areas().then((res) => {
+        areas(auth.tokken).then((res) => {
           setData(res);
           setViewGrid(1);
         });
         break;
       case "Materia":
-        subjectMatters().then((res) => {
+        subjectMatters(auth.tokken).then((res) => {
           setData(res);
           setViewGrid(1);
         });
         break;
       case "Origen":
-        origins().then((res) => {
+        origins(auth.tokken).then((res) => {
           setData(res);
           setViewGrid(1);
         });
         break;
       case "Calidad":
-        capacities().then((res) => {
+        capacities(auth.tokken).then((res) => {
           setData(res);
           setViewGrid(1);
         });
         break;
       case "Funcionario Judicial":
-        legalOfficerOptions().then((res) => {
+        legalOfficerOptions(auth.tokken).then((res) => {
           setData(res);
           setViewGrid(1);
         });
         break;
       case "Resultado de la atención":
-        attentionResults().then((res) => {
+        attentionResults(auth.tokken).then((res) => {
           setData(res);
           setViewGrid(1);
         });
         break;
       case "Eficacia":
-        efficacyOptions().then((res) => {
+        efficacyOptions(auth.tokken).then((res) => {
           setData(res);
           setViewGrid(1);
         });
         break;
       case "Estado de los casos":
-        caseStatuses().then((res) => {
+        caseStatuses(auth.tokken).then((res) => {
           setData(res);
           setViewGrid(1);
         });
         break;
       case "Resultado de la audiencia":
-        audienceResults().then((res) => {
+        audienceResults(auth.tokken).then((res) => {
           setData(res);
           setViewGrid(1);
         });
         break;
       case "Opciones de soporte gráfico":
-        graphicSupportOptions().then((res) => {
+        graphicSupportOptions(auth.tokken).then((res) => {
           setData(res);
           setViewGrid(1);
         });
         break;
       case "Tipos de identificación":
-        idTypes().then((res) => {
+        idTypes(auth.tokken).then((res) => {
           setData(res);
           setViewGrid(1);
         });
         break;
       case "Tipos de archivo":
-        fileTypes().then((res) => {
+        fileTypes(auth.tokken).then((res) => {
           setData(res);
           setViewGrid(1);
         });
         break;
       case "Usuarios":
-        people().then((res) => {
+        users(auth.tokken).then((res) => {
           setData(res);
           setViewGrid(2);
         });
@@ -251,26 +261,37 @@ export const Configuration = () => {
   };
 
   useEffect(() => {
-    idTypes().then((id) => {
-      let idType = id.map((e) => e.name);
-      setIdTypeSelectItems(idType);
-      setIdType(id);
+    people(auth.tokken).then((res) => {
+      let persons = res.map(
+        (e) =>
+          e.name +
+          " " +
+          (e.lastName1 === null ? "" : e.lastName1) +
+          " " +
+          (e.lastName2 === null ? "" : e.lastName2)
+      );
+      setPeopleSelectItems(persons);
+      setIdPerson(res);
     });
   }, [data]);
 
   const cellrender = (row) => {
-    let apellido1 = row.data.lastName1 === null ? "" : row.data.lastName1;
-    let apellido2 = row.data.lastName2 === null ? "" : row.data.lastName2;
+    let apellido1 =
+      row.data.person.lastName1 === null ? "" : row.data.person.lastName1;
+    let apellido2 =
+      row.data.person.lastName2 === null ? "" : row.data.person.lastName2;
     return <p>{`${apellido1} ${apellido2}`}</p>;
   };
 
   let positionEditorOptions = {
-    items: idTypeSelectItems,
+    items: peopleSelectItems,
     searchEnabled: true,
     value: "",
   };
 
-  console.log(data);
+  let editorPassword = {
+    mode: "password",
+  };
 
   return (
     <div>
@@ -342,94 +363,112 @@ export const Configuration = () => {
                 let id = row.data.id;
                 switch (optionSelect[0]) {
                   case "Lugares de atención":
-                    deletePlace(id).then((res) => {
+                    deletePlace(id, auth.tokken).then((res) => {
                       res.request.status === 204
                         ? alert("success", "Elemento eliminado")
-                        : alert("error", "Error al eliminar");
+                        : alert("error", "Este recurso ya está en uso!!!");
+                      attentionPlaces(auth.tokken).then((res) => setData(res));
                     });
                     break;
                   case "Áreas":
-                    deleteArea(id).then((res) => {
+                    deleteArea(id, auth.tokken).then((res) => {
+                      console.log();
                       res.request.status === 204
                         ? alert("success", "Elemento eliminado")
-                        : alert("error", "Error al eliminar");
+                        : alert("error", "Este recurso ya está en uso!!!");
+                      areas(auth.tokken).then((res) => setData(res));
                     });
                     break;
                   case "Materia":
-                    deleteSubjectMatters(id).then((res) => {
+                    deleteSubjectMatters(id, auth.tokken).then((res) => {
                       res.request.status === 204
                         ? alert("success", "Elemento eliminado")
-                        : alert("error", "Error al eliminar");
+                        : alert("error", "Este recurso ya está en uso!!!");
+                      subjectMatters(auth.tokken).then((res) => setData(res));
                     });
                     break;
                   case "Origen":
-                    deleteOrigins(id).then((res) => {
+                    deleteOrigins(id, auth.tokken).then((res) => {
                       res.request.status === 204
                         ? alert("success", "Elemento eliminado")
-                        : alert("error", "Error al eliminar");
+                        : alert("error", "Este recurso ya está en uso!!!");
+                      origins(auth.tokken).then((res) => setData(res));
                     });
                     break;
                   case "Calidad":
-                    deleteCapacities(id).then((res) => {
+                    deleteCapacities(id, auth.tokken).then((res) => {
                       res.request.status === 204
                         ? alert("success", "Elemento eliminado")
-                        : alert("error", "Error al eliminar");
+                        : alert("error", "Este recurso ya está en uso!!!");
+                      capacities(auth.tokken).then((res) => setData(res));
                     });
                     break;
                   case "Funcionario Judicial":
-                    deleteLegalOfficerOptions(id).then((res) => {
+                    deleteLegalOfficerOptions(id, auth.tokken).then((res) => {
                       res.request.status === 204
                         ? alert("success", "Elemento eliminado")
-                        : alert("error", "Error al eliminar");
+                        : alert("error", "Este recurso ya está en uso!!!");
+                      legalOfficerOptions(auth.tokken).then((res) =>
+                        setData(res)
+                      );
                     });
                     break;
                   case "Resultado de la atención":
-                    deleteAttentionResults(id).then((res) => {
+                    deleteAttentionResults(id, auth.tokken).then((res) => {
                       res.request.status === 204
                         ? alert("success", "Elemento eliminado")
-                        : alert("error", "Error al eliminar");
+                        : alert("error", "Este recurso ya está en uso!!!");
+                      attentionResults(auth.tokken).then((res) => setData(res));
                     });
                     break;
                   case "Eficacia":
-                    deleteEfficacyOptions(id).then((res) => {
+                    deleteEfficacyOptions(id, auth.tokken).then((res) => {
                       res.request.status === 204
                         ? alert("success", "Elemento eliminado")
-                        : alert("error", "Error al eliminar");
+                        : alert("error", "Este recurso ya está en uso!!!");
+                      efficacyOptions(auth.tokken).then((res) => setData(res));
                     });
                     break;
                   case "Estado de los casos":
-                    deleteCaseStatuses(id).then((res) => {
+                    deleteCaseStatuses(id, auth.tokken).then((res) => {
                       res.request.status === 204
                         ? alert("success", "Elemento eliminado")
-                        : alert("error", "Error al eliminar");
+                        : alert("error", "Este recurso ya está en uso!!!");
+                      caseStatuses(auth.tokken).then((res) => setData(res));
                     });
                     break;
                   case "Resultado de la audiencia":
-                    deleteAudienceResults(id).then((res) => {
+                    deleteAudienceResults(id, auth.tokken).then((res) => {
                       res.request.status === 204
                         ? alert("success", "Elemento eliminado")
-                        : alert("error", "Error al eliminar");
+                        : alert("error", "Este recurso ya está en uso!!!");
+                      audienceResults(auth.tokken).then((res) => setData(res));
                     });
                     break;
                   case "Opciones de soporte gráfico":
-                    deleteGraphicSupportOptions(id).then((res) => {
+                    deleteGraphicSupportOptions(id, auth.tokken).then((res) => {
                       res.request.status === 204
                         ? alert("success", "Elemento eliminado")
-                        : alert("error", "Error al eliminar");
+                        : alert("error", "Este recurso ya está en uso!!!");
+                      graphicSupportOptions(auth.tokken).then((res) =>
+                        setData(res)
+                      );
                     });
                     break;
                   case "Tipos de identificación":
-                    deleteIdTypes(id).then((res) => {
+                    deleteIdTypes(id, auth.tokken).then((res) => {
                       res.request.status === 204
                         ? alert("success", "Elemento eliminado")
-                        : alert("error", "Error al eliminar");
+                        : alert("error", "Este recurso ya está en uso!!!");
+                      idTypes(auth.tokken).then((res) => setData(res));
                     });
                     break;
                   case "Tipos de archivo":
-                    deleteFileTypes(id).then((res) => {
+                    deleteFileTypes(id, auth.tokken).then((res) => {
                       res.request.status === 204
                         ? alert("success", "Elemento eliminado")
-                        : alert("error", "Error al eliminar");
+                        : alert("error", "Este recurso ya está en uso!!!");
+                      fileTypes(auth.tokken).then((res) => setData(res));
                     });
                     break;
 
@@ -442,110 +481,146 @@ export const Configuration = () => {
                 let description = row.data.description;
                 switch (optionSelect[0]) {
                   case "Lugares de atención":
-                    createPlace(name, description).then((res) => {
+                    createPlace(name, description, auth.tokken).then((res) => {
+                      console.log("res createplace", res);
                       res.id
                         ? alert("success", "Elemento creado")
-                        : alert("error", "Error al eliminar");
-                      attentionPlaces().then((res) => setData(res));
+                        : alert("error", "Este nombre ya existe!!!");
+                      attentionPlaces(auth.tokken).then((res) => setData(res));
                     });
                     break;
                   case "Áreas":
-                    createArea(name, description).then((res) => {
+                    createArea(name, description, auth.tokken).then((res) => {
+                      console.log("area create", res);
                       res.id
                         ? alert("success", "Elemento creado")
-                        : alert("error", "Error al eliminar");
-                      areas().then((res) => setData(res));
+                        : alert("error", "Este nombre ya existe!!!");
+                      areas(auth.tokken).then((res) => setData(res));
                     });
                     break;
                   case "Materia":
-                    createSubjectMatters(name, description).then((res) => {
-                      res.id
-                        ? alert("success", "Elemento creado")
-                        : alert("error", "Error al eliminar");
-                      subjectMatters().then((res) => setData(res));
-                    });
-                    break;
-                  case "Origen":
-                    createOrigins(name, description).then((res) => {
-                      res.id
-                        ? alert("success", "Elemento creado")
-                        : alert("error", "Error al eliminar");
-                      origins().then((res) => setData(res));
-                    });
-                    break;
-                  case "Calidad":
-                    createCapacities(name, description).then((res) => {
-                      res.id
-                        ? alert("success", "Elemento creado")
-                        : alert("error", "Error al eliminar");
-                      capacities().then((res) => setData(res));
-                    });
-                    break;
-                  case "Funcionario Judicial":
-                    createLegalOfficerOptions(name, description).then((res) => {
-                      res.id
-                        ? alert("success", "Elemento creado")
-                        : alert("error", "Error al eliminar");
-                      legalOfficerOptions().then((res) => setData(res));
-                    });
-                    break;
-                  case "Resultado de la atención":
-                    createAttentionResults(name, description).then((res) => {
-                      res.id
-                        ? alert("success", "Elemento creado")
-                        : alert("error", "Error al eliminar");
-                      attentionResults().then((res) => setData(res));
-                    });
-                    break;
-                  case "Eficacia":
-                    createEfficacyOptions(name, description).then((res) => {
-                      res.id
-                        ? alert("success", "Elemento creado")
-                        : alert("error", "Error al eliminar");
-                      efficacyOptions().then((res) => setData(res));
-                    });
-                    break;
-                  case "Estado de los casos":
-                    createCaseStatuses(name, description).then((res) => {
-                      res.id
-                        ? alert("success", "Elemento creado")
-                        : alert("error", "Error al eliminar");
-                      caseStatuses().then((res) => setData(res));
-                    });
-                    break;
-                  case "Resultado de la audiencia":
-                    createAudienceResults(name, description).then((res) => {
-                      res.id
-                        ? alert("success", "Elemento creado")
-                        : alert("error", "Error al eliminar");
-                      audienceResults().then((res) => setData(res));
-                    });
-                    break;
-                  case "Opciones de soporte gráfico":
-                    createGraphicSupportOptions(name, description).then(
+                    createSubjectMatters(name, description, auth.tokken).then(
                       (res) => {
                         res.id
                           ? alert("success", "Elemento creado")
-                          : alert("error", "Error al eliminar");
-                        graphicSupportOptions().then((res) => setData(res));
+                          : alert("error", "Este nombre ya existe!!!");
+                        subjectMatters(auth.tokken).then((res) => setData(res));
                       }
                     );
                     break;
-                  case "Tipos de identificación":
-                    createIdTypes(name, description).then((res) => {
+                  case "Origen":
+                    createOrigins(name, description, auth.tokken).then(
+                      (res) => {
+                        res.id
+                          ? alert("success", "Elemento creado")
+                          : alert("error", "Este nombre ya existe!!!");
+                        origins(auth.tokken).then((res) => setData(res));
+                      }
+                    );
+                    break;
+                  case "Calidad":
+                    createCapacities(name, description, auth.tokken).then(
+                      (res) => {
+                        res.id
+                          ? alert("success", "Elemento creado")
+                          : alert("error", "Este nombre ya existe!!!");
+                        capacities(auth.tokken).then((res) => setData(res));
+                      }
+                    );
+                    break;
+                  case "Funcionario Judicial":
+                    createLegalOfficerOptions(
+                      name,
+                      description,
+                      auth.tokken
+                    ).then((res) => {
                       res.id
                         ? alert("success", "Elemento creado")
-                        : alert("error", "Error al eliminar");
-                      idTypes().then((res) => setData(res));
+                        : alert("error", "Este nombre ya existe!!!");
+                      legalOfficerOptions(auth.tokken).then((res) =>
+                        setData(res)
+                      );
                     });
                     break;
-                  case "Tipos de archivo":
-                    createFileTypes(name, description).then((res) => {
+                  case "Resultado de la atención":
+                    createAttentionResults(name, description, auth.tokken).then(
+                      (res) => {
+                        res.id
+                          ? alert("success", "Elemento creado")
+                          : alert("error", "Este nombre ya existe!!!");
+                        attentionResults(auth.tokken).then((res) =>
+                          setData(res)
+                        );
+                      }
+                    );
+                    break;
+                  case "Eficacia":
+                    createEfficacyOptions(name, description, auth.tokken).then(
+                      (res) => {
+                        res.id
+                          ? alert("success", "Elemento creado")
+                          : alert("error", "Este nombre ya existe!!!");
+                        efficacyOptions(auth.tokken).then((res) =>
+                          setData(res)
+                        );
+                      }
+                    );
+                    break;
+                  case "Estado de los casos":
+                    createCaseStatuses(name, description, auth.tokken).then(
+                      (res) => {
+                        res.id
+                          ? alert("success", "Elemento creado")
+                          : alert("error", "Este nombre ya existe!!!");
+                        caseStatuses(auth.tokken).then((res) => setData(res));
+                      }
+                    );
+                    break;
+                  case "Resultado de la audiencia":
+                    createAudienceResults(name, description, auth.tokken).then(
+                      (res) => {
+                        res.id
+                          ? alert("success", "Elemento creado")
+                          : alert("error", "Este nombre ya existe!!!");
+                        audienceResults(auth.tokken).then((res) =>
+                          setData(res)
+                        );
+                      }
+                    );
+                    break;
+                  case "Opciones de soporte gráfico":
+                    createGraphicSupportOptions(
+                      name,
+                      description,
+                      auth.tokken
+                    ).then((res) => {
                       res.id
                         ? alert("success", "Elemento creado")
-                        : alert("error", "Error al eliminar");
-                      fileTypes().then((res) => setData(res));
+                        : alert("error", "Este nombre ya existe!!!");
+                      graphicSupportOptions(auth.tokken).then((res) =>
+                        setData(res)
+                      );
                     });
+                    break;
+                  case "Tipos de identificación":
+                    createIdTypes(name, description, auth.tokken).then(
+                      (res) => {
+                        res.id
+                          ? alert("success", "Elemento creado")
+                          : alert("error", "Este nombre ya existe!!!");
+                        idTypes(auth.tokken).then((res) => setData(res));
+                      }
+                    );
+                    break;
+                  case "Tipos de archivo":
+                    createFileTypes(name, description, auth.tokken).then(
+                      (res) => {
+                        res.id
+                          ? alert("success", "Elemento creado")
+                          : alert("error", "Este nombre ya existe!!!");
+                        fileTypes(auth.tokken).then((res) => setData(res));
+                      }
+                    );
                     break;
 
                   default:
@@ -559,81 +634,91 @@ export const Configuration = () => {
                 let description = row.data.description;
                 switch (optionSelect[0]) {
                   case "Lugares de atención":
-                    updatePlace(id, name, description).then((res) => {
-                      res.length > 0
-                        ? alert("success", "Elemento editado")
-                        : alert("error", "Error al editar");
-                    });
+                    updatePlace(id, name, description, auth.tokken).then(
+                      (res) => {
+                        res.length > 0
+                          ? alert("success", "Elemento editado")
+                          : alert("error", "Error al editar");
+                      }
+                    );
                     break;
                   case "Áreas":
-                    updateArea(id, name, description).then((res) => {
-                      res.length > 0
-                        ? alert("success", "Elemento editado")
-                        : alert("error", "Error al editar");
-                    });
+                    updateArea(id, name, description, auth.tokken).then(
+                      (res) => {
+                        res.length > 0
+                          ? alert("success", "Elemento editado")
+                          : alert("error", "Error al editar");
+                      }
+                    );
                     break;
                   case "Materia":
-                    updateSubjectMatters(id, name, description).then((res) => {
+                    updateSubjectMatters(
+                      id,
+                      name,
+                      description,
+                      auth.tokken
+                    ).then((res) => {
                       res.length > 0
                         ? alert("success", "Elemento editado")
                         : alert("error", "Error al editar");
                     });
                     break;
                   case "Origen":
-                    updateOrigins(id, name, description).then((res) => {
-                      res.length > 0
-                        ? alert("success", "Elemento editado")
-                        : alert("error", "Error al editar");
-                    });
+                    updateOrigins(id, name, description, auth.tokken).then(
+                      (res) => {
+                        res.length > 0
+                          ? alert("success", "Elemento editado")
+                          : alert("error", "Error al editar");
+                      }
+                    );
                     break;
                   case "Calidad":
-                    updateCapacities(id, name, description).then((res) => {
+                    updateCapacities(id, name, description, auth.tokken).then(
+                      (res) => {
+                        res.length > 0
+                          ? alert("success", "Elemento editado")
+                          : alert("error", "Error al editar");
+                      }
+                    );
+                    break;
+                  case "Funcionario Judicial":
+                    updateLegalOfficerOptions(
+                      id,
+                      name,
+                      description,
+                      auth.tokken
+                    ).then((res) => {
                       res.length > 0
                         ? alert("success", "Elemento editado")
                         : alert("error", "Error al editar");
                     });
                     break;
-                  case "Funcionario Judicial":
-                    updateLegalOfficerOptions(id, name, description).then(
-                      (res) => {
-                        res.length > 0
-                          ? alert("success", "Elemento editado")
-                          : alert("error", "Error al editar");
-                      }
-                    );
-                    break;
                   case "Resultado de la atención":
-                    updateAttentionResults(id, name, description).then(
-                      (res) => {
-                        res.length > 0
-                          ? alert("success", "Elemento editado")
-                          : alert("error", "Error al editar");
-                      }
-                    );
+                    updateAttentionResults(
+                      id,
+                      name,
+                      description,
+                      auth.tokken
+                    ).then((res) => {
+                      res.length > 0
+                        ? alert("success", "Elemento editado")
+                        : alert("error", "Error al editar");
+                    });
                     break;
                   case "Eficacia":
-                    updateEfficacyOptions(id, name, description).then((res) => {
+                    updateEfficacyOptions(
+                      id,
+                      name,
+                      description,
+                      auth.tokken
+                    ).then((res) => {
                       res.length > 0
                         ? alert("success", "Elemento editado")
                         : alert("error", "Error al editar");
                     });
                     break;
                   case "Estado de los casos":
-                    updateCaseStatuses(id, name, description).then((res) => {
-                      res.length > 0
-                        ? alert("success", "Elemento editado")
-                        : alert("error", "Error al editar");
-                    });
-                    break;
-                  case "Resultado de la audiencia":
-                    updateAudienceResults(id, name, description).then((res) => {
-                      res.length > 0
-                        ? alert("success", "Elemento editado")
-                        : alert("error", "Error al editar");
-                    });
-                    break;
-                  case "Opciones de soporte gráfico":
-                    updateGraphicSupportOptions(id, name, description).then(
+                    updateCaseStatuses(id, name, description, auth.tokken).then(
                       (res) => {
                         res.length > 0
                           ? alert("success", "Elemento editado")
@@ -641,19 +726,47 @@ export const Configuration = () => {
                       }
                     );
                     break;
-                  case "Tipos de identificación":
-                    updateIdTypes(id, name, description).then((res) => {
+                  case "Resultado de la audiencia":
+                    updateAudienceResults(
+                      id,
+                      name,
+                      description,
+                      auth.tokken
+                    ).then((res) => {
                       res.length > 0
                         ? alert("success", "Elemento editado")
                         : alert("error", "Error al editar");
                     });
                     break;
-                  case "Tipos de archivo":
-                    updateFileTypes(id, name, description).then((res) => {
+                  case "Opciones de soporte gráfico":
+                    updateGraphicSupportOptions(
+                      id,
+                      name,
+                      description,
+                      auth.tokken
+                    ).then((res) => {
                       res.length > 0
                         ? alert("success", "Elemento editado")
                         : alert("error", "Error al editar");
                     });
+                    break;
+                  case "Tipos de identificación":
+                    updateIdTypes(id, name, description, auth.tokken).then(
+                      (res) => {
+                        res.length > 0
+                          ? alert("success", "Elemento editado")
+                          : alert("error", "Error al editar");
+                      }
+                    );
+                    break;
+                  case "Tipos de archivo":
+                    updateFileTypes(id, name, description, auth.tokken).then(
+                      (res) => {
+                        res.length > 0
+                          ? alert("success", "Elemento editado")
+                          : alert("error", "Error al editar");
+                      }
+                    );
                     break;
 
                   default:
@@ -671,7 +784,7 @@ export const Configuration = () => {
                 texts={texts2}
               >
                 <Popup
-                  title="Consultorio Jurídico"
+                  title="Configuraciones"
                   showTitle={true}
                   width={700}
                   height={240}
@@ -701,6 +814,7 @@ export const Configuration = () => {
                 showPageSizeSelector={true}
                 showInfo={true}
                 showNavigationButtons={true}
+                infoText= 'Página {0} de {1} ({2} Registros)'
               />
               <Export
                 enabled={true}
@@ -732,71 +846,80 @@ export const Configuration = () => {
               showBorders={true}
               onRowRemoved={(row) => {
                 let id = row.data.id;
-                deletePeople(id).then((res) => {
+                deleteUsers(id, auth.tokken).then((res) => {
                   res.request.status === 204
                     ? alert("success", "Elemento eliminado")
-                    : alert("error", "Error al eliminar");
+                    : alert("error", "Este recurso ya está en uso!!!");
                 });
               }}
               onRowInserted={(row) => {
-                let typeId = [];
+                let peopleId = [];
+                idPerson.filter((e) => {
+                  if (
+                    e.name +
+                      " " +
+                      (e.lastName1 === null ? "" : e.lastName1) +
+                      " " +
+                      (e.lastName2 === null ? "" : e.lastName2) ===
+                    row.data.person.name
+                  ) {
+                    peopleId.push(e.id);
+                  }
+                });
 
-                idType.forEach(
-                  (e) => e.name === row.data.idTypeId && typeId.push(e.id)
+                let username = row.data.username;
+                let pwd = row.data.pwd;
+                let roleId = row.data.roleId;
+                let personId = peopleId;
+
+                console.log(
+                  "row data",
+                  username,
+                  pwd,
+                  roleId,
+                  personId,
+                  "row data",
+                  row.data
                 );
 
-                let name = row.data.name;
-                let lastName1 = row.data.lastName1;
-                let lastName2 = row.data.lastName2;
-                let idTypeId = typeId[0];
-                let idNumber = row.data.idNumber;
-                let email = row.data.email;
-                let tel = row.data.tel;
-                let birthdate = row.data.birthdate;
+                createUsers(username, pwd, roleId, personId, auth.tokken).then(
+                  (res) => {
+                    console.log("create res", res);
+                    res.id && alert("success", "Elemento creado");
 
-                createPeople(
-                  name,
-                  lastName1,
-                  lastName2,
-                  idTypeId,
-                  idNumber,
-                  email,
-                  tel,
-                  birthdate
-                ).then((res) => {
-                  res.id
-                    ? alert("success", "Elemento creado")
-                    : alert("error", "Error al crear persona");
-                  people().then((res) => setData(res));
-                });
+                    if (
+                      res.response.data.error ===
+                      "The person is already assigned to a specific user"
+                    ) {
+                      alert(
+                        "error",
+                        "La persona ya tiene un usario asignado!!!"
+                      );
+                    }
+                    if (res.response.data.error === "Username Already Exists") {
+                      alert("error", "El nombre de usuario ya existe!!!");
+                    }
+                    users(auth.tokken).then((res) => setData(res));
+                  }
+                );
               }}
               onInitialized={() => {}}
               onRowUpdated={(row) => {
                 let id = row.data.id;
-                let name = row.data.name;
-                let lastName1 = row.data.lastName1;
-                let lastName2 = row.data.lastName2;
-                let idTypeId = row.data.idTypeId;
-                let idNumber = row.data.idNumber;
-                let email = row.data.email;
-                let tel = row.data.tel;
-                let birthdate = row.data.birthdate;
 
-                updatePeople(
-                  id,
-                  name,
-                  lastName1,
-                  lastName2,
-                  idTypeId,
-                  idNumber,
-                  email,
-                  tel,
-                  birthdate
-                ).then((res) => {
-                  res.length > 0
-                    ? alert("success", "Elemento editado")
-                    : alert("error", "Error al editar");
-                });
+                let username = row.data.username;
+                let pwd = row.data.pwd;
+                let roleId = row.data.roleId;
+
+                updateUsers(id, username, pwd, roleId, auth.tokken).then(
+                  (res) => {
+                    console.log("edit user", res);
+                    users(auth.tokken).then((res) => setData(res));
+                    // res.length > 0
+                    //   ? alert("success", "Elemento editado")
+                    //   : alert("error", "Error al editar");
+                  }
+                );
               }}
               rowAlternationEnabled={true}
             >
@@ -809,28 +932,31 @@ export const Configuration = () => {
                 texts={texts2}
               >
                 <Popup
-                  title="Consultorio Jurídico"
+                  title="Configuración Usuarios"
                   showTitle={true}
                   width={700}
                   height={350}
                 />
                 <Form>
                   <Item itemType="group" colCount={2} colSpan={2}>
-                    <Item dataField="name" caption="Nombre" />
-                    <Item dataField="lastName1" caption="Primer apellido" />
-                    <Item dataField="lastName2" caption="Segundo apellido" />
                     <Item
-                      dataField="Personas"
+                      dataField="person.name"
                       editorType="dxSelectBox"
                       editorOptions={positionEditorOptions}
-                    />
+                    >
+                      <RequiredRule message="Este campo es requerido" />
+                    </Item>
+                    <Item dataField="roleId" caption="Rol">
+                      <RequiredRule message="Este campo es requerido" />
+                    </Item>
+                    <Item dataField="username" caption="Usuario">
+                      <RequiredRule message="Este campo es requerido" />
+                    </Item>
                     <Item
-                      dataField="Roles"
-                      editorType="dxSelectBox"
-                      editorOptions={positionEditorOptions}
+                      dataField="pwd"
+                      caption="Contraseña"
+                      editorOptions={editorPassword}
                     />
-                    <Item dataField="user" caption="Usuario" />
-                    <Item dataField="password" caption="Contraseña" />
                   </Item>
                 </Form>
               </Editing>
@@ -841,8 +967,18 @@ export const Configuration = () => {
                 deferred={true}
                 showCheckBoxesMode="always"
               />
-              <Column dataField="role" caption="Rol" />
-              <Column dataField="name" caption="Nombre" />
+              <Column dataField="roleId" caption="Rol">
+                <Lookup
+                  dataSource={[
+                    { codigo: "1", nombre: "Estudiante" },
+                    { codigo: "2", nombre: "Asesor" },
+                    { codigo: "3", nombre: "Admin" },
+                  ]}
+                  displayExpr="nombre"
+                  valueExpr="codigo"
+                />
+              </Column>
+              <Column dataField="person.name" caption="Nombre" />
               <Column caption="Apellidos" cellRender={cellrender} width={200} />
               <Column
                 dataField="lastName1"
@@ -854,8 +990,9 @@ export const Configuration = () => {
                 caption="Segundo apellido"
                 visible={false}
               />
-              <Column dataField="user" caption="Usuario" />
-              <Column dataField="password" caption="Contraseña" />
+              <Column dataField="username" caption="Usuario" />
+              <Column dataField="pwd" caption="Contraseña" visible={false} />
+              <Column dataField="id" caption="ID" visible={false} />
               <Paging defaultPageSize={10} />
               <Pager
                 visible={true}
@@ -864,6 +1001,7 @@ export const Configuration = () => {
                 showPageSizeSelector={true}
                 showInfo={true}
                 showNavigationButtons={true}
+                infoText= 'Página {0} de {1} ({2} Registros)'
               />
               <Export
                 enabled={true}

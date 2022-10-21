@@ -1,8 +1,23 @@
 import { WorkSharp } from "@mui/icons-material";
 import { Grid, Typography } from "@mui/material";
-import React from "react";
+import React, { useContext, useEffect } from "react";
+import AuthContext from "../../auth/context/AuthContext";
+
+const { loginRefresh } = require("../components/servicesCases");
 
 export const WelcomeView = () => {
+
+  useEffect(() => {
+    loginRefresh().then( res => {
+      if (res.accessToken) {
+        console.log("resfresh", res.accessToken)
+      handleAuth(true, res.accessToken)
+      }
+    })
+  }, []);
+
+  const { auth, handleAuth } = useContext(AuthContext);
+
   return (
     <Grid
       container

@@ -1,6 +1,6 @@
 import { Grid, TextField, Typography } from "@mui/material";
 
-const Textfield = ({ data, name, label, onChangeValue, disabled = false }) => {
+const Textfield = ({ data, name, label, onChangeValue, onlyread, buttonEdit = false }) => {
   return (
     <Grid
       container
@@ -28,8 +28,19 @@ const Textfield = ({ data, name, label, onChangeValue, disabled = false }) => {
         value={data}
         name={name}
         onChange={onChangeValue}
-        disabled={disabled}
+        inputProps={
+					{ readOnly: onlyread, }
+				}
       />
+      {buttonEdit && <Typography
+        variant="p"
+        className="title"
+        style={{
+          marginBottom: 5,
+        }}
+      >
+        {label}
+      </Typography>}
     </Grid>
   );
 };

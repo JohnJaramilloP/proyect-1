@@ -1,11 +1,12 @@
 import { Toolbar } from '@mui/material';
 import { Box } from '@mui/system'
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import AuthContext from '../../auth/context/AuthContext';
 import { NavBar, SideBar } from '../components';
 
 export const JournalLayout = ({valueSideBar, setValueSideBar, valueSideBarHidden, setValueSideBarHidden, children}) => {
   
-  const [drawerWidth, setDrawerWidth] = useState(240)
+  const [drawerWidth, setDrawerWidth] = useState(240);  
   
   const handleDrawerOpen = () => {
     setValueSideBarHidden(!valueSideBarHidden);
@@ -16,6 +17,8 @@ export const JournalLayout = ({valueSideBar, setValueSideBar, valueSideBarHidden
     ? setDrawerWidth(0)
     : setDrawerWidth(240)
   }
+
+
 
   return (
     <Box sx={{ display: "flex"}}>

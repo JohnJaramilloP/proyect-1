@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import DataGrid, {
   Column,
   FilterRow,
@@ -29,17 +29,12 @@ import LoadingOverlay from "react-loading-overlay";
 import { SeeCase } from "../components";
 import { Link } from "react-router-dom";
 import "../components/ModalFile.css";
+import AuthContext from "../../auth/context/AuthContext";
 
 const { idTypes, people } = require("../components/services.js");
 
 const {
-  cases,
-  createCases,
-  updateCases,
-  deleteCases,
-  casesId,
-  deleteFile,
-  uploadFile,
+    assignedCasesEstudent
 } = require("../components/servicesCases.js");
 
 const texts = {
@@ -52,12 +47,11 @@ const texts2 = {
   confirmDeleteMessage: "Estas seguro de eliminar el caso?",
 };
 
-const allowedPageSizes = [5, 10, "Todos"];
+const allowedPageSizes = [5, 10, 15, 20];
 
 export const CasesAssigned = () => {
   const [data, setData] = useState({});
   const [showLoading, setShowLoading] = useState(true);
-  const [persons, setPersons] = useState([]);
   const [personsSelect, setPersonsSelect] = useState([]);
   const [fileUp, setFileUp] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -65,8 +59,11 @@ export const CasesAssigned = () => {
   const [files, setFiles] = useState([]);
   const [load, setLoad] = useState(false);
 
+  const { auth, handleAuth } = useContext(AuthContext);
+
   useEffect(() => {
-    cases().then((cases) => {
+    assignedCasesEstudent(auth.tokken).then((cases) => {
+      console.log("assigned cases", cases)
       setData(cases);
       setShowLoading(false);
     });
@@ -88,18 +85,11 @@ export const CasesAssigned = () => {
 
   const renderGridCell = (row) => {
     return (
-      <Link to={"/Ver_caso_ase_estu"} state={{ id: row.data.id }}>
+      <Link to={`/Ver_caso_ase_estu/${row.data.id}`}>
         <Visibility sx={{ cursor: "pointer", color: "#009929" }} />
       </Link>
     );
   };
-
-  useEffect(() => {
-    people().then((people) => {
-      setPersons(people);
-      setPersonsSelect(people.map((person) => person.name));
-    });
-  }, []);
 
   let positionEditorOptions = {
     items: personsSelect,
@@ -199,6 +189,7 @@ export const CasesAssigned = () => {
                     showPageSizeSelector={true}
                     showInfo={true}
                     showNavigationButtons={true}
+                    infoText= 'Página {0} de {1} ({2} Registros)'
                   />
                   <Export
                     enabled={true}
