@@ -1,19 +1,21 @@
 {
   "files": {
-    "main.css": "/proyect-1/static/css/main.e2e68543.css",
-    "main.js": "/proyect-1/static/js/main.28906d81.js",
+    "main.css": "/proyect-1/static/css/main.17cc78cd.css",
+    "main.js": "/proyect-1/static/js/main.21c20e64.js",
     "static/media/tec_a.jpg": "/proyect-1/static/media/tec_a.8478ea064147ebbd9de8.jpg",
+    "static/media/estudent.png": "/proyect-1/static/media/estudent.d031fa2e9ea9e6e59711.png",
     "static/media/logo-sinfondo.png": "/proyect-1/static/media/logo-sinfondo.3a46a3d8c6ffba0fec34.png",
     "static/media/admin-sinfondo.png": "/proyect-1/static/media/admin-sinfondo.817dff85a91b509f361b.png",
     "static/media/dxicons.ttf": "/proyect-1/static/media/dxicons.64631931e34b7af4eacb.ttf",
+    "static/media/lawyer.png": "/proyect-1/static/media/lawyer.f762a2296e0349b0eebf.png",
     "static/media/dxicons.woff": "/proyect-1/static/media/dxicons.ba538823bce315b65132.woff",
     "static/media/dxicons.woff2": "/proyect-1/static/media/dxicons.8070d7e69c5185a654a5.woff2",
     "index.html": "/proyect-1/index.html",
-    "main.e2e68543.css.map": "/proyect-1/static/css/main.e2e68543.css.map",
-    "main.28906d81.js.map": "/proyect-1/static/js/main.28906d81.js.map"
+    "main.17cc78cd.css.map": "/proyect-1/static/css/main.17cc78cd.css.map",
+    "main.21c20e64.js.map": "/proyect-1/static/js/main.21c20e64.js.map"
   },
   "entrypoints": [
-    "static/css/main.e2e68543.css",
-    "static/js/main.28906d81.js"
+    "static/css/main.17cc78cd.css",
+    "static/js/main.21c20e64.js"
   ]
 }
