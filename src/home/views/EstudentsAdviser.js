@@ -61,7 +61,7 @@ export const EstudentsAdviser = () => {
       alignItems="center"
     >
       <Typography variant="h4">Estudiantes - "Asesor"</Typography>
-      <LoadingOverlay active={showLoading} spinner text="Cargando casos... ">
+      <LoadingOverlay active={showLoading} spinner text="Cargando Estudiantes... ">
         <Card
           style={{
             padding: 10,

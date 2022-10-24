@@ -64,7 +64,7 @@ export const Advisers = ({state}) => {
     >
       <Typography variant="h4">Asesores</Typography>
 
-      <LoadingOverlay active={showLoading} spinner text="Cargando casos... ">
+      <LoadingOverlay active={showLoading} spinner text="Cargando Asesores... ">
         <Card
           style={{
             padding: 10,

@@ -62,7 +62,6 @@ const representacionTerceros = [
 ];
 
 export const SeeCase = () => {
-
   const { id } = useParams();
 
   const { auth, handleAuth } = useContext(AuthContext);
@@ -111,12 +110,13 @@ export const SeeCase = () => {
   const [materia, setMateria] = useState([]);
   const [resultadoAudiencia, setResultadoAudiencia] = useState([]);
   const [graficar, setGraficar] = useState([]);
-  const [cantidad, setCantidad] = useState([1]);
+  const [cantidad, setCantidad] = useState([]);
   const [peopleList, setPeopleList] = useState([]);
   const [estudents, setEstudents] = useState([]);
   const [advisors, setAdvisors] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [nameValue, setNameValue] = useState({});
+  const [reloadData, setReloadData] = useState(false);
 
   useEffect(() => {
     casesId(id, auth.tokken).then((_case) => {
@@ -220,7 +220,7 @@ export const SeeCase = () => {
         files: _case.files && _case.files,
       });
     });
-  }, []);
+  }, [reloadData]);
 
   const handleChange = (e) => {
     const { value, name } = e.target;
@@ -317,6 +317,7 @@ export const SeeCase = () => {
       graphicSupportId: data.graphicSupport,
     };
     updateCases(id, body, auth.tokken).then((res) => {
+      console.log("update res", res);
       let id = data.id;
       if (res[0] === 1) {
         uploadFile(id, fileUp, auth.tokken).then((res) =>
@@ -643,7 +644,9 @@ export const SeeCase = () => {
           <Grid>
             <Typography variant="p">SE RECEPCIONó EL CASO</Typography>
             <FormControl sx={{ m: 1, width: "100%" }}>
-              <InputLabel id="demo-simple-select-label">SE RECEPCIONó EL CASO</InputLabel>
+              <InputLabel id="demo-simple-select-label">
+                SE RECEPCIONó EL CASO
+              </InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select-label"
@@ -849,7 +852,7 @@ export const SeeCase = () => {
           </Typography>
           <FormControl sx={{ m: 1, width: "100%" }}>
             <InputLabel id="demo-simple-select-label">
-            FECHA DE CITACION DE PARTE USUARIO
+              FECHA DE CITACION DE PARTE USUARIO
             </InputLabel>
             <Select
               labelId="demo-simple-select-label"
@@ -884,7 +887,7 @@ export const SeeCase = () => {
 
             <FormControl sx={{ m: 1, width: "100%" }}>
               <InputLabel id="demo-simple-select-label">
-              TUVO PARTICIPACIÓN INDIVIDUAL
+                TUVO PARTICIPACIÓN INDIVIDUAL
               </InputLabel>
               <Select
                 labelId="demo-simple-select-label"
@@ -983,7 +986,7 @@ export const SeeCase = () => {
 
             <FormControl sx={{ m: 1, width: "100%" }}>
               <InputLabel id="demo-simple-select-label">
-              REALIZÓ REPRESENTACION DE TERCEROS
+                REALIZÓ REPRESENTACION DE TERCEROS
               </InputLabel>
               <Select
                 labelId="demo-simple-select-label"
@@ -1361,10 +1364,16 @@ export const SeeCase = () => {
           justifyContent: "space-around",
         }}
       >
-        <Link to={"/Casos"}>
+        <Grid>
           <Button
             onClick={() => {
               updateCase();
+              setCantidad([]);
+              setFileUp([]);
+              casesId(id, auth.tokken).then((_case) => {
+                setData({ files: _case.files });
+                setReloadData(!reloadData);
+              });
             }}
             style={{
               width: "200px",
@@ -1378,23 +1387,25 @@ export const SeeCase = () => {
           >
             Guardar cambios
           </Button>
-        </Link>
+        </Grid>
 
-        <Link to={"/Casos"}>
-          <Button
-            style={{
-              width: "200px",
-              height: "50px",
-              margin: "10px auto",
-              borderRadius: "50px",
-              fontSize: 22,
-              background: "#8c8c8c",
-              border: "none",
-            }}
-          >
-            Salir
-          </Button>
-        </Link>
+        <Grid>
+          <Link to={"/Casos"}>
+            <Button
+              style={{
+                width: "200px",
+                height: "50px",
+                margin: "10px auto",
+                borderRadius: "50px",
+                fontSize: 22,
+                background: "#8c8c8c",
+                border: "none",
+              }}
+            >
+              Salir
+            </Button>
+          </Link>
+        </Grid>
       </Grid>
 
       {showModal && (

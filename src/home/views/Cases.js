@@ -28,7 +28,7 @@ import {
 } from "@mui/icons-material";
 import LoadingOverlay from "react-loading-overlay";
 import { SeeCase } from "../components";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import "../components/ModalFile.css";
 import AuthContext from "../../auth/context/AuthContext";
 
@@ -43,6 +43,7 @@ const {
   deleteFile,
   uploadFile,
   loginRefresh,
+  checkUrl,
 } = require("../components/servicesCases.js");
 
 const texts = {
@@ -54,7 +55,7 @@ const texts = {
 const texts2 = {
   confirmDeleteMessage: "Estas seguro de eliminar el caso?",
   saveRowChanges: "Guardar",
-  cancelRowChanges: "Cancelar"
+  cancelRowChanges: "Cancelar",
 };
 
 const allowedPageSizes = [5, 10, 15, 20];
@@ -309,7 +310,7 @@ export const Cases = () => {
                     showPageSizeSelector={true}
                     showInfo={true}
                     showNavigationButtons={true}
-                    infoText= 'Página {0} de {1} ({2} Registros)'
+                    infoText="Página {0} de {1} ({2} Registros)"
                   />
                   <Export
                     enabled={true}

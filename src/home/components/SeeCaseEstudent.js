@@ -222,6 +222,8 @@ export const SeeCaseEstudent = () => {
     });
   }, []);
 
+  const roleId = localStorage.getItem("role");
+
   const handleChange = (e) => {
     const { value, name } = e.target;
     setData({
@@ -358,7 +360,7 @@ export const SeeCaseEstudent = () => {
         position: "relative",
       }}
     >
-      <Link to={auth.role === 1 ? "/Casos_Asignados" : "/Casos_Asignados_asesor"}>
+      <Link to={roleId === "1" ? "/Casos_Asignados" : "/Casos_Asignados_asesor"}>
         <CgClose
           style={{
             fontSize: 35,
@@ -1361,7 +1363,7 @@ export const SeeCaseEstudent = () => {
           justifyContent: "space-around",
         }}
       >
-        <Link to={auth.role === 1 ? "/Casos_Asignados" : "/Casos_Asignados_asesor"}>
+        <Link to={roleId === "1" ? "/Casos_Asignados" : "/Casos_Asignados_asesor"}>
           <Button
             onClick={() => {
               updateCase();
@@ -1380,7 +1382,7 @@ export const SeeCaseEstudent = () => {
           </Button>
         </Link>
 
-        <Link to={auth.role === 1 ? "/Casos_Asignados" : "/Casos_Asignados_asesor"}>
+        <Link to={roleId === "1" ? "/Casos_Asignados" : "/Casos_Asignados_asesor"}>
           <Button
             style={{
               width: "200px",

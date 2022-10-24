@@ -109,7 +109,7 @@ export const Persons = () => {
       alignItems="center"
     >
       <Typography variant="h4">Personas</Typography>
-      <LoadingOverlay active={showLoading} spinner text="Cargando casos... ">
+      <LoadingOverlay active={showLoading} spinner text="Cargando Personas... ">
         <Card
           style={{
             padding: 10,
@@ -127,12 +127,6 @@ export const Persons = () => {
               showRowLines={true}
               columnAutoWidth={true}
               showBorders={true}
-              onContentReady={e => {
-                console.log("content", e)
-              }}
-              onToolbarPreparing={row => {
-                console.log("tool", row.component)
-              }}
               onRowRemoved={(row) => {
                 let id = row.data.id;
                 deletePeople(id, auth.tokken).then((res) => {
