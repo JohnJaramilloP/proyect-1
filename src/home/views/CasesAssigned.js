@@ -85,7 +85,7 @@ export const CasesAssigned = () => {
 
   const renderGridCell = (row) => {
     return (
-      <Link to={`/Ver_caso_ase_estu/${row.data.id}`}>
+      <Link to={`/Casos_en_progreso/${row.data.id}`}>
         <Visibility sx={{ cursor: "pointer", color: "#009929" }} />
       </Link>
     );

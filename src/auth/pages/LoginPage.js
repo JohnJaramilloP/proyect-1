@@ -27,13 +27,12 @@ export const LoginPage = () => {
 
   const onLogin = () => {
     login(data.user, data.password).then((res) => {
-      console.log("reslogin", res)
       if (res.accessToken) {
         handleAuth(true, res.accessToken)
-          alert("success", "Acceso concedido")
+          alert("success", "Acceso Concedido")
           navigate("/");
       } else {
-        alert("error", "credenciales Inválidas");
+        alert("error", "Credenciales Inválidas");
       }
     });
   };
@@ -47,7 +46,8 @@ export const LoginPage = () => {
   };
 
   return (
-    <AuthLayout title="Login">
+    <AuthLayout title="Iniciar Sesión
+    ">
       <form>
         <Grid container>
           <Grid item xs={12} sx={{ mt: 2 }}>
@@ -75,7 +75,7 @@ export const LoginPage = () => {
 
           <Grid container spacing={2} sx={{ mt: 1, mb: 2 }}>
             <Grid item xs={12} sm={6}>
-              <Button variant="contained" fullWidth onClick={onLogin}>
+              <Button variant="contained" fullWidth onClick={onLogin} type="submit">
                 Login
               </Button>
             </Grid>

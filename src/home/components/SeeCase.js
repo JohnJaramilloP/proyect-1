@@ -1338,9 +1338,10 @@ export const SeeCase = () => {
                               res.status === 204
                                 ? alert("success", "Documento eliminado")
                                 : alert("error", "Error al eliminar");
-                              casesId(id, auth.tokken).then((_case) =>
-                                setData({ files: _case.files })
-                              );
+                              casesId(id, auth.tokken).then((_case) => {
+                                setData({ files: _case.files });
+                                setReloadData(!reloadData);
+                              });
                             });
                             alert("success", "Documento eliminado");
                           }

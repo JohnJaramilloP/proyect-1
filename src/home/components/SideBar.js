@@ -7,6 +7,7 @@ import {
   PersonPinCircle,
   PeopleOutline,
   BusinessCenter,
+  MenuOutlined,
 } from "@mui/icons-material";
 import {
   Box,
@@ -32,6 +33,7 @@ import superAdmin from "../../assets/images/admin-sinfondo.png";
 import estudent from "../../assets/images/estudent.png";
 import lawyer from "../../assets/images/lawyer.png";
 import AuthContext from "../../auth/context/AuthContext";
+import "./SideBar.css";
 
 const { menuOptions } = require("../components/servicesCases.js");
 
@@ -48,18 +50,18 @@ export const SideBar = ({
   useEffect(() => {
     menuOptions(auth.tokken).then((res) => {
       let options = res[0].roleId;
-      handleAuth(true, auth.tokken)
-      localStorage.setItem("role", options)
+      handleAuth(true, auth.tokken);
+      localStorage.setItem("role", options);
     });
   }, []);
 
   const handleBacklogin = () => {
-    handleAuth(false, '');
+    handleAuth(false, "");
     navigate("/auth/login");
-    localStorage.setItem("role", "")
+    localStorage.setItem("role", "");
   };
 
-  const roleId = localStorage.getItem("role")
+  const roleId = localStorage.getItem("role");
 
   let options =
     roleId === "1"
@@ -70,7 +72,7 @@ export const SideBar = ({
       ? ["Casos", "Estudiantes", "Asesores", "Personas", "Configuracion"]
       : "";
 
-console.log("sidebar role", roleId )
+  console.log("sidebar role", roleId);
 
   return (
     <Box
@@ -103,6 +105,16 @@ console.log("sidebar role", roleId )
               height: 80,
             }}
           >
+            <div className="menuIcon">
+              <IconButton
+                color="inherit"
+                edge="start"
+                sx={{ mr: 2 }}
+                onClick={() => (handleDrawerOpen(), handleClose())}
+              >
+                <MenuOutlined />
+              </IconButton>
+            </div>
             <Typography variant="h6" noWrap component="div">
               Consultorio Jurídico
             </Typography>
@@ -118,35 +130,41 @@ console.log("sidebar role", roleId )
               pl: 2,
             }}
           >
-            {roleId === "3" && <ImageListItem
-              variant="standard"
-              sx={{
-                width: { xs: 160, md: 180 },
-                margin: "20px auto"
-              }}
-            >
-              <img src={superAdmin} alt="super-admin" />
-            </ImageListItem>}
+            {roleId === "3" && (
+              <ImageListItem
+                variant="standard"
+                sx={{
+                  width: { xs: 160, md: 180 },
+                  margin: "20px auto",
+                }}
+              >
+                <img src={superAdmin} alt="super-admin" />
+              </ImageListItem>
+            )}
 
-            {roleId === "2" && <ImageListItem
-              variant="standard"
-              sx={{
-                width: { xs: 90, md: 110 },
-                margin: "20px auto"
-              }}
-            >
-              <img src={lawyer} alt="super-admin" />
-            </ImageListItem>}
+            {roleId === "2" && (
+              <ImageListItem
+                variant="standard"
+                sx={{
+                  width: { xs: 90, md: 110 },
+                  margin: "20px auto",
+                }}
+              >
+                <img src={lawyer} alt="super-admin" />
+              </ImageListItem>
+            )}
 
-            {roleId === "1" && <ImageListItem
-              variant="standard"
-              sx={{
-                width: { xs: 100, md: 120 },
-                margin: "20px auto"
-              }}
-            >
-              <img src={estudent} alt="super-admin" />
-            </ImageListItem>}
+            {roleId === "1" && (
+              <ImageListItem
+                variant="standard"
+                sx={{
+                  width: { xs: 100, md: 120 },
+                  margin: "20px auto",
+                }}
+              >
+                <img src={estudent} alt="super-admin" />
+              </ImageListItem>
+            )}
 
             <Tooltip title="Cerrar Sesión">
               <Button onClick={handleBacklogin}>

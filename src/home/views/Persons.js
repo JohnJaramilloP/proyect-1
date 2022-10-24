@@ -44,7 +44,7 @@ const texts2 = {
   saveRowChanges: "Guardar",
   cancelRowChanges: "Cancelar",
   deleteRow: "Eliminar",
-  editRow: "Editar"
+  editRow: "Editar",
 };
 
 const allowedPageSizes = [5, 10, 15, 20];
@@ -55,6 +55,7 @@ export const Persons = () => {
   const [idTypeSelectItems, setIdTypeSelectItems] = useState([]);
   const [idType, setIdType] = useState([]);
   const [showLoading, setShowLoading] = useState(true);
+  const [reloadData, setReloadData] = useState(false);
 
   const { auth, handleAuth } = useContext(AuthContext);
 
@@ -70,7 +71,7 @@ export const Persons = () => {
     value: "",
   };
 
-  const roleId = localStorage.getItem("role")
+  const roleId = localStorage.getItem("role");
 
   useEffect(() => {
     roleId === "3" &&
@@ -78,8 +79,8 @@ export const Persons = () => {
         setData(people);
         setShowLoading(false);
       });
-      roleId === "1" &&
-    peopleToEstudents(auth.tokken).then((people) => {
+    roleId === "1" &&
+      peopleToEstudents(auth.tokken).then((people) => {
         setData(people);
         setShowLoading(false);
       });
@@ -89,7 +90,7 @@ export const Persons = () => {
       setIdTypeSelectItems(idType);
       setIdType(id);
     });
-  }, []);
+  }, [reloadData]);
 
   const alert = (icon, text) => {
     Swal.fire({
@@ -133,6 +134,7 @@ export const Persons = () => {
                   res.request.status === 204
                     ? alert("success", "Elemento eliminado")
                     : alert("error", "Error al eliminar");
+                    setReloadData(!reloadData);
                 });
               }}
               onRowInserted={(row) => {
@@ -165,8 +167,7 @@ export const Persons = () => {
                   res.id
                     ? alert("success", "Elemento creado")
                     : alert("error", "Error al crear persona");
-                  if (auth.role === 3) {people(auth.tokken).then((res) => setData(res));}
-                  if (auth.role === 1) {peopleToEstudents(auth.tokken).then((res) => setData(res));}
+                  setReloadData(!reloadData);
                 });
               }}
               onInitialized={() => {}}
@@ -196,6 +197,7 @@ export const Persons = () => {
                   res.length > 0
                     ? alert("success", "Elemento editado")
                     : alert("error", "Error al editar");
+                    setReloadData(!reloadData);
                 });
               }}
               rowAlternationEnabled={true}
@@ -273,7 +275,7 @@ export const Persons = () => {
                 showPageSizeSelector={true}
                 showInfo={true}
                 showNavigationButtons={true}
-                infoText= 'Página {0} de {1} ({2} Registros)'
+                infoText="Página {0} de {1} ({2} Registros)"
               />
               <Export
                 enabled={true}

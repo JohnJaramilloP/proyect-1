@@ -1,0 +1,9 @@
+.menuIcon {
+  display: none;
+}
+
+@media (max-width: 600px) {
+    .menuIcon {
+      display: block;
+    }
+  }

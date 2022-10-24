@@ -48,7 +48,8 @@ export const HomeRoutes = () => {
         <Route path="/Personas" element={<Persons />} />
         <Route path="/Configuracion" element={<Configuration />} />
         <Route path="/Ver_caso/:id" element={<SeeCase />} />
-        <Route path="/Ver_caso_ase_estu/:id" element={<SeeCaseEstudent />} />
+        <Route path="/Casos_en_progreso/:id" element={<SeeCaseEstudent />} />
+        <Route path="/Casos_asesoramiento/:id" element={<SeeCaseEstudent />} />
         <Route path="/" element={<Navigate to="/Bienvenido" />} />
       </Routes>
     </div>
