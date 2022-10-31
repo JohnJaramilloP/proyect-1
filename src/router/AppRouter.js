@@ -14,7 +14,7 @@ export const AppRouter = () => {
   const { auth, handleAuth } = useContext(AuthContext);
 
   
-  checkUrl(auth.tokken, window.location.pathname.replace("/", "")).then();
+  // checkUrl(auth.tokken, window.location.pathname.replace("/", "")).then();
 
 
 const{pathname} = useLocation();

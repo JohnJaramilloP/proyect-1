@@ -172,11 +172,17 @@ export const Persons = () => {
               }}
               onInitialized={() => {}}
               onRowUpdated={(row) => {
+                let typeId = [];
+
+                idType.forEach(
+                  (e) => e.name === row.data.idTypeId && typeId.push(e.id)
+                );
+
                 let id = row.data.id;
                 let name = row.data.name;
                 let lastName1 = row.data.lastName1;
                 let lastName2 = row.data.lastName2;
-                let idTypeId = row.data.idTypeId;
+                let idTypeId = typeId[0];
                 let idNumber = row.data.idNumber;
                 let email = row.data.email;
                 let tel = row.data.tel;

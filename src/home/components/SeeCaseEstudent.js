@@ -53,6 +53,8 @@ const {
 
 const recepcion = ["Si", "No"];
 
+const pazSalvo = ["Si", "No"];
+
 const representacionTerceros = [
   { id: 1, name: "ASESORIA" },
   { id: 2, name: "ELABORACION DE DEMANDA" },
@@ -178,9 +180,9 @@ export const SeeCaseEstudent = () => {
         studentAsigneeCapacity:
           _case.studentAssigneeCapacity && _case.studentAssigneeCapacity.id,
         appointmentDateByUser:
-          _case.appointmentDateByUser && _case.appointmentDateByUser === false
-            ? "No"
-            : "Si",
+          _case.appointmentDateByUser && _case.appointmentDateByUser === true
+            ? "Si"
+            : "No",
         individualParticipation:
           _case.individualParticipation && _case.individualParticipation.name,
         advisor: _case.advisor && _case.advisor.id,
@@ -212,20 +214,16 @@ export const SeeCaseEstudent = () => {
               ? ""
               : _case.receiverStudent.lastName2),
         studentPeaceFulCertificate:
-          _case.studentPeaceFulCertificate &&
-          _case.studentPeaceFulCertificate === false
-            ? "No"
-            : "Si",
+          _case.studentPeaceFulCertificate && _case.studentPeaceFulCertificate === true ? "Si" : "No",
         graphicSupport: _case.graphicSupport && _case.graphicSupport.id,
         files: _case.files && _case.files,
       });
     });
   }, [reloadData]);
 
-  const roleId = localStorage.getItem("role");
-
   const handleChange = (e) => {
     const { value, name } = e.target;
+    console.log(name)
     setData({
       ...data,
       [name]: value,
@@ -239,6 +237,8 @@ export const SeeCaseEstudent = () => {
       [name2]: value2,
     });
   };
+
+  const roleId = localStorage.getItem("role");
 
   useEffect(() => {
     areas(auth.tokken).then((areas) => {
@@ -315,7 +315,11 @@ export const SeeCaseEstudent = () => {
       caseStatusId: data.caseStatus,
       receiverStudentId: data.receiverStudent,
       studentPeacefulCertificate:
-        data.studentPeaceFulCertificate === "Si" ? true : false,
+        data.studentPeaceFulCertificate === "Si"
+        ? true
+        : data.studentPeaceFulCertificate === "No"
+        ? false
+        : null,
       graphicSupportId: data.graphicSupport,
     };
     updateCases(id, body, auth.tokken).then((res) => {
@@ -350,7 +354,7 @@ export const SeeCaseEstudent = () => {
     setFileUp([...fileUp, e.target.files[0]]);
   };
 
-  console.log("id", id);
+  console.log("data", data, "paz y salvo", data.studentPeaceFulCertificate);
 
   return (
     <Grid
@@ -361,9 +365,7 @@ export const SeeCaseEstudent = () => {
         position: "relative",
       }}
     >
-      <Link
-        to={roleId === "1" ? "/Casos_Asignados" : "/Casos_Asignados_asesor"}
-      >
+      <Link to={roleId === "1" ? "/Casos_Asignados" : "/Casos_Asignados_asesor"} >
         <CgClose
           style={{
             fontSize: 35,
@@ -423,12 +425,15 @@ export const SeeCaseEstudent = () => {
           label="RADICADO INTERNO"
           onChangeValue={handleChange}
         />
-        <TextfieldDate
+
+        <Textfield data={data.attentionConsultantDate} name="attentionConsultantDate" label="FECHA DE ATENCIÓN Y ASESORIA" disabled={true} />
+
+        {/* <TextfieldDate
           data={data.attentionConsultantDate}
           name="attentionConsultantDate"
           label="FECHA DE ATENCIÓN Y ASESORIA"
           onChangeValue={handleChange}
-        />
+        /> */}
       </Grid>
 
       <Grid
@@ -778,6 +783,7 @@ export const SeeCaseEstudent = () => {
               display: "flex",
             }}
           >
+            
             <TextField
               id="outlined-basic"
               label="ESTUDIANTE A QUIEN SE LE ASIGNO EL CASO"
@@ -786,24 +792,9 @@ export const SeeCaseEstudent = () => {
               name="studentAssignee"
               inputProps={{ readOnly: true }}
               style={{
-                width: "95%",
+                width: "100%",
               }}
             />
-            <Tooltip title="Seleccionar Estudiante">
-              <Button
-                onClick={() => {
-                  setShowModal(!showModal);
-                  setNameValue({
-                    name: "studentAssignee",
-                    value: data.studentAssignee,
-                    name2: "studentAssigneeName",
-                    value2: data.studentAssigneeName,
-                  });
-                }}
-              >
-                <Edit />
-              </Button>
-            </Tooltip>
           </Grid>
         </Grid>
 
@@ -952,24 +943,9 @@ export const SeeCaseEstudent = () => {
               name="advisor"
               inputProps={{ readOnly: true }}
               style={{
-                width: "95%",
+                width: "100%",
               }}
             />
-            <Tooltip title="Seleccionar Asesor">
-              <Button
-                onClick={() => {
-                  setShowModal(!showModal);
-                  setNameValue({
-                    name: "advisor",
-                    value: data.advisor,
-                    name2: "advisorName",
-                    value2: data.advisorName,
-                  });
-                }}
-              >
-                <Edit />
-              </Button>
-            </Tooltip>
           </Grid>
         </Grid>
 
@@ -1021,13 +997,13 @@ export const SeeCaseEstudent = () => {
         <TextfieldDate
           data={data.audienceDateTime}
           name="audienceDateTime"
-          label=" FECHA DE AUDIENCIA"
+          label="FECHA DE AUDIENCIA (*Es necesario especificar la hora de audiencia)"
           onChangeValue={handleChange}
         />
         <TextfieldDate
           data={data.audienceTime}
           name="audienceTime"
-          label="HORA DE AUDIENCIA"
+          label="HORA DE AUDIENCIA (*Es necesario especificar la fecha de audiencia)"
           onChangeValue={handleChange}
           type="time"
         />
@@ -1120,24 +1096,9 @@ export const SeeCaseEstudent = () => {
               name="receiverStudent"
               inputProps={{ readOnly: true }}
               style={{
-                width: "95%",
+                width: "100%",
               }}
             />
-            <Tooltip title="Seleccionar Estudiante">
-              <Button
-                onClick={() => {
-                  setShowModal(!showModal);
-                  setNameValue({
-                    name: "receiverStudent",
-                    value: data.receiverStudent,
-                    name2: "receiverStudentName",
-                    value2: data.receiverStudentName,
-                  });
-                }}
-              >
-                <Edit />
-              </Button>
-            </Tooltip>
           </Grid>
         </Grid>
 
@@ -1151,35 +1112,29 @@ export const SeeCaseEstudent = () => {
             flexDirection: "column",
           }}
         >
-          <Typography
-            variant="p"
-            className="title"
-            style={{
-              marginBottom: 5,
-            }}
-          >
-            PAZ Y SALVO DE ESTUDIANTE EN CONSULTORIO
-          </Typography>
-          <FormControl sx={{ m: 1, width: "100%" }}>
-            <InputLabel id="demo-simple-select-label">
+          <Grid>
+            <Typography variant="p">PAZ Y SALVO DE ESTUDIANTE EN CONSULTORIO</Typography>
+            <FormControl sx={{ m: 1, width: "100%" }}>
+              <InputLabel id="demo-simple-select-label">
               PAZ Y SALVO DE ESTUDIANTE EN CONSULTORIO
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select-label"
-              value={data.studentPeaceFulCertificate}
-              onChange={handleChange}
-              input={<OutlinedInput label="Name" />}
-              MenuProps={MenuProps}
-              name="studentPeaceFulCertificate"
-            >
-              {recepcion.map((name) => (
-                <MenuItem key={name} value={name}>
-                  {name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select-label"
+                value={data.studentPeaceFulCertificate}
+                onChange={handleChange}
+                input={<OutlinedInput label="Name" />}
+                MenuProps={MenuProps}
+                name="studentPeaceFulCertificate"
+              >
+                {pazSalvo.map((name) => (
+                  <MenuItem key={name} value={name}>
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
         </Grid>
       </Grid>
 
@@ -1395,9 +1350,7 @@ export const SeeCaseEstudent = () => {
         </Grid>
 
         <Grid>
-          <Link
-            to={roleId === "1" ? "/Casos_Asignados" : "/Casos_Asignados_asesor"}
-          >
+          <Link to={roleId === "1" ? "/Casos_Asignados" : "/Casos_Asignados_asesor"}>
             <Button
               style={{
                 width: "200px",

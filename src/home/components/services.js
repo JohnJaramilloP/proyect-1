@@ -1235,9 +1235,9 @@ export async function createUsers(
 export async function updateUsers(
   id,
   username,
-  pwd,
   roleId,
-  tokken
+  tokken,
+  pwd
 ) {
   return new Promise((resolve, reject) => {
     let password = !!pwd && pwd;

@@ -121,10 +121,27 @@ export async function uploadFile (id, files, tokken) {
   });
 }
 
-export async function deleteFile(id, name, tokken) {
+export async function uploadFileSimple (body, tokken) {
+  return new Promise((resolve, reject) => {
+  axios.post(URL + "files/db", body, {
+    headers: {
+      'Authorization': `Bearer ${tokken}`
+    }
+  })
+  .then(function (response) {
+    resolve(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+    resolve(error);
+  });
+  });
+}
+
+export async function deleteFile(id, url, tokken) {
   return new Promise((resolve, reject) => {
     axios
-      .delete(URL + "files/" + id + "?fileName=" + name, {
+      .delete(URL + "files/" + id + "?url=" + url, {
         headers: {
           'Authorization': `Bearer ${tokken}`
         }

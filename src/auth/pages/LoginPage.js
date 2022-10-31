@@ -31,6 +31,7 @@ export const LoginPage = () => {
         handleAuth(true, res.accessToken)
           alert("success", "Acceso Concedido")
           navigate("/");
+          localStorage.setItem("login", true);
       } else {
         alert("error", "Credenciales Inválidas");
       }

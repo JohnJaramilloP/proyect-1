@@ -56,9 +56,11 @@ export const SideBar = ({
   }, []);
 
   const handleBacklogin = () => {
+    localStorage.setItem("login", false);
+    localStorage.setItem("role", "");
+    localStorage.setItem("lastPath", "/auth/login");
     handleAuth(false, "");
     navigate("/auth/login");
-    localStorage.setItem("role", "");
   };
 
   const roleId = localStorage.getItem("role");

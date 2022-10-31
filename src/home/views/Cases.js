@@ -31,6 +31,7 @@ import { SeeCase } from "../components";
 import { Link, Navigate } from "react-router-dom";
 import "../components/ModalFile.css";
 import AuthContext from "../../auth/context/AuthContext";
+import SimpleFileUpload from "react-simple-file-upload";
 
 const { idTypes, people } = require("../components/services.js");
 
@@ -44,6 +45,7 @@ const {
   uploadFile,
   loginRefresh,
   checkUrl,
+  uploadFileSimple,
 } = require("../components/servicesCases.js");
 
 const texts = {
@@ -91,6 +93,15 @@ export const Cases = () => {
       timer: 1500,
     });
   };
+
+  function handleFile(url) {
+    console.log("The URL of the file is " + url);
+    let body = {
+      url: url,
+      caseId: idCase,
+    };
+    uploadFileSimple(body, auth.tokken);
+  }
 
   const saveFile = (e) => {
     setFileUp([...fileUp, e.target.files[0]]);
@@ -253,7 +264,7 @@ export const Cases = () => {
                       title="Crear Caso"
                       useIcons={true}
                       showTitle={true}
-                      // width={600}
+                      // width="70%"
                       height={300}
                     />
                     <Form>
@@ -383,7 +394,7 @@ export const Cases = () => {
                   enctype="multipart/form-data"
                   target="_blank"
                 >
-                  <input
+                  {/* <input
                     type="file"
                     name="archivosubido"
                     onChange={saveFile}
@@ -391,6 +402,12 @@ export const Cases = () => {
                       marginBottom: "10px",
                       width: "240px",
                     }}
+                  /> */}
+                  <SimpleFileUpload
+                    apiKey="81696e288998403763177caa00915951"
+                    onSuccess={handleFile}
+                    width="60"
+                    height="60"
                   />
                 </form>
 
@@ -419,7 +436,7 @@ export const Cases = () => {
                           download="filename"
                           target="_blank"
                         >
-                          {e.url.split("_")[2]}
+                          {e.url && e.url.split("/")[7]}
                         </a>
                         <Button
                           key={e.id}
@@ -448,7 +465,7 @@ export const Cases = () => {
                                 if (result.isConfirmed) {
                                   deleteFile(
                                     e.id,
-                                    e.url.split("/")[4],
+                                    e.url,
                                     auth.tokken
                                   ).then((res) => {
                                     if (res.status === 204) {
@@ -487,21 +504,22 @@ export const Cases = () => {
                       border: "none",
                     }}
                     onClick={() => {
-                      uploadFile(idCase, fileUp, auth.tokken).then((res) =>
-                        res.status === 200
-                          ? (alert("success", "Cambios guardados"),
-                            setShowModal(!showModal),
-                            casesId(idCase, auth.tokken).then(
-                              (_case) => setFiles(_case.files),
-                              setShowModal(!showModal)
-                            ),
-                            setFiles([]),
-                            setFileUp([]))
-                          : (alert("error", "Error al guardar"),
-                            setShowModal(!showModal),
-                            setFiles([]),
-                            setFileUp([]))
+                      // uploadFile(idCase, fileUp, auth.tokken).then((res) =>
+                      // res.status === 200
+                      // ?
+                      alert("success", "Cambios guardados");
+                      setShowModal(!showModal);
+                      casesId(idCase, auth.tokken).then(
+                        (_case) => setFiles(_case.files),
+                        setShowModal(!showModal)
                       );
+                      setFiles([]);
+                      setFileUp([]);
+                      // : (alert("error", "Error al guardar"),
+                      //   setShowModal(!showModal),
+                      //   setFiles([]),
+                      //   setFileUp([]))
+                      // );
                     }}
                   >
                     Guardar

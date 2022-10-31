@@ -26,6 +26,8 @@ export const HomeRoutes = () => {
       if (!!res.response && res.response.status === 406) {
         handleAuth(false, "");
         <Navigate to="/auth/login" />;
+        localStorage.setItem("lastPath", "/auth/login");
+        localStorage.setItem("login", false);
       }
       if (res.accessToken) {
         console.log('UPDATING TOKEN')
@@ -39,9 +41,9 @@ export const HomeRoutes = () => {
       <Routes>
         <Route path="/Bienvenido" element={<WelcomeView />} />
         <Route path="/Casos" element={<Cases />} />
-        <Route path="Casos_Recepcionados" element={<CasesReceived />} />
-        <Route path="Casos_Asignados" element={<CasesAssigned />} />
-        <Route path="Casos_Asignados_asesor" element={<CasesAssignedAdviser />} />
+        <Route path="/Casos_Recepcionados" element={<CasesReceived />} />
+        <Route path="/Casos_Asignados" element={<CasesAssigned />} />
+        <Route path="/Casos_Asignados_asesor" element={<CasesAssignedAdviser />} />
         <Route path="/Estudiantes" element={<Estudents />} />
         <Route path="/Estudiantes_Asesor" element={<EstudentsAdviser />} />
         <Route path="/Asesores" element={<Advisers />} />

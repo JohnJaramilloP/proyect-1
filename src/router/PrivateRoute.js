@@ -6,7 +6,7 @@ import { checkUrl, loginRefresh } from "../home/components/servicesCases";
 const PrivateRoute = ({ children }) => {
   const { auth, handleAuth } = useContext(AuthContext);
 
-  const paht = localStorage.getItem("lastPath")
+  const path = localStorage.getItem("lastPath")
 
   function getToken() {
     if (auth.tokken !== "") {
@@ -14,6 +14,8 @@ const PrivateRoute = ({ children }) => {
     } else if (auth.tokken === "") {
       loginRefresh().then((res) => {
         if (!!res.response && res.response.status === 406) {
+          localStorage.setItem("lastPath", "/auth/login");
+          localStorage.setItem("login", false);
           handleAuth(false, "");
           <Navigate to="/auth/login" />;
         }
@@ -25,7 +27,7 @@ const PrivateRoute = ({ children }) => {
     }
   }
 
-  return getToken() ? children : <Navigate to={paht} />;
+  return getToken() ? children : <Navigate to={path === null ? "/auth/login" : path} />;
 
   // return children;
 };

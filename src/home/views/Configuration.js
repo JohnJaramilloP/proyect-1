@@ -99,7 +99,7 @@ const texts2 = {
   saveRowChanges: "Guardar",
   cancelRowChanges: "Cancelar",
   deleteRow: "Eliminar",
-  editRow: "Editar"
+  editRow: "Editar",
 };
 
 const allowedPageSizes = [5, 10, 15, 20];
@@ -814,7 +814,7 @@ export const Configuration = () => {
                 showPageSizeSelector={true}
                 showInfo={true}
                 showNavigationButtons={true}
-                infoText= 'Página {0} de {1} ({2} Registros)'
+                infoText="Página {0} de {1} ({2} Registros)"
               />
               <Export
                 enabled={true}
@@ -885,7 +885,10 @@ export const Configuration = () => {
                 createUsers(username, pwd, roleId, personId, auth.tokken).then(
                   (res) => {
                     console.log("create res", res);
-                    res.id && alert("success", "Elemento creado");
+                    if (res.id) {
+                      alert("success", "Elemento creado");
+                        users(auth.tokken).then((res) => setData(res));
+                    }
 
                     if (
                       res.response.data.error ===
@@ -899,7 +902,6 @@ export const Configuration = () => {
                     if (res.response.data.error === "Username Already Exists") {
                       alert("error", "El nombre de usuario ya existe!!!");
                     }
-                    users(auth.tokken).then((res) => setData(res));
                   }
                 );
               }}
@@ -925,7 +927,7 @@ export const Configuration = () => {
             >
               <Editing
                 mode="popup"
-                allowUpdating={true}
+                allowUpdating={false}
                 allowAdding={true}
                 allowDeleting={true}
                 useIcons={true}
@@ -1001,7 +1003,7 @@ export const Configuration = () => {
                 showPageSizeSelector={true}
                 showInfo={true}
                 showNavigationButtons={true}
-                infoText= 'Página {0} de {1} ({2} Registros)'
+                infoText="Página {0} de {1} ({2} Registros)"
               />
               <Export
                 enabled={true}

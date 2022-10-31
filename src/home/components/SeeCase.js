@@ -18,6 +18,7 @@ import TextfieldDate from "./TextfieldDate";
 import Textfield from "./Textfield";
 import AuthContext from "../../auth/context/AuthContext";
 import { ModalAddPerson } from "./ModalAddPerson";
+import SimpleFileUpload from "react-simple-file-upload";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -49,9 +50,12 @@ const {
   deleteFile,
   estudentsList,
   advisorsList,
+  uploadFileSimple,
 } = require("../components/servicesCases.js");
 
 const recepcion = ["Si", "No"];
+
+const pazSalvo = ["Si", "No"];
 
 const representacionTerceros = [
   { id: 1, name: "ASESORIA" },
@@ -178,9 +182,9 @@ export const SeeCase = () => {
         studentAsigneeCapacity:
           _case.studentAssigneeCapacity && _case.studentAssigneeCapacity.id,
         appointmentDateByUser:
-          _case.appointmentDateByUser && _case.appointmentDateByUser === false
-            ? "No"
-            : "Si",
+          _case.appointmentDateByUser && _case.appointmentDateByUser === true
+            ? "Si"
+            : "No",
         individualParticipation:
           _case.individualParticipation && _case.individualParticipation.name,
         advisor: _case.advisor && _case.advisor.id,
@@ -213,9 +217,9 @@ export const SeeCase = () => {
               : _case.receiverStudent.lastName2),
         studentPeaceFulCertificate:
           _case.studentPeaceFulCertificate &&
-          _case.studentPeaceFulCertificate === false
-            ? "No"
-            : "Si",
+          _case.studentPeaceFulCertificate === true
+            ? "Si"
+            : "No",
         graphicSupport: _case.graphicSupport && _case.graphicSupport.id,
         files: _case.files && _case.files,
       });
@@ -224,6 +228,7 @@ export const SeeCase = () => {
 
   const handleChange = (e) => {
     const { value, name } = e.target;
+    console.log(name);
     setData({
       ...data,
       [name]: value,
@@ -236,6 +241,15 @@ export const SeeCase = () => {
       [name]: value,
       [name2]: value2,
     });
+  };
+
+  function handleFile(url) {
+    console.log("The URL of the file is " + url);
+    let body = {
+      url: url,
+      caseId: id,
+    };
+    uploadFileSimple(body, auth.tokken);
   };
 
   useEffect(() => {
@@ -313,7 +327,11 @@ export const SeeCase = () => {
       caseStatusId: data.caseStatus,
       receiverStudentId: data.receiverStudent,
       studentPeacefulCertificate:
-        data.studentPeaceFulCertificate === "Si" ? true : false,
+        data.studentPeaceFulCertificate === "Si"
+          ? true
+          : data.studentPeaceFulCertificate === "No"
+          ? false
+          : null,
       graphicSupportId: data.graphicSupport,
     };
     updateCases(id, body, auth.tokken).then((res) => {
@@ -348,7 +366,7 @@ export const SeeCase = () => {
     setFileUp([...fileUp, e.target.files[0]]);
   };
 
-  console.log("id", id);
+  console.log("data", data);
 
   return (
     <Grid
@@ -1017,13 +1035,13 @@ export const SeeCase = () => {
         <TextfieldDate
           data={data.audienceDateTime}
           name="audienceDateTime"
-          label=" FECHA DE AUDIENCIA"
+          label="FECHA DE AUDIENCIA (*Es necesario especificar la hora de audiencia)"
           onChangeValue={handleChange}
         />
         <TextfieldDate
           data={data.audienceTime}
           name="audienceTime"
-          label="HORA DE AUDIENCIA"
+          label="HORA DE AUDIENCIA (*Es necesario especificar la fecha de audiencia)"
           onChangeValue={handleChange}
           type="time"
         />
@@ -1147,35 +1165,31 @@ export const SeeCase = () => {
             flexDirection: "column",
           }}
         >
-          <Typography
-            variant="p"
-            className="title"
-            style={{
-              marginBottom: 5,
-            }}
-          >
-            PAZ Y SALVO DE ESTUDIANTE EN CONSULTORIO
-          </Typography>
-          <FormControl sx={{ m: 1, width: "100%" }}>
-            <InputLabel id="demo-simple-select-label">
+          <Grid>
+            <Typography variant="p">
               PAZ Y SALVO DE ESTUDIANTE EN CONSULTORIO
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select-label"
-              value={data.studentPeaceFulCertificate}
-              onChange={handleChange}
-              input={<OutlinedInput label="Name" />}
-              MenuProps={MenuProps}
-              name="studentPeaceFulCertificate"
-            >
-              {recepcion.map((name) => (
-                <MenuItem key={name} value={name}>
-                  {name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+            </Typography>
+            <FormControl sx={{ m: 1, width: "100%" }}>
+              <InputLabel id="demo-simple-select-label">
+                PAZ Y SALVO DE ESTUDIANTE EN CONSULTORIO
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select-label"
+                value={data.studentPeaceFulCertificate}
+                onChange={handleChange}
+                input={<OutlinedInput label="Name" />}
+                MenuProps={MenuProps}
+                name="studentPeaceFulCertificate"
+              >
+                {pazSalvo.map((name) => (
+                  <MenuItem key={name} value={name}>
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
         </Grid>
       </Grid>
 
@@ -1263,23 +1277,31 @@ export const SeeCase = () => {
               <Add />
             </Button>
             <br />
-            <form
-              action="../../form-result.php"
-              method="post"
-              enctype="multipart/form-data"
-              target="_blank"
-            >
+            <form>
               {cantidad.map((e) => (
-                <input
-                  key={e}
-                  type="file"
-                  name="archivosubido"
-                  onChange={saveFile}
+                // <input
+                //   key={e}
+                //   type="file"
+                //   name="archivosubido"
+                //   onChange={saveFile}
+                //   style={{
+                //     marginBottom: "10px",
+                //     width: "240px",
+                //   }}
+                // />
+                <div
                   style={{
-                    marginBottom: "10px",
-                    width: "240px",
+                    display: "inline",
+                    margin: "0 10px",
                   }}
-                />
+                >
+                  <SimpleFileUpload
+                    apiKey="81696e288998403763177caa00915951"
+                    onSuccess={handleFile}
+                    width="60"
+                    height="60"
+                  />
+                </div>
               ))}
             </form>
           </Grid>
@@ -1307,7 +1329,7 @@ export const SeeCase = () => {
                   }}
                 >
                   <a href={e.url} download="filename" target="_blank">
-                    {e.url.split("_")[2]}
+                    {e.url && e.url.split("/")[7]}
                   </a>
                   <Button
                     style={{
@@ -1330,11 +1352,7 @@ export const SeeCase = () => {
                           confirmButtonText: "Sí",
                         }).then((result) => {
                           if (result.isConfirmed) {
-                            deleteFile(
-                              e.id,
-                              e.url.split("/")[4],
-                              auth.tokken
-                            ).then((res) => {
+                            deleteFile(e.id, e.url, auth.tokken).then((res) => {
                               res.status === 204
                                 ? alert("success", "Documento eliminado")
                                 : alert("error", "Error al eliminar");
