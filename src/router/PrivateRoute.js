@@ -8,28 +8,28 @@ const PrivateRoute = ({ children }) => {
 
   const path = localStorage.getItem("lastPath")
 
-  function getToken() {
-    if (auth.tokken !== "") {
-      return auth.login;
-    } else if (auth.tokken === "") {
-      loginRefresh().then((res) => {
-        if (!!res.response && res.response.status === 406) {
-          localStorage.setItem("lastPath", "/auth/login");
-          localStorage.setItem("login", false);
-          handleAuth(false, "");
-          <Navigate to="/auth/login" />;
-        }
-        if (res.accessToken) {
-          handleAuth(true, res.accessToken);
-          return auth.login;
-        }
-      });
-    }
-  }
+  // function getToken() {
+  //   if (auth.tokken !== "") {
+  //     return auth.login;
+  //   } else if (auth.tokken === "") {
+  //     loginRefresh().then((res) => {
+  //       if (!!res.response && res.response.status === 406) {
+  //         localStorage.setItem("lastPath", "/auth/login");
+  //         localStorage.setItem("login", false);
+  //         handleAuth(false, "");
+  //         <Navigate to="/auth/login" />;
+  //       }
+  //       if (res.accessToken) {
+  //         handleAuth(true, res.accessToken);
+  //         return auth.login;
+  //       }
+  //     });
+  //   }
+  // }
 
-  return getToken() ? children : <Navigate to={path === null ? "/auth/login" : path} />;
+  // return getToken() ? children : <Navigate to={path === null ? "/auth/login" : path} />;
 
-  // return children;
+  return children;
 };
 
 export default PrivateRoute;
