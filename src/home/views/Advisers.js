@@ -33,7 +33,7 @@ const allowedPageSizes = [5, 10, 15, 20];
 
 const { advisorsList } = require("../components/servicesCases.js");
 
-export const Advisers = ({state}) => {
+export const Advisers = ({ state }) => {
   const [data, setData] = useState([]);
   const [showLoading, setShowLoading] = useState(true);
 
@@ -53,7 +53,7 @@ export const Advisers = ({state}) => {
     return <p>{`${apellido1} ${apellido2}`}</p>;
   };
 
-  console.log("statessss",state)
+  console.log("statessss", state);
 
   return (
     <Grid
@@ -95,8 +95,13 @@ export const Advisers = ({state}) => {
                 deferred={true}
                 showCheckBoxesMode="always"
               />
-              <Column dataField="name" caption="Nombre" />
-              <Column caption="Apellidos" cellRender={cellrender} width={200} />
+              <Column dataField="name" caption="Nombre" alignment="center" />
+              <Column
+                caption="Apellidos"
+                cellRender={cellrender}
+                width={200}
+                alignment="center"
+              />
               <Column
                 dataField="lastName1"
                 caption="Primer apellido"
@@ -112,12 +117,24 @@ export const Advisers = ({state}) => {
                 caption="Tipo de documento"
                 visible={false}
               />
-              <Column dataField="idType.name" caption="Tipo de documento" />
-              <Column dataField="idNumber" caption="Número de documento" />
-              <Column dataField="email" caption="Correo" />
-              <Column dataField="tel" caption="Teléfono" />
-              <Column dataField="birthdate" caption="Fecha de nacimiento" />
-              <Paging defaultPageSize={10} />
+              <Column
+                dataField="idType.name"
+                caption="Tipo de documento"
+                alignment="center"
+              />
+              <Column
+                dataField="idNumber"
+                caption="Número de documento"
+                alignment="center"
+              />
+              <Column dataField="email" caption="Correo" alignment="center" />
+              <Column dataField="tel" caption="Teléfono" alignment="center" />
+              <Column
+                dataField="birthdate"
+                caption="Fecha de nacimiento"
+                alignment="center"
+              />
+              <Paging defaultPageSize={15} />
               <Pager
                 visible={true}
                 allowedPageSizes={allowedPageSizes}
@@ -125,7 +142,7 @@ export const Advisers = ({state}) => {
                 showPageSizeSelector={true}
                 showInfo={true}
                 showNavigationButtons={true}
-                infoText= 'Página {0} de {1} ({2} Registros)'
+                infoText="Página {0} de {1} ({2} Registros)"
               />
               <Export
                 enabled={true}

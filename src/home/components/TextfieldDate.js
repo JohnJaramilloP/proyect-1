@@ -32,9 +32,8 @@ let dateNow = fechaDeAyer().toISOString().slice(0, 10);
         {label}
       </Typography>
       <TextField
-        id="outlined-basic"
-        variant="outlined"
-        label={label}
+        id="filled-basic"
+        variant="filled"
         value={data}
         name={name}
         onChange={onChangeValue}

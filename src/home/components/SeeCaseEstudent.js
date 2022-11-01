@@ -5,7 +5,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { Grid, TextField, Typography } from "@mui/material";
+import { Grid, ImageListItem, TextField, Typography } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import Modal from "@mui/material/Modal";
 import { CgClose } from "react-icons/cg";
@@ -18,6 +18,8 @@ import TextfieldDate from "./TextfieldDate";
 import Textfield from "./Textfield";
 import AuthContext from "../../auth/context/AuthContext";
 import { ModalAddPerson } from "./ModalAddPerson";
+import SimpleFileUpload from "react-simple-file-upload";
+import archivoCargado from "../../assets/images/archivo_cargado.PNG";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -49,6 +51,7 @@ const {
   deleteFile,
   estudentsList,
   advisorsList,
+  uploadFileSimple,
 } = require("../components/servicesCases.js");
 
 const recepcion = ["Si", "No"];
@@ -99,7 +102,7 @@ export const SeeCaseEstudent = () => {
     caseStatus: "",
     receiverStudent: "",
     receiverStudentName: "",
-    studentPeaceFulCertificate: "",
+    studentPeacefulCertificate: "",
     graphicSupport: "",
     files: [],
   });
@@ -213,8 +216,11 @@ export const SeeCaseEstudent = () => {
             (_case.receiverStudent.lastName2 === null
               ? ""
               : _case.receiverStudent.lastName2),
-        studentPeaceFulCertificate:
-          _case.studentPeaceFulCertificate && _case.studentPeaceFulCertificate === true ? "Si" : "No",
+        studentPeacefulCertificate:
+          _case.studentPeacefulCertificate &&
+          _case.studentPeacefulCertificate === true
+            ? "Si"
+            : "No",
         graphicSupport: _case.graphicSupport && _case.graphicSupport.id,
         files: _case.files && _case.files,
       });
@@ -223,7 +229,7 @@ export const SeeCaseEstudent = () => {
 
   const handleChange = (e) => {
     const { value, name } = e.target;
-    console.log(name)
+    console.log(name);
     setData({
       ...data,
       [name]: value,
@@ -237,6 +243,15 @@ export const SeeCaseEstudent = () => {
       [name2]: value2,
     });
   };
+
+  function handleFile(url) {
+    console.log("The URL of the file is " + url);
+    let body = {
+      url: url,
+      caseId: id,
+    };
+    uploadFileSimple(body, auth.tokken);
+  }
 
   const roleId = localStorage.getItem("role");
 
@@ -315,11 +330,11 @@ export const SeeCaseEstudent = () => {
       caseStatusId: data.caseStatus,
       receiverStudentId: data.receiverStudent,
       studentPeacefulCertificate:
-        data.studentPeaceFulCertificate === "Si"
-        ? true
-        : data.studentPeaceFulCertificate === "No"
-        ? false
-        : null,
+        data.studentPeacefulCertificate === "Si"
+          ? true
+          : data.studentPeacefulCertificate === "No"
+          ? false
+          : null,
       graphicSupportId: data.graphicSupport,
     };
     updateCases(id, body, auth.tokken).then((res) => {
@@ -354,7 +369,7 @@ export const SeeCaseEstudent = () => {
     setFileUp([...fileUp, e.target.files[0]]);
   };
 
-  console.log("data", data, "paz y salvo", data.studentPeaceFulCertificate);
+  console.log("data", data, "paz y salvo", data.studentPeacefulCertificate);
 
   return (
     <Grid
@@ -365,7 +380,9 @@ export const SeeCaseEstudent = () => {
         position: "relative",
       }}
     >
-      <Link to={roleId === "1" ? "/Casos_Asignados" : "/Casos_Asignados_asesor"} >
+      <Link
+        to={roleId === "1" ? "/Casos_Asignados" : "/Casos_Asignados_asesor"}
+      >
         <CgClose
           style={{
             fontSize: 35,
@@ -426,7 +443,12 @@ export const SeeCaseEstudent = () => {
           onChangeValue={handleChange}
         />
 
-        <Textfield data={data.attentionConsultantDate} name="attentionConsultantDate" label="FECHA DE ATENCIÓN Y ASESORIA" disabled={true} />
+        <Textfield
+          data={data.attentionConsultantDate}
+          name="attentionConsultantDate"
+          label="FECHA DE ATENCIÓN Y ASESORIA"
+          disabled={true}
+        />
 
         {/* <TextfieldDate
           data={data.attentionConsultantDate}
@@ -475,9 +497,8 @@ export const SeeCaseEstudent = () => {
             }}
           >
             <TextField
-              id="outlined-basic"
-              label="PARTE ACCIONANTE"
-              variant="outlined"
+              id="filled-basic"
+              variant="filled"
               value={data.plaintiffName}
               name="plaintiff"
               inputProps={{ readOnly: true }}
@@ -536,9 +557,8 @@ export const SeeCaseEstudent = () => {
             }}
           >
             <TextField
-              id="outlined-basic"
-              label="PARTE ACCIONADA"
-              variant="outlined"
+              id="filled-basic"
+              variant="filled"
               value={data.defendantName}
               name="defendant"
               inputProps={{ readOnly: true }}
@@ -652,16 +672,12 @@ export const SeeCaseEstudent = () => {
         >
           <Grid>
             <Typography variant="p">SE RECEPCIONó EL CASO</Typography>
-            <FormControl sx={{ m: 1, width: "100%" }}>
-              <InputLabel id="demo-simple-select-label">
-                SE RECEPCIONó EL CASO
-              </InputLabel>
+            <FormControl variant="filled" sx={{ m: 1, width: "100%" }}>
               <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select-label"
+                labelId="demo-simple-select-filled-label"
+                id="demo-simple-select-filled"
                 value={data.receivedCase}
                 onChange={handleChange}
-                input={<OutlinedInput label="Name" />}
                 MenuProps={MenuProps}
                 name="receivedCase"
               >
@@ -695,9 +711,8 @@ export const SeeCaseEstudent = () => {
             NOMBRE DEL ESTUDIANTE QUE RECEPCIONO EL CASO
           </Typography>
           <TextField
-            id="outlined-basic"
-            label="NOMBRE DEL ESTUDIANTE QUE RECEPCIONO EL CASO"
-            variant="outlined"
+            id="filled-basic"
+            variant="filled"
             value={data.studentRecepcionist}
             name="studentRecepcionist"
             inputProps={{ readOnly: true }}
@@ -783,11 +798,9 @@ export const SeeCaseEstudent = () => {
               display: "flex",
             }}
           >
-            
             <TextField
-              id="outlined-basic"
-              label="ESTUDIANTE A QUIEN SE LE ASIGNO EL CASO"
-              variant="outlined"
+              id="filled-basic"
+              variant="filled"
               value={data.studentAssigneeName}
               name="studentAssignee"
               inputProps={{ readOnly: true }}
@@ -845,16 +858,12 @@ export const SeeCaseEstudent = () => {
           >
             FECHA DE CITACION DE PARTE USUARIO
           </Typography>
-          <FormControl sx={{ m: 1, width: "100%" }}>
-            <InputLabel id="demo-simple-select-label">
-              FECHA DE CITACION DE PARTE USUARIO
-            </InputLabel>
+          <FormControl variant="filled" sx={{ m: 1, width: "100%" }}>
             <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select-label"
+              labelId="demo-simple-select-filled-label"
+              id="demo-simple-select-filled"
               value={data.appointmentDateByUser}
               onChange={handleChange}
-              input={<OutlinedInput label="Name" />}
               MenuProps={MenuProps}
               name="appointmentDateByUser"
             >
@@ -880,16 +889,12 @@ export const SeeCaseEstudent = () => {
           <Grid>
             <Typography variant="p">TUVO PARTICIPACIÓN INDIVIDUAL </Typography>
 
-            <FormControl sx={{ m: 1, width: "100%" }}>
-              <InputLabel id="demo-simple-select-label">
-                TUVO PARTICIPACIÓN INDIVIDUAL
-              </InputLabel>
+            <FormControl variant="filled" sx={{ m: 1, width: "100%" }}>
               <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select-label"
+                labelId="demo-simple-select-filled-label"
+                id="demo-simple-select-filled"
                 value={data.individualParticipation}
                 onChange={handleChange}
-                input={<OutlinedInput label="Name" />}
                 MenuProps={MenuProps}
                 name="individualParticipation"
               >
@@ -936,9 +941,8 @@ export const SeeCaseEstudent = () => {
             }}
           >
             <TextField
-              id="outlined-basic"
-              label="NOMBRE DEL ASESOR"
-              variant="outlined"
+              id="filled-basic"
+              variant="filled"
               value={data.advisorName}
               name="advisor"
               inputProps={{ readOnly: true }}
@@ -964,16 +968,12 @@ export const SeeCaseEstudent = () => {
               REALIZÓ REPRESENTACION DE TERCEROS
             </Typography>
 
-            <FormControl sx={{ m: 1, width: "100%" }}>
-              <InputLabel id="demo-simple-select-label">
-                REALIZÓ REPRESENTACION DE TERCEROS
-              </InputLabel>
+            <FormControl variant="filled" sx={{ m: 1, width: "100%" }}>
               <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select-label"
+                labelId="demo-simple-select-filled-label"
+                id="demo-simple-select-filled"
                 value={data.thirdPartyRepresentation}
                 onChange={handleChange}
-                input={<OutlinedInput label="Name" />}
                 MenuProps={MenuProps}
                 name="thirdPartyRepresentation"
               >
@@ -1089,9 +1089,9 @@ export const SeeCaseEstudent = () => {
             }}
           >
             <TextField
-              id="outlined-basic"
+              id="filled-basic"
               label="ESTUDIANTE QUE RECIBE EL CASO"
-              variant="outlined"
+              variant="filled"
               value={data.receiverStudentName}
               name="receiverStudent"
               inputProps={{ readOnly: true }}
@@ -1113,21 +1113,19 @@ export const SeeCaseEstudent = () => {
           }}
         >
           <Grid>
-            <Typography variant="p">PAZ Y SALVO DE ESTUDIANTE EN CONSULTORIO</Typography>
-            <FormControl sx={{ m: 1, width: "100%" }}>
-              <InputLabel id="demo-simple-select-label">
+            <Typography variant="p">
               PAZ Y SALVO DE ESTUDIANTE EN CONSULTORIO
-              </InputLabel>
+            </Typography>
+            <FormControl variant="filled" sx={{ m: 1, width: "100%" }}>
               <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select-label"
-                value={data.studentPeaceFulCertificate}
+                labelId="demo-simple-select-filled-label"
+                id="demo-simple-select-filled"
+                value={data.studentPeacefulCertificate}
                 onChange={handleChange}
-                input={<OutlinedInput label="Name" />}
                 MenuProps={MenuProps}
-                name="studentPeaceFulCertificate"
+                name="studentPeacefulCertificate"
               >
-                {pazSalvo.map((name) => (
+                {recepcion.map((name) => (
                   <MenuItem key={name} value={name}>
                     {name}
                   </MenuItem>
@@ -1192,6 +1190,30 @@ export const SeeCaseEstudent = () => {
           }}
         >
           Documentación del caso:
+          <p
+            style={{
+              fontWeight: 200,
+            }}
+          >
+            Antes de guardar cambios, verificar que los archivos han sido
+            cargados correctamente.
+          </p>
+          <p
+            style={{
+              fontWeight: 500,
+            }}
+          >
+            Ejemplo de documento cargado correctamente:
+          </p>
+          <ImageListItem
+            variant="standard"
+            sx={{
+              width: { xs: 60, md: 60 },
+              marginLeft: "65px",
+            }}
+          >
+            <img src={archivoCargado} alt="archivo_cargado" />
+          </ImageListItem>
         </Typography>
 
         <Grid
@@ -1222,23 +1244,32 @@ export const SeeCaseEstudent = () => {
               <Add />
             </Button>
             <br />
-            <form
-              action="../../form-result.php"
-              method="post"
-              enctype="multipart/form-data"
-              target="_blank"
-            >
+            <form>
               {cantidad.map((e) => (
-                <input
-                  key={e}
-                  type="file"
-                  name="archivosubido"
-                  onChange={saveFile}
+                // <input
+                //   key={e}
+                //   type="file"
+                //   name="archivosubido"
+                //   onChange={saveFile}
+                //   style={{
+                //     marginBottom: "10px",
+                //     width: "240px",
+                //   }}
+                // />
+                <div
                   style={{
-                    marginBottom: "10px",
-                    width: "240px",
+                    display: "inline",
+                    margin: "0 10px",
                   }}
-                />
+                >
+                  <SimpleFileUpload
+                    apiKey="81696e288998403763177caa00915951"
+                    data-preview="true"
+                    onSuccess={handleFile}
+                    width="60"
+                    height="60"
+                  />
+                </div>
               ))}
             </form>
           </Grid>
@@ -1266,7 +1297,7 @@ export const SeeCaseEstudent = () => {
                   }}
                 >
                   <a href={e.url} download="filename" target="_blank">
-                    {e.url.split("_")[2]}
+                    {e.url && e.url.split("/")[7]}
                   </a>
                   <Button
                     style={{
@@ -1287,13 +1318,10 @@ export const SeeCaseEstudent = () => {
                           cancelButtonColor: "#d33",
                           cancelButtonText: "Cancelar",
                           confirmButtonText: "Sí",
+                          confirmButtonColor: "#009929",
                         }).then((result) => {
                           if (result.isConfirmed) {
-                            deleteFile(
-                              e.id,
-                              e.url.split("/")[4],
-                              auth.tokken
-                            ).then((res) => {
+                            deleteFile(e.id, e.url, auth.tokken).then((res) => {
                               res.status === 204
                                 ? alert("success", "Documento eliminado")
                                 : alert("error", "Error al eliminar");
@@ -1350,7 +1378,9 @@ export const SeeCaseEstudent = () => {
         </Grid>
 
         <Grid>
-          <Link to={roleId === "1" ? "/Casos_Asignados" : "/Casos_Asignados_asesor"}>
+          <Link
+            to={roleId === "1" ? "/Casos_Asignados" : "/Casos_Asignados_asesor"}
+          >
             <Button
               style={{
                 width: "200px",

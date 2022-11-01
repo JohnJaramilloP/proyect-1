@@ -19,14 +19,13 @@ const SelectSeeCase = ({
   return (
     <Grid>
       <Typography variant="p">{label}</Typography>
-      <FormControl sx={{ m: 1, width: "100%" }}>
-        <InputLabel id="demo-simple-select-label">{label}</InputLabel>
+      <FormControl variant="filled" sx={{ m: 1, width: "100%" }}>
         <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select-label"
+          labelId="demo-simple-select-filled-label"
+          id="demo-simple-select-filled"
           value={value}
           onChange={onChangeValue}
-          input={<OutlinedInput label="Name" />}
+          // input={<OutlinedInput label="Name" />}
           MenuProps={menuProp}
           name={name}
         >

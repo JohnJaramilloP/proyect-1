@@ -33,9 +33,7 @@ import AuthContext from "../../auth/context/AuthContext";
 
 const { idTypes, people } = require("../components/services.js");
 
-const {
-  assignedCasesAdvisor
-} = require("../components/servicesCases.js");
+const { assignedCasesAdvisor } = require("../components/servicesCases.js");
 
 const texts = {
   exportAll: "Exportar todos los datos",
@@ -63,7 +61,7 @@ export const CasesAssignedAdviser = () => {
 
   useEffect(() => {
     assignedCasesAdvisor(auth.tokken).then((cases) => {
-      console.log("cases asigned avisor", cases)
+      console.log("cases asigned avisor", cases);
       setData(cases);
       setShowLoading(false);
     });
@@ -108,7 +106,7 @@ export const CasesAssignedAdviser = () => {
           justifyContent="center"
           alignItems="center"
         >
-          <Typography variant="h4">Casos Asignados - "Asesor"</Typography>
+          <Typography variant="h4">Casos Asignados</Typography>
 
           <Grid container>
             <Card
@@ -173,15 +171,39 @@ export const CasesAssignedAdviser = () => {
                     deferred={true}
                     showCheckBoxesMode="always"
                   />
-                  <Column dataField="id" caption="Número" />
-                  <Column dataField="year" caption="Año" />
-                  <Column dataField="plaintiff.name" caption="Nombre" />
-                  <Column dataField="plaintiff.lastName1" caption="Apellido1" />
-                  <Column dataField="plaintiff.lastName2" caption="Apellido2" />
-                  <Column dataField="plaintiff.idNumber" caption="Cédula" />
-                  <Column dataField="socioeconomicLevel" caption="Estrato" />
-                  <Column caption="Ver Caso" cellRender={renderGridCell} />
-                  <Paging defaultPageSize={10} />
+                  <Column dataField="id" caption="Número" alignment="center" />
+                  <Column dataField="year" caption="Año" alignment="center" />
+                  <Column
+                    dataField="plaintiff.name"
+                    caption="Nombre"
+                    alignment="center"
+                  />
+                  <Column
+                    dataField="plaintiff.lastName1"
+                    caption="Apellido1"
+                    alignment="center"
+                  />
+                  <Column
+                    dataField="plaintiff.lastName2"
+                    caption="Apellido2"
+                    alignment="center"
+                  />
+                  <Column
+                    dataField="plaintiff.idNumber"
+                    caption="Cédula"
+                    alignment="center"
+                  />
+                  <Column
+                    dataField="socioeconomicLevel"
+                    caption="Estrato"
+                    alignment="center"
+                  />
+                  <Column
+                    caption="Ver Caso"
+                    cellRender={renderGridCell}
+                    alignment="center"
+                  />
+                  <Paging defaultPageSize={15} />
                   <Pager
                     visible={true}
                     allowedPageSizes={allowedPageSizes}
@@ -189,7 +211,7 @@ export const CasesAssignedAdviser = () => {
                     showPageSizeSelector={true}
                     showInfo={true}
                     showNavigationButtons={true}
-                    infoText= 'Página {0} de {1} ({2} Registros)'
+                    infoText="Página {0} de {1} ({2} Registros)"
                   />
                   <Export
                     enabled={true}

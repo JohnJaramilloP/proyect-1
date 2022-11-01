@@ -251,8 +251,8 @@ export const Persons = () => {
                 deferred={true}
                 showCheckBoxesMode="always"
               />
-              <Column dataField="name" caption="Nombre" />
-              <Column caption="Apellidos" cellRender={cellrender} width={200} />
+              <Column dataField="name" caption="Nombre" alignment="center"/>
+              <Column caption="Apellidos" cellRender={cellrender} width={200} alignment="center"/>
               <Column
                 dataField="lastName1"
                 caption="Primer apellido"
@@ -268,12 +268,12 @@ export const Persons = () => {
                 caption="Tipo de documento"
                 visible={false}
               />
-              <Column dataField="idType.name" caption="Tipo de documento" />
-              <Column dataField="idNumber" caption="Número de documento" />
-              <Column dataField="email" caption="Correo" />
-              <Column dataField="tel" caption="Teléfono" />
-              <Column dataField="birthdate" caption="Fecha de nacimiento" />
-              <Paging defaultPageSize={10} />
+              <Column dataField="idType.name" caption="Tipo de documento" alignment="center"/>
+              <Column dataField="idNumber" caption="Número de documento" alignment="center"/>
+              <Column dataField="email" caption="Correo" alignment="center"/>
+              <Column dataField="tel" caption="Teléfono" alignment="center"/>
+              <Column dataField="birthdate" caption="Fecha de nacimiento" alignment="center"/>
+              <Paging defaultPageSize={15} />
               <Pager
                 visible={true}
                 allowedPageSizes={allowedPageSizes}

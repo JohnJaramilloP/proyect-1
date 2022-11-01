@@ -146,6 +146,7 @@ export const Cases = () => {
             cancelButtonColor: "#d33",
             cancelButtonText: "Cancelar",
             confirmButtonText: "Sí",
+            confirmButtonColor: "#009929",
           }).then((result) => {
             if (result.isConfirmed) {
               deleteCases(row.data.id, auth.tokken).then((res) => {
@@ -296,24 +297,26 @@ export const Cases = () => {
                     deferred={true}
                     showCheckBoxesMode="always"
                   />
-                  <Column dataField="id" caption="Número" />
-                  <Column dataField="year" caption="Año" />
-                  <Column dataField="plaintiff.name" caption="Nombre" />
-                  <Column dataField="plaintiff.lastName1" caption="Apellido1" />
-                  <Column dataField="plaintiff.lastName2" caption="Apellido2" />
-                  <Column dataField="plaintiff.idNumber" caption="Cédula" />
-                  <Column dataField="socioeconomicLevel" caption="Estrato" />
+                  <Column dataField="id" caption="Número" alignment="center"/>
+                  <Column dataField="year" caption="Año" alignment="center"/>
+                  <Column dataField="plaintiff.name" caption="Nombre" alignment="center"/>
+                  <Column dataField="plaintiff.lastName1" caption="Apellido1" alignment="center"/>
+                  <Column dataField="plaintiff.lastName2" caption="Apellido2" alignment="center"/>
+                  <Column dataField="plaintiff.idNumber" caption="Cédula" alignment="center"/>
+                  <Column dataField="socioeconomicLevel" caption="Estrato" alignment="center"/>
                   <Column
                     dataField="attentionConsultantDate"
                     caption="Fecha de Atención"
+                    alignment="center"
                   />
-                  <Column caption="Ver Caso" cellRender={renderGridCell} />
+                  <Column caption="Ver Caso" cellRender={renderGridCell} alignment="center"/>
                   <Column
                     caption="Cargar Documento"
                     cellRender={renderGridCell1}
+                    alignment="center"
                   />
-                  <Column caption="Eliminar" cellRender={renderGridCell2} />
-                  <Paging defaultPageSize={10} />
+                  <Column caption="Eliminar" cellRender={renderGridCell2} alignment="center"/>
+                  <Paging defaultPageSize={15} />
                   <Pager
                     visible={true}
                     allowedPageSizes={allowedPageSizes}

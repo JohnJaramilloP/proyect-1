@@ -22,9 +22,8 @@ const Textfield = ({ data, name, label, onChangeValue, onlyread, buttonEdit = fa
         {label}
       </Typography>
       <TextField
-        id="outlined-basic"
-        label={label}
-        variant="outlined"
+        id="filled-basic"
+        variant="filled"
         value={data}
         name={name}
         onChange={onChangeValue}

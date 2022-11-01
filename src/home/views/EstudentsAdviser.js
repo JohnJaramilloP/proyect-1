@@ -48,8 +48,14 @@ export const EstudentsAdviser = () => {
   }, []);
 
   const cellrender = (row) => {
-    let apellido1 = row.data.studentAssignee.lastName1 === null ? "" : row.data.studentAssignee.lastName1;
-    let apellido2 = row.data.studentAssignee.lastName2 === null ? "" : row.data.studentAssignee.lastName2;
+    let apellido1 =
+      row.data.studentAssignee.lastName1 === null
+        ? ""
+        : row.data.studentAssignee.lastName1;
+    let apellido2 =
+      row.data.studentAssignee.lastName2 === null
+        ? ""
+        : row.data.studentAssignee.lastName2;
     return <p>{`${apellido1} ${apellido2}`}</p>;
   };
 
@@ -60,8 +66,12 @@ export const EstudentsAdviser = () => {
       justifyContent="center"
       alignItems="center"
     >
-      <Typography variant="h4">Estudiantes - "Asesor"</Typography>
-      <LoadingOverlay active={showLoading} spinner text="Cargando Estudiantes... ">
+      <Typography variant="h4">Estudiantes a cargo</Typography>
+      <LoadingOverlay
+        active={showLoading}
+        spinner
+        text="Cargando Estudiantes... "
+      >
         <Card
           style={{
             padding: 10,
@@ -92,14 +102,43 @@ export const EstudentsAdviser = () => {
                 deferred={true}
                 showCheckBoxesMode="always"
               />
-              <Column dataField="studentAssignee.name" caption="Nombre" />
-              <Column caption="Apellidos" cellRender={cellrender} width={200} />
-              <Column dataField="studentAssignee.idTypeId" caption="Tipo de documento" />
-              <Column dataField="studentAssignee.idNumber" caption="Número de documento" />
-              <Column dataField="studentAssignee.email" caption="Correo" />
-              <Column dataField="studentAssignee.tel" caption="Teléfono" />
-              <Column dataField="studentAssignee.birthdate" caption="Fecha de nacimiento" />
-              <Paging defaultPageSize={10} />
+              <Column
+                dataField="studentAssignee.name"
+                caption="Nombre"
+                alignment="center"
+              />
+              <Column
+                caption="Apellidos"
+                cellRender={cellrender}
+                width={200}
+                alignment="center"
+              />
+              <Column
+                dataField="studentAssignee.idTypeId"
+                caption="Tipo de documento"
+                alignment="center"
+              />
+              <Column
+                dataField="studentAssignee.idNumber"
+                caption="Número de documento"
+                alignment="center"
+              />
+              <Column
+                dataField="studentAssignee.email"
+                caption="Correo"
+                alignment="center"
+              />
+              <Column
+                dataField="studentAssignee.tel"
+                caption="Teléfono"
+                alignment="center"
+              />
+              <Column
+                dataField="studentAssignee.birthdate"
+                caption="Fecha de nacimiento"
+                alignment="center"
+              />
+              <Paging defaultPageSize={15} />
               <Pager
                 visible={true}
                 allowedPageSizes={allowedPageSizes}
@@ -107,7 +146,7 @@ export const EstudentsAdviser = () => {
                 showPageSizeSelector={true}
                 showInfo={true}
                 showNavigationButtons={true}
-                infoText= 'Página {0} de {1} ({2} Registros)'
+                infoText="Página {0} de {1} ({2} Registros)"
               />
               <Export
                 enabled={true}

@@ -30,6 +30,7 @@ import { SeeCase } from "../components";
 import { Link } from "react-router-dom";
 import "../components/ModalFile.css";
 import AuthContext from "../../auth/context/AuthContext";
+import SimpleFileUpload from "react-simple-file-upload";
 
 const { idTypes, people } = require("../components/services.js");
 
@@ -40,7 +41,8 @@ const {
   casesId,
   deleteFile,
   uploadFile,
-  receivedCases
+  receivedCases,
+  uploadFileSimple,
 } = require("../components/servicesCases.js");
 
 const texts = {
@@ -54,7 +56,7 @@ const texts2 = {
   saveRowChanges: "Guardar",
   cancelRowChanges: "Cancelar",
   deleteRow: "Eliminar",
-  editRow: "Editar"
+  editRow: "Editar",
 };
 
 const allowedPageSizes = [5, 10, 15, 20];
@@ -89,13 +91,24 @@ export const CasesReceived = () => {
     });
   };
 
+  function handleFile(url) {
+    console.log("The URL of the file is " + url);
+    let body = {
+      url: url,
+      caseId: idCase,
+    };
+    uploadFileSimple(body, auth.tokken);
+  }
+
   const saveFile = (e) => {
     setFileUp([...fileUp, e.target.files[0]]);
   };
 
   const renderGridCell1 = (row) => {
-    return (
-      !!row.data.studentAssignee ? "" : <PostAdd
+    return !!row.data.studentAssignee ? (
+      ""
+    ) : (
+      <PostAdd
         sx={{ cursor: "pointer", color: "#009929" }}
         onClick={() => {
           let caseId = row.data.id;
@@ -111,8 +124,10 @@ export const CasesReceived = () => {
   };
 
   const renderGridCell2 = (row) => {
-    return (
-      !!row.data.studentAssignee ? "" : <Delete
+    return !!row.data.studentAssignee ? (
+      ""
+    ) : (
+      <Delete
         sx={{ cursor: "pointer", color: "#009929" }}
         onClick={() => {
           Swal.fire({
@@ -124,6 +139,7 @@ export const CasesReceived = () => {
             cancelButtonColor: "#d33",
             cancelButtonText: "Cancelar",
             confirmButtonText: "Sí",
+            confirmButtonColor: "#009929",
           }).then((result) => {
             if (result.isConfirmed) {
               deleteCases(row.data.id, auth.tokken).then((res) => {
@@ -275,20 +291,49 @@ export const CasesReceived = () => {
                     deferred={true}
                     showCheckBoxesMode="always"
                   />
-                  <Column dataField="id" caption="Número" />
-                  <Column dataField="year" caption="Año" />
-                  <Column dataField="plaintiff.name" caption="Parte Accionante" />
-                  <Column dataField="plaintiff.lastName1" caption="Apellido1" />
-                  <Column dataField="plaintiff.lastName2" caption="Apellido2" />
-                  <Column dataField="plaintiff.idNumber" caption="Cédula" />
-                  <Column dataField="socioeconomicLevel" caption="Estrato" />
-                  <Column dataField="attentionConsultantDate" caption="Fecha de Atención" />
+                  <Column dataField="id" caption="Número" alignment="center" />
+                  <Column dataField="year" caption="Año" alignment="center" />
+                  <Column
+                    dataField="plaintiff.name"
+                    caption="Parte Accionante"
+                    alignment="center"
+                  />
+                  <Column
+                    dataField="plaintiff.lastName1"
+                    caption="Apellido1"
+                    alignment="center"
+                  />
+                  <Column
+                    dataField="plaintiff.lastName2"
+                    caption="Apellido2"
+                    alignment="center"
+                  />
+                  <Column
+                    dataField="plaintiff.idNumber"
+                    caption="Cédula"
+                    alignment="center"
+                  />
+                  <Column
+                    dataField="socioeconomicLevel"
+                    caption="Estrato"
+                    alignment="center"
+                  />
+                  <Column
+                    dataField="attentionConsultantDate"
+                    caption="Fecha de Atención"
+                    alignment="center"
+                  />
                   <Column
                     caption="Cargar Documento"
                     cellRender={renderGridCell1}
+                    alignment="center"
                   />
-                  <Column caption="Eliminar" cellRender={renderGridCell2} />
-                  <Paging defaultPageSize={10} />
+                  <Column
+                    caption="Eliminar"
+                    cellRender={renderGridCell2}
+                    alignment="center"
+                  />
+                  <Paging defaultPageSize={15} />
                   <Pager
                     visible={true}
                     allowedPageSizes={allowedPageSizes}
@@ -296,7 +341,7 @@ export const CasesReceived = () => {
                     showPageSizeSelector={true}
                     showInfo={true}
                     showNavigationButtons={true}
-                    infoText= 'Página {0} de {1} ({2} Registros)'
+                    infoText="Página {0} de {1} ({2} Registros)"
                   />
                   <Export
                     enabled={true}
@@ -369,7 +414,7 @@ export const CasesReceived = () => {
                   enctype="multipart/form-data"
                   target="_blank"
                 >
-                  <input
+                  {/* <input
                     type="file"
                     name="archivosubido"
                     onChange={saveFile}
@@ -377,6 +422,12 @@ export const CasesReceived = () => {
                       marginBottom: "10px",
                       width: "240px",
                     }}
+                  /> */}
+                  <SimpleFileUpload
+                    apiKey="81696e288998403763177caa00915951"
+                    onSuccess={handleFile}
+                    width="60"
+                    height="60"
                   />
                 </form>
 
@@ -405,7 +456,7 @@ export const CasesReceived = () => {
                           download="filename"
                           target="_blank"
                         >
-                          {e.url.split("_")[2]}
+                          {e.url && e.url.split("/")[7]}
                         </a>
                         <Button
                           key={e.id}
@@ -432,7 +483,7 @@ export const CasesReceived = () => {
                                 confirmButtonText: "Sí",
                               }).then((result) => {
                                 if (result.isConfirmed) {
-                                  deleteFile(e.id, e.url.split("/")[4], auth.tokken).then(
+                                  deleteFile(e.id, e.url, auth.tokken).then(
                                     (res) => {
                                       if (res.status === 204) {
                                         alert("success", "Documento eliminado");
@@ -471,21 +522,22 @@ export const CasesReceived = () => {
                       border: "none",
                     }}
                     onClick={() => {
-                      uploadFile(idCase, fileUp, auth.tokken).then((res) =>
-                        res.status === 200
-                          ? (alert("success", "Cambios guardados"),
-                            setShowModal(!showModal),
-                            casesId(idCase, auth.tokken).then(
-                              (_case) => setFiles(_case.files),
-                              setShowModal(!showModal)
-                            ),
-                            setFiles([]),
-                            setFileUp([]))
-                          : (alert("error", "Error al guardar"),
-                            setShowModal(!showModal),
-                            setFiles([]),
-                            setFileUp([]))
+                      // uploadFile(idCase, fileUp, auth.tokken).then((res) =>
+                      // res.status === 200
+                      // ?
+                      alert("success", "Cambios guardados");
+                      setShowModal(!showModal);
+                      casesId(idCase, auth.tokken).then(
+                        (_case) => setFiles(_case.files),
+                        setShowModal(!showModal)
                       );
+                      setFiles([]);
+                      setFileUp([]);
+                      // : (alert("error", "Error al guardar"),
+                      //   setShowModal(!showModal),
+                      //   setFiles([]),
+                      //   setFileUp([]))
+                      // );
                     }}
                   >
                     Guardar

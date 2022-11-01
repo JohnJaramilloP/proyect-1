@@ -804,9 +804,9 @@ export const Configuration = () => {
                 deferred={true}
                 showCheckBoxesMode="always"
               />
-              <Column dataField="name" caption="Nombre" />
-              <Column dataField="description" caption="Descripción" />
-              <Paging defaultPageSize={10} />
+              <Column dataField="name" caption="Nombre" alignment="center"/>
+              <Column dataField="description" caption="Descripción" alignment="center"/>
+              <Paging defaultPageSize={15} />
               <Pager
                 visible={true}
                 allowedPageSizes={allowedPageSizes}
@@ -969,7 +969,7 @@ export const Configuration = () => {
                 deferred={true}
                 showCheckBoxesMode="always"
               />
-              <Column dataField="roleId" caption="Rol">
+              <Column dataField="roleId" caption="Rol" alignment="center">
                 <Lookup
                   dataSource={[
                     { codigo: "1", nombre: "Estudiante" },
@@ -980,8 +980,8 @@ export const Configuration = () => {
                   valueExpr="codigo"
                 />
               </Column>
-              <Column dataField="person.name" caption="Nombre" />
-              <Column caption="Apellidos" cellRender={cellrender} width={200} />
+              <Column dataField="person.name" caption="Nombre" alignment="center"/>
+              <Column caption="Apellidos" cellRender={cellrender} width={200} alignment="center"/>
               <Column
                 dataField="lastName1"
                 caption="Primer apellido"
@@ -992,10 +992,10 @@ export const Configuration = () => {
                 caption="Segundo apellido"
                 visible={false}
               />
-              <Column dataField="username" caption="Usuario" />
+              <Column dataField="username" caption="Usuario" alignment="center"/>
               <Column dataField="pwd" caption="Contraseña" visible={false} />
               <Column dataField="id" caption="ID" visible={false} />
-              <Paging defaultPageSize={10} />
+              <Paging defaultPageSize={15} />
               <Pager
                 visible={true}
                 allowedPageSizes={allowedPageSizes}

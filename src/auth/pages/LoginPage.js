@@ -25,7 +25,8 @@ export const LoginPage = () => {
 
   const navigate = useNavigate();
 
-  const onLogin = () => {
+  const onLogin = (e) => {
+    e.preventDefault();
     login(data.user, data.password).then((res) => {
       if (res.accessToken) {
         handleAuth(true, res.accessToken)
@@ -47,14 +48,15 @@ export const LoginPage = () => {
   };
 
   return (
-    <AuthLayout title="Iniciar Sesión
-    ">
-      <form>
+    <AuthLayout title="Iniciar Sesión">
+      <form
+      onSubmit={onLogin}
+      >
         <Grid container>
           <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
-              label="correo"
-              type="email"
+              label="Usuario"
+              type="text"
               placeholder="Usuario"
               fullWidth
               name="user"
@@ -76,7 +78,7 @@ export const LoginPage = () => {
 
           <Grid container spacing={2} sx={{ mt: 1, mb: 2 }}>
             <Grid item xs={12} sm={6}>
-              <Button variant="contained" fullWidth onClick={onLogin} type="submit">
+              <Button variant="contained" fullWidth type="submit">
                 Login
               </Button>
             </Grid>

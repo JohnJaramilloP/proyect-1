@@ -1,7 +1,9 @@
-// const URL = "http://localhost:8000/api/";
-const URL = "https://consultorio-juridico.herokuapp.com/api/";
+const URL = "http://localhost:8000/api/";
+// const URL = "https://consultorio-juridico.herokuapp.com/api/";
 
 const axios = require("axios").default;
+
+axios.defaults.withCredentials = true
 
 let CircularJSON = require("circular-json");
 

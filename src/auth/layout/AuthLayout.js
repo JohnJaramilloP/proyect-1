@@ -16,6 +16,8 @@ export const AuthLayout = ({ children, title = "" }) => {
         backgroundImage: `url(${imageBack})`,
         backgroundsize: "cover",
         backgroundPosition: "center",
+        // backgroundAttachment: "fixed",
+        // backgroundRepeat: "no-repeat"
       }}
     >
       <div

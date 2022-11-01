@@ -5,7 +5,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { Grid, TextField, Typography } from "@mui/material";
+import { Grid, ImageListItem, TextField, Typography } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import Modal from "@mui/material/Modal";
 import { CgClose } from "react-icons/cg";
@@ -19,6 +19,7 @@ import Textfield from "./Textfield";
 import AuthContext from "../../auth/context/AuthContext";
 import { ModalAddPerson } from "./ModalAddPerson";
 import SimpleFileUpload from "react-simple-file-upload";
+import archivoCargado from "../../assets/images/archivo_cargado.PNG";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -101,7 +102,7 @@ export const SeeCase = () => {
     caseStatus: "",
     receiverStudent: "",
     receiverStudentName: "",
-    studentPeaceFulCertificate: "",
+    studentPeacefulCertificate: "",
     graphicSupport: "",
     files: [],
   });
@@ -215,9 +216,9 @@ export const SeeCase = () => {
             (_case.receiverStudent.lastName2 === null
               ? ""
               : _case.receiverStudent.lastName2),
-        studentPeaceFulCertificate:
-          _case.studentPeaceFulCertificate &&
-          _case.studentPeaceFulCertificate === true
+        studentPeacefulCertificate:
+          _case.studentPeacefulCertificate &&
+          _case.studentPeacefulCertificate === true
             ? "Si"
             : "No",
         graphicSupport: _case.graphicSupport && _case.graphicSupport.id,
@@ -250,7 +251,7 @@ export const SeeCase = () => {
       caseId: id,
     };
     uploadFileSimple(body, auth.tokken);
-  };
+  }
 
   useEffect(() => {
     areas(auth.tokken).then((areas) => {
@@ -327,9 +328,9 @@ export const SeeCase = () => {
       caseStatusId: data.caseStatus,
       receiverStudentId: data.receiverStudent,
       studentPeacefulCertificate:
-        data.studentPeaceFulCertificate === "Si"
+        data.studentPeacefulCertificate === "Si"
           ? true
-          : data.studentPeaceFulCertificate === "No"
+          : data.studentPeacefulCertificate === "No"
           ? false
           : null,
       graphicSupportId: data.graphicSupport,
@@ -484,9 +485,8 @@ export const SeeCase = () => {
             }}
           >
             <TextField
-              id="outlined-basic"
-              label="PARTE ACCIONANTE"
-              variant="outlined"
+              id="filled-basic"
+              variant="filled"
               value={data.plaintiffName}
               name="plaintiff"
               inputProps={{ readOnly: true }}
@@ -545,9 +545,8 @@ export const SeeCase = () => {
             }}
           >
             <TextField
-              id="outlined-basic"
-              label="PARTE ACCIONADA"
-              variant="outlined"
+              id="filled-basic"
+              variant="filled"
               value={data.defendantName}
               name="defendant"
               inputProps={{ readOnly: true }}
@@ -661,16 +660,12 @@ export const SeeCase = () => {
         >
           <Grid>
             <Typography variant="p">SE RECEPCIONó EL CASO</Typography>
-            <FormControl sx={{ m: 1, width: "100%" }}>
-              <InputLabel id="demo-simple-select-label">
-                SE RECEPCIONó EL CASO
-              </InputLabel>
+            <FormControl variant="filled" sx={{ m: 1, width: "100%" }}>
               <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select-label"
+                labelId="demo-simple-select-filled-label"
+                id="demo-simple-select-filled"
                 value={data.receivedCase}
                 onChange={handleChange}
-                input={<OutlinedInput label="Name" />}
                 MenuProps={MenuProps}
                 name="receivedCase"
               >
@@ -704,9 +699,8 @@ export const SeeCase = () => {
             NOMBRE DEL ESTUDIANTE QUE RECEPCIONO EL CASO
           </Typography>
           <TextField
-            id="outlined-basic"
-            label="NOMBRE DEL ESTUDIANTE QUE RECEPCIONO EL CASO"
-            variant="outlined"
+            id="filled-basic"
+            variant="filled"
             value={data.studentRecepcionist}
             name="studentRecepcionist"
             inputProps={{ readOnly: true }}
@@ -793,9 +787,8 @@ export const SeeCase = () => {
             }}
           >
             <TextField
-              id="outlined-basic"
-              label="ESTUDIANTE A QUIEN SE LE ASIGNO EL CASO"
-              variant="outlined"
+              id="filled-basic"
+              variant="filled"
               value={data.studentAssigneeName}
               name="studentAssignee"
               inputProps={{ readOnly: true }}
@@ -868,16 +861,12 @@ export const SeeCase = () => {
           >
             FECHA DE CITACION DE PARTE USUARIO
           </Typography>
-          <FormControl sx={{ m: 1, width: "100%" }}>
-            <InputLabel id="demo-simple-select-label">
-              FECHA DE CITACION DE PARTE USUARIO
-            </InputLabel>
+          <FormControl variant="filled" sx={{ m: 1, width: "100%" }}>
             <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select-label"
+              labelId="demo-simple-select-filled-label"
+              id="demo-simple-select-filled"
               value={data.appointmentDateByUser}
               onChange={handleChange}
-              input={<OutlinedInput label="Name" />}
               MenuProps={MenuProps}
               name="appointmentDateByUser"
             >
@@ -903,16 +892,12 @@ export const SeeCase = () => {
           <Grid>
             <Typography variant="p">TUVO PARTICIPACIÓN INDIVIDUAL </Typography>
 
-            <FormControl sx={{ m: 1, width: "100%" }}>
-              <InputLabel id="demo-simple-select-label">
-                TUVO PARTICIPACIÓN INDIVIDUAL
-              </InputLabel>
+            <FormControl variant="filled" sx={{ m: 1, width: "100%" }}>
               <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select-label"
+                labelId="demo-simple-select-filled-label"
+                id="demo-simple-select-filled"
                 value={data.individualParticipation}
                 onChange={handleChange}
-                input={<OutlinedInput label="Name" />}
                 MenuProps={MenuProps}
                 name="individualParticipation"
               >
@@ -959,9 +944,8 @@ export const SeeCase = () => {
             }}
           >
             <TextField
-              id="outlined-basic"
-              label="NOMBRE DEL ASESOR"
-              variant="outlined"
+              id="filled-basic"
+              variant="filled"
               value={data.advisorName}
               name="advisor"
               inputProps={{ readOnly: true }}
@@ -1002,16 +986,12 @@ export const SeeCase = () => {
               REALIZÓ REPRESENTACION DE TERCEROS
             </Typography>
 
-            <FormControl sx={{ m: 1, width: "100%" }}>
-              <InputLabel id="demo-simple-select-label">
-                REALIZÓ REPRESENTACION DE TERCEROS
-              </InputLabel>
+            <FormControl variant="filled" sx={{ m: 1, width: "100%" }}>
               <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select-label"
+                labelId="demo-simple-select-filled-label"
+                id="demo-simple-select-filled"
                 value={data.thirdPartyRepresentation}
                 onChange={handleChange}
-                input={<OutlinedInput label="Name" />}
                 MenuProps={MenuProps}
                 name="thirdPartyRepresentation"
               >
@@ -1127,9 +1107,8 @@ export const SeeCase = () => {
             }}
           >
             <TextField
-              id="outlined-basic"
-              label="ESTUDIANTE QUE RECIBE EL CASO"
-              variant="outlined"
+              id="filled-basic"
+              variant="filled"
               value={data.receiverStudentName}
               name="receiverStudent"
               inputProps={{ readOnly: true }}
@@ -1169,18 +1148,14 @@ export const SeeCase = () => {
             <Typography variant="p">
               PAZ Y SALVO DE ESTUDIANTE EN CONSULTORIO
             </Typography>
-            <FormControl sx={{ m: 1, width: "100%" }}>
-              <InputLabel id="demo-simple-select-label">
-                PAZ Y SALVO DE ESTUDIANTE EN CONSULTORIO
-              </InputLabel>
+            <FormControl variant="filled" sx={{ m: 1, width: "100%" }}>
               <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select-label"
-                value={data.studentPeaceFulCertificate}
+                labelId="demo-simple-select-filled-label"
+                id="demo-simple-select-filled"
+                value={data.studentPeacefulCertificate}
                 onChange={handleChange}
-                input={<OutlinedInput label="Name" />}
                 MenuProps={MenuProps}
-                name="studentPeaceFulCertificate"
+                name="studentPeacefulCertificate"
               >
                 {pazSalvo.map((name) => (
                   <MenuItem key={name} value={name}>
@@ -1247,6 +1222,30 @@ export const SeeCase = () => {
           }}
         >
           Documentación del caso:
+          <p
+            style={{
+              fontWeight: 200,
+            }}
+          >
+            Antes de guardar cambios, verificar que los archivos han sido
+            cargados correctamente.
+          </p>
+          <p
+            style={{
+              fontWeight: 500,
+            }}
+          >
+            Ejemplo de documento cargado correctamente:
+          </p>
+          <ImageListItem
+            variant="standard"
+            sx={{
+              width: { xs: 60, md: 60 },
+              marginLeft: "65px",
+            }}
+          >
+            <img src={archivoCargado} alt="archivo_cargado" />
+          </ImageListItem>
         </Typography>
 
         <Grid
@@ -1350,6 +1349,7 @@ export const SeeCase = () => {
                           cancelButtonColor: "#d33",
                           cancelButtonText: "Cancelar",
                           confirmButtonText: "Sí",
+                          confirmButtonColor: "#009929",
                         }).then((result) => {
                           if (result.isConfirmed) {
                             deleteFile(e.id, e.url, auth.tokken).then((res) => {
