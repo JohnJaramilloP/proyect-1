@@ -18,7 +18,7 @@ export const AppRouter = () => {
 
   const lastPath = pathname;
 
-  const role = localStorage.getItem("role");
+  const role = localStorage.getItem("role")
 
   useEffect(() => {
     if (pathname !== "/auth/login") {
@@ -26,28 +26,28 @@ export const AppRouter = () => {
     }
   }, [lastPath]);
 
-    // window.onbeforeunload = closeWindow;
+  window.onbeforeunload = closeWindow;
 
-    // function closeWindow() {
-    //   localStorage.setItem("login", false);
-    //   localStorage.setItem("role", "");
-    //   localStorage.setItem("lastPath", "");
-    //   handleAuth(false, "");
-    // }
+  function closeWindow() {
+    localStorage.setItem("login", false);
+    localStorage.setItem("role", "");
+    localStorage.setItem("lastPath", lastPath);
+    handleAuth(false, "");
+  }
 
-    window.onpopstate = backOnWindow;
+  window.onpopstate = backOnWindow;
 
-    function backOnWindow() {
-      let path = localStorage.getItem("lastPath");
-      console.log("atras uht login", path);
-      if (role === "") {
-        console.log("atras uht login");
-        localStorage.setItem("login", false);
-        localStorage.setItem("role", "");
-        localStorage.setItem("lastPath", "/auth/login");
-        handleAuth(false, "");
-      }
+  function backOnWindow() {
+    let path = localStorage.getItem("lastPath");
+    console.log("atras uht login", path)
+    if (role === "") {
+      console.log("atras uht login")
+      localStorage.setItem("login", false);
+      localStorage.setItem("role", "");
+      localStorage.setItem("lastPath", "/auth/login");
+      handleAuth(false, "");
     }
+  }
 
   return (
     <div>
