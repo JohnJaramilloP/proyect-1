@@ -26,15 +26,14 @@ export const AppRouter = () => {
     }
   }, [lastPath]);
 
-  useEffect(() => {
-    window.onbeforeunload = closeWindow;
+    // window.onbeforeunload = closeWindow;
 
-    function closeWindow() {
-      localStorage.setItem("login", false);
-      localStorage.setItem("role", "");
-      localStorage.setItem("lastPath", "");
-      handleAuth(false, "");
-    }
+    // function closeWindow() {
+    //   localStorage.setItem("login", false);
+    //   localStorage.setItem("role", "");
+    //   localStorage.setItem("lastPath", "");
+    //   handleAuth(false, "");
+    // }
 
     window.onpopstate = backOnWindow;
 
@@ -49,7 +48,6 @@ export const AppRouter = () => {
         handleAuth(false, "");
       }
     }
-  }, []);
 
   return (
     <div>
