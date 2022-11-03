@@ -46,6 +46,7 @@ export const LoginPage = () => {
       [name]: value,
     });
   };
+  console.log("hola", localStorage.getItem("lastPath"))
 
   return (
     <AuthLayout title="Iniciar Sesión">
