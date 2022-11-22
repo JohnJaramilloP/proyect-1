@@ -69,7 +69,7 @@ export const SideBar = ({
     roleId === "1"
       ? ["Casos_Recepcionados", "Casos_Asignados", "Personas"]
       : roleId === "2"
-      ? ["Casos_Asignados_asesor", "Estudiantes_asesor"]
+      ? ["Casos_Asignados_asesor", "Estudiantes_Asesor"]
       : roleId === "3"
       ? ["Casos", "Estudiantes", "Asesores", "Personas", "Configuracion"]
       : "";
@@ -210,7 +210,7 @@ export const SideBar = ({
                       >
                         {text === "Casos" && <FindInPage />}
                         {text === "Estudiantes" && <Group />}
-                        {text === "Estudiantes_asesor" && <Group />}
+                        {text === "Estudiantes_Asesor" && <Group />}
                         {text === "Casos_Recepcionados" && <PeopleOutline />}
                         {text === "Casos_Asignados" && <BusinessCenter />}
                         {text === "Casos_Asignados_asesor" && (
@@ -229,7 +229,7 @@ export const SideBar = ({
                               ? "Casos Asignados"
                               : text === "Casos_Asignados_asesor"
                               ? "Casos Asignados"
-                              : text === "Estudiantes_asesor"
+                              : text === "Estudiantes_Asesor"
                               ? "Estudiantes"
                               : text === "Configuracion"
                               ? "Configuración"
